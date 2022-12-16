@@ -550,9 +550,32 @@ input[type=checkbox]{
 input[type=checkbox]:checked{
     accent-color: rgba(255, 173, 158, 0.5);
 }
+.out-data{
+    justify-content: space-evenly;
+}
 .products-cards{
-    min-height: 700px;
-    width: 870px;
+    max-width: 870px;
+    justify-content: space-between;
+}
+.products-card-title{
+    justify-content: space-between;
+}
+.products-card{
     background: rgba(255, 173, 158, 0.29);
     border-radius: 10px;
+    margin-bottom: 40px;
+}
+.card-image{
+    width: 275px;
+    height: 200px;
+    border-radius: 10px 10px 0px 0px;
+}
+.card-expand-img{
+    max-width: 35px;
+}
+.card-basket-img{
+    max-width: 35px;
+}
+.products-card-title{
+    padding: 10px;
 }
