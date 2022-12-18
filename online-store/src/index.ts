@@ -11,7 +11,7 @@ let filterBrand = <HTMLElement>document.querySelector('.filter-brand');
 let arrayCategory: string[] = [];
 let arrayBrand: string[] = [];
 let productsCards = <HTMLElement>document.querySelector('.products-cards');
-for (var i=0; i<dataProducts.length; i++){
+for (let i=0; i<dataProducts.length; i++){
     console.log(dataProducts[i].title)
     console.log(dataProducts[i].thumbnail)
     arrayCategory.push(dataProducts[i].category);
@@ -36,7 +36,7 @@ arrayBrand = [...new Set(arrayBrand)];
 console.log(arrayBrand)
 
 
-for (var i=0; i<arrayCategory.length; i++){
+for (let i=0; i<arrayCategory.length; i++){
     let checkboxCategory = <HTMLElement>document.createElement('div');
     checkboxCategory.className = 'checkbox-line wrap item-active';
     checkboxCategory.innerHTML = 
@@ -46,7 +46,7 @@ for (var i=0; i<arrayCategory.length; i++){
     filterCategory.append(checkboxCategory);
     console.log(arrayCategory[i]);
 }
-for (var i=0; i<arrayBrand.length; i++){
+for (let i=0; i<arrayBrand.length; i++){
     let checkboxBrand = <HTMLElement>document.createElement('div');
     checkboxBrand.className = 'checkbox-line wrap item-active';
     checkboxBrand.innerHTML = 
