@@ -131,7 +131,7 @@ const dataProducts = [
         },
         {
             "id":8,
-            "title":"Microsoft Surface Laptop 4",
+            "title":"Microsoft Surface 4",
             "description":"Style and speed. Stand out on HD video calls backed by Studio Mics. Capture ideas on the vibrant touchscreen.",
             "price":1499,
             "discountPercentage":10.23,
@@ -171,7 +171,7 @@ const dataProducts = [
         },
         {
             "id":10,
-            "title":"HP Pavilion 15-DK1056WM",
+            "title":"HP Pavilion",
             "description":"HP Pavilion 15-DK1056WM Gaming Laptop 10th Gen Core i5, 8GB, 256GB SSD, GTX 1650 4GB, Windows 10",
             "price":1099,
             "discountPercentage":6.18,
@@ -229,7 +229,7 @@ const dataProducts = [
         },
         {
             "id":13,
-            "title":"Fog Scent Xpressio Perfume",
+            "title":"Fog Xpressio Perfume",
             "description":"Product details of Best Fog Scent Xpressio Perfume 100ml For Men cool long lasting perfumes for Men",
             "price":13,
             "discountPercentage":8.14,
@@ -248,7 +248,7 @@ const dataProducts = [
         },
         {
             "id":14,
-            "title":"Non-Alcoholic Concentrated Perfume Oil",
+            "title":"Al Munakh Perfume Oil",
             "description":"Original Al Munakh® by Mahal Al Musk | Our Impression of Climate | 6ml Non-Alcoholic Concentrated Perfume Oil",
             "price":120,
             "discountPercentage":15.6,
@@ -326,7 +326,7 @@ const dataProducts = [
         },
         {
             "id":18,
-            "title":"Oil Free Moisturizer 100ml",
+            "title":"Oil Free Moisturizer",
             "description":"Dermive Oil Free Moisturizer with SPF 20 is specifically formulated with ceramides, hyaluronic acid & sunscreen.",
             "price":40,
             "discountPercentage":13.1,
@@ -344,7 +344,7 @@ const dataProducts = [
         },
         {
             "id":19,
-            "title":"Skin Beauty Serum.",
+            "title":"Skin Beauty Serum",
             "description":"Product name: rorec collagen hyaluronic acid white face serum riceNet weight: 15 m",
             "price":46,
             "discountPercentage":10.68,
@@ -363,7 +363,7 @@ const dataProducts = [
         },
         {
             "id":20,
-            "title":"Freckle Treatment Cream- 15gm",
+            "title":"Freckle Cream",
             "description":"Fair & Clear is Pakistan's only pure Freckle cream which helpsfade Freckles, Darkspots and pigments. Mercury level is 0%, so there are no side effects.",
             "price":70,
             "discountPercentage":16.99,
@@ -379,6 +379,24 @@ const dataProducts = [
                 "https://i.dummyjson.com/data/products/20/3.jpg",
                 "https://i.dummyjson.com/data/products/20/4.jpg",
                 "https://i.dummyjson.com/data/products/20/thumbnail.jpg"
+            ]
+        },
+        {
+            "id":21,
+            "title":"- Daal Masoor 500gr",
+            "description":"Fine quality Branded Product Keep in a cool and dry place",
+            "price":20,
+            "discountPercentage":4.81,
+            "rating":4.44,
+            "stock":133,
+            "brand":"Saaf & Khaas",
+            "category":"groceries",
+            "thumbnail":"https://i.dummyjson.com/data/products/21/thumbnail.png",
+            "images":
+            [
+                "https://i.dummyjson.com/data/products/21/1.png",
+                "https://i.dummyjson.com/data/products/21/2.jpg",
+                "https://i.dummyjson.com/data/products/21/3.jpg"
             ]
         }
 ];
