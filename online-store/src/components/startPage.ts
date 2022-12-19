@@ -61,8 +61,26 @@ const startPage: string =
                     Price
                 </h3>
                 <div class="out-data wrap">
-                    <div class="from-price">0</div>
-                    <div class="to-price">0</div>
+                    <div class="stock-values">
+                <div class="from-price">0</div>
+                <div class="to-price">0</div>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="17"
+                step="1"
+                value="0"
+                multiple
+              />
+              <input
+                type="range"
+                min="0"
+                max="17"
+                step="1"
+                value="17"
+                class="input-max"
+              />
                 </div>
             </div>
             <div class="filters-stock filters-wrap">
@@ -70,8 +88,26 @@ const startPage: string =
                     Stock
                 </h3>
                 <div class="out-data wrap">
-                    <div class="from-stock">0</div>
-                    <div class="to-stock">0</div>
+                   <div class="from-stock">0</div>
+                <div class="to-stock">0</div>
+              </div>
+
+              <input
+                type="range"
+                min="0"
+                max="17"
+                step="1"
+                value="0"
+                multiple
+              />
+              <input
+                type="range"
+                min="0"
+                max="17"
+                step="1"
+                value="17"
+                class="input-max"
+              />
                 </div>
             </div>
         </div>
