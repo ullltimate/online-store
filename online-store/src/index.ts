@@ -63,8 +63,8 @@ let footer = <HTMLElement>document.querySelector(".footer");
 
 cart.addEventListener("click", () => {
   main.innerHTML = cartPage;
-  main.classList.add("main-cart");
-  footer.classList.add("footer-product");
+  /*main.classList.add("main-cart");
+  footer.classList.add("footer-product");*/
   let toModal = <HTMLElement>document.querySelector(".toModal");
   let modalBg = <HTMLElement>document.querySelector(".modal-background");
   let modalWindow = <HTMLElement>document.querySelector(".modal-window");
@@ -82,13 +82,14 @@ cart.addEventListener("click", () => {
 });
 
 let allCards: HTMLCollection = productsCards.children;
+
 if (allCards != undefined) {
   for (let i = 0; i < dataProducts.length; i++) {
     allCards[i].addEventListener("click", () => {
       main.innerHTML = productPage;
-      main.classList.add("main-cart");
-      main.style.flexDirection = "column";
-      footer.classList.add("footer-product");
+      /*main.classList.add("main-cart");
+      main.style.flexDirection = "column";*/
+      /*footer.classList.add("footer-product");*/
 
       let title = <HTMLElement>document.querySelector(".product-title");
       title.innerText = dataProducts[i].title;
@@ -119,7 +120,7 @@ if (allCards != undefined) {
       path.innerText = `Store > ${dataProducts[i].category} > ${dataProducts[i].brand} > ${dataProducts[i].title}`;
 
       let main_page = <HTMLElement>document.querySelector(".photos-main");
-      main_page.style.backgroundImage = `url('${dataProducts[i].images[0]}')`;
+      main_page.style.background = `url('${dataProducts[i].images[0]}') no-repeat`;
       for (let j = 0; j < 3; j++) {
         let k = <HTMLElement>document.getElementsByClassName("photo-other")[j];
         k.style.backgroundImage = `url('${dataProducts[i].images[j]}')`;
