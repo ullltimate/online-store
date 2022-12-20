@@ -47,24 +47,24 @@ const cartPage: string =
             <p>PAGE: &lt 1 &gt</p>
           </div>
           <div class="products-cart-wrapper">
-            <div class="card-cart">
+            <div class="card-cart wrap">
               <p class="font">1</p>
               <div class="card-cart-photo"></div>
-              <div class="card-cart-info">
+              <div class="card-cart-info wrap">
                 <p class="font">IPHONE 9</p>
-                <div class="cart-info-description-and-count">
+                <div class="cart-info-description-and-count wrap">
                   <p class="font">An apple mobile which is nothing like apple</p>
                   <div class="cart-info-count">
                     <p class="font">STOCK: 94</p>
-                    <div class="cart-info-current-count">
-                      <div class="round-sign">+</div>
+                    <div class="cart-info-current-count wrap">
+                      <div class="round-sign wrap">+</div>
                       <p class="font">1</p>
-                      <div class="round-sign">-</div>
+                      <div class="round-sign wrap">-</div>
                     </div>
                   </div>
                 </div>
-                <div class="cart-info-rating-discount-cost">
-                  <div class="cart-info-rating-discount">
+                <div class="cart-info-rating-discount-cost wrap">
+                  <div class="cart-info-rating-discount wrap">
                     <ul class="font">
                       <li>Rating:</li>
                       <li>Discount:</li>
@@ -80,9 +80,9 @@ const cartPage: string =
             </div>
           </div>
         </div>
-        <div class="summary-cart font">
+        <div class="summary-cart font wrap">
           <h3>Summary</h3>
-          <div class="summary-total">
+          <div class="summary-total wrap">
             <ul>
               <li>Products:</li>
               <li>Total:</li>

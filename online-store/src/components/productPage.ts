@@ -12,7 +12,7 @@ const productPage: string =
       </div>
     </div>
     <div class="info-product wrap">
-      <div class="info-main font">
+      <div class="info-main font wrap">
         <h2 class = "product-title font">iPhone 9</h2>
         <p class = "product-description font">An apple mobile which is nothing like apple</p>
       </div>

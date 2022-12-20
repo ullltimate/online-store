@@ -61,7 +61,7 @@ const startPage: string =
                     Price
                 </h3>
                 <div class="out-data wrap">
-                    <div class="stock-values">
+                    <div class="stock-values font wrap">
                         <div class="from-price">0</div>
                         <div class="to-price">0</div>
                     </div>
@@ -88,7 +88,7 @@ const startPage: string =
                     Stock
                 </h3>
                 <div class="out-data wrap">
-                    <div class="stock-values">    
+                    <div class="stock-values font wrap">    
                         <div class="from-stock">0</div>
                         <div class="to-stock">0</div>
                     </div>   
