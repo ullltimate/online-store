@@ -16,7 +16,7 @@ const startPageLayout: string =
                     <option value="sort-title" disabled selected>Sort options:</option>
                     <option value="price-ASC">Sort by price ASC</option>
                     <option value="price-DESC">Sort by price DESC</option>
-                    <option value="rating-ASC">Sort by rating ASC</option>
+                    <option value="raiting-ASC">Sort by rating ASC</option>
                     <option value="raiting-DESC">Sort by raiting DESC</option>
                 </select>
             </li>
@@ -185,7 +185,7 @@ export default function home(): void{
     
     let sizeElemSmall = <HTMLElement>document.querySelector('.size-elem-small');
     let sizeElemBig = <HTMLElement>document.querySelector('.size-elem-big');
-    let cardImageArray: Array<HTMLElement> = Array.from(document.querySelectorAll('.card-image'));
+    let cardImageArray: Array<HTMLImageElement> = Array.from(document.querySelectorAll('.card-image'));
     let cardExpandImgArray: Array<HTMLElement> = Array.from(document.querySelectorAll('.card-expand-img'));
     let cardBasketImgArray: Array<HTMLElement> = Array.from(document.querySelectorAll('.card-basket-img'));
     let cardTitleArray: Array<HTMLElement> = Array.from(document.querySelectorAll('.card-title'));
@@ -217,8 +217,45 @@ export default function home(): void{
         switchingView(sizeElemBig, sizeElemSmall)
     })
 
-    let selectSort = <HTMLElement>document.querySelector('.select-sort');
-    selectSort.addEventListener('click', (e) => {
-        console.log(e.target)
-    })
+    let selectSort = <HTMLSelectElement>document.querySelector('.select-sort');
+    selectSort.onchange = function(){
+        if (selectSort.value === 'price-ASC'){
+            sortPriceASC();
+        }
+        if (selectSort.value === 'price-DESC'){
+            sortPriceDESC();
+        }
+        if (selectSort.value === 'raiting-ASC'){
+            sortRaitingASC();
+        }
+        if (selectSort.value === 'raiting-DESC'){
+            sortRaitingDESC()
+        }
+    }
+    function switchingViewBySort(){
+        for(let i=0; i<dataProducts.length; i++){
+            cardImageArray[i].src = `${dataProducts[i].thumbnail}`;
+            cardTitleArray[i].innerText = `${dataProducts[i].title}`;
+        }
+    }
+    function sortPriceASC(){
+        dataProducts.sort(function(a,b){return a.price - b.price});
+        console.log(dataProducts);
+        switchingViewBySort();
+    }
+    function sortPriceDESC(){
+        dataProducts.sort(function(a,b){return b.price - a.price});
+        console.log(dataProducts);
+        switchingViewBySort();
+    }
+    function sortRaitingASC(){
+        dataProducts.sort(function(a,b){return a.rating - b.rating});
+        console.log(dataProducts);
+        switchingViewBySort();
+    }
+    function sortRaitingDESC(){
+        dataProducts.sort(function(a,b){return b.rating - a.rating});
+        console.log(dataProducts);
+        switchingViewBySort();
+    }
 }
