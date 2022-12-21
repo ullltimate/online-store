@@ -1,4 +1,4 @@
-const cartPage: string = 
+const cartPageLayout: string = 
 `<div class="wrapper">
     <div class="modal-background">
       <div class="modal-window">
@@ -99,4 +99,23 @@ const cartPage: string =
       </div> 
 </div>`
 
-export default cartPage;
+export default function cartProduct(): void{
+  let main = <HTMLElement>document.querySelector('.main');
+  main.innerHTML = cartPageLayout;
+  /*main.classList.add("main-cart");
+  footer.classList.add("footer-product");*/
+  let toModal = <HTMLElement>document.querySelector(".toModal");
+  let modalBg = <HTMLElement>document.querySelector(".modal-background");
+  let modalWindow = <HTMLElement>document.querySelector(".modal-window");
+  let closeModal = <HTMLElement>document.querySelector(".modal-close");
+
+  toModal.addEventListener("click", () => {
+    modalBg.style.display = "block";
+    modalWindow.style.display = "flex";
+  });
+
+  closeModal.addEventListener("click", () => {
+    modalBg.style.display = "none";
+    modalWindow.style.display = "none";
+  });
+}
