@@ -205,6 +205,7 @@ export default function home(): void{
                 console.log(idArrayElemAddCart);
                 localStorage.setItem('idArrayCart', idArrayElemAddCart);
                 localStorage.setItem('count', String(count));
+                localStorage.setItem('totalCard', String(summa));
             } else {
                 productPage(i);
             }
@@ -214,6 +215,12 @@ export default function home(): void{
 
     let count: number = 0;
     let countProduct = <HTMLElement>document.querySelector('.count');
+    let totalCardSumma = <HTMLElement>document.querySelector('.summa');
+    let summa: number = 0;
+    if(localStorage.getItem('totalCard') != undefined){
+        summa = Number(localStorage.getItem('totalCard'));
+        totalCardSumma.innerHTML = String(summa);
+    }
     if(localStorage.getItem('count') != undefined){
         count = Number(localStorage.getItem('count'));
         countProduct.innerHTML = String(count);
@@ -231,7 +238,14 @@ export default function home(): void{
             localStorage.setItem('basketSrc', elem.src);
             if (id != undefined){
                 idArrayElemAddCart += `-${id}`;
+                for (let i=0; i<dataProducts.length; i++){
+                    if(dataProducts[i].id === Number(id)){
+                        summa += dataProducts[i].price;
+                        totalCardSumma.innerHTML = `${summa}`
+                    }
+                }
             }
+
         } else {
             elem.src = 'https://i.ibb.co/b2V2ZLR/shopping-cart-icon-196876-1.png';
             count -= 1;
@@ -239,7 +253,14 @@ export default function home(): void{
             if (id != undefined){
                 let str = `-${id}`;
                 idArrayElemAddCart = idArrayElemAddCart.replace(str, '');
+                for (let i=0; i<dataProducts.length; i++){
+                    if(dataProducts[i].id === Number(id)){
+                        summa -= dataProducts[i].price;
+                        totalCardSumma.innerHTML = `${summa}`;
+                    }
+                }
             }
+
         }
     }
     
