@@ -817,6 +817,12 @@ input[type="range"] {
     width: 80vw;
     height: 70vh;
   } */ 
+  .empty-cart{
+    text-align: center;
+    padding-top: 40px;
+    margin-bottom: 80vh;
+    display: none;
+  }
   .cart-wrapper{
     justify-content: space-between;
     margin: 40px 0px;

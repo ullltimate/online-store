@@ -1,5 +1,6 @@
 const cartPageLayout: string = 
 `<div class="wrapper">
+    <h2 class='empty-cart header-text font'>Cart is Empty</h2>
     <div class="modal-background">
       <div class="modal-window">
         <img class="modal-close" src="https://i.ibb.co/q70WLs6/close.png">
