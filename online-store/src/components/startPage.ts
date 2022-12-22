@@ -13,10 +13,10 @@ const startPageLayout: string =
             </li>
             <li class="list-item">
                 <select name="select-sort" id="" class="select-sort">
-                    <option value="sort-title">Sort options:</option>
+                    <option value="sort-title" disabled selected>Sort options:</option>
                     <option value="price-ASC">Sort by price ASC</option>
                     <option value="price-DESC">Sort by price DESC</option>
-                    <option value="rating-ASC">Sort by rating ASC</option>
+                    <option value="raiting-ASC">Sort by rating ASC</option>
                     <option value="raiting-DESC">Sort by raiting DESC</option>
                 </select>
             </li>
@@ -27,7 +27,7 @@ const startPageLayout: string =
                 <input type="search" placeholder="Search product" class="search">
             </li>
             <li class="list-item wrap">
-                <div class="size-elem wrap">
+                <div class="size-elem-small wrap">
                     <div class="small-elem"></div>
                     <div class="small-elem"></div>
                     <div class="small-elem"></div>
@@ -38,7 +38,7 @@ const startPageLayout: string =
                     <div class="small-elem"></div>
                     <div class="small-elem"></div>
                 </div>
-                <div class="size-elem wrap active-size">
+                <div class="size-elem-big wrap active-size">
                     <div class="big-elem"></div>
                     <div class="big-elem"></div>
                     <div class="big-elem"></div>
@@ -181,5 +181,81 @@ export default function home(): void{
         productPage(i);
         });
     }
+    }
+    
+    let sizeElemSmall = <HTMLElement>document.querySelector('.size-elem-small');
+    let sizeElemBig = <HTMLElement>document.querySelector('.size-elem-big');
+    let cardImageArray: Array<HTMLImageElement> = Array.from(document.querySelectorAll('.card-image'));
+    let cardExpandImgArray: Array<HTMLElement> = Array.from(document.querySelectorAll('.card-expand-img'));
+    let cardBasketImgArray: Array<HTMLElement> = Array.from(document.querySelectorAll('.card-basket-img'));
+    let cardTitleArray: Array<HTMLElement> = Array.from(document.querySelectorAll('.card-title'));
+    function switchingView(addElemActive: HTMLElement, removeElemActive: HTMLElement){
+        if(addElemActive.classList.contains('active-size') === false){
+            addElemActive.classList.add('active-size');
+            removeElemActive.classList.remove('active-size');
+        }
+        for (let i=0; i<cardImageArray.length; i++){
+            if(addElemActive === sizeElemSmall){
+                cardImageArray[i].style.width = '200px';
+                cardImageArray[i].style.height = '100px';
+                cardExpandImgArray[i].style.maxWidth = '20px';
+                cardBasketImgArray[i].style.maxHeight = '20px';
+                cardTitleArray[i].style.fontSize = '12px';
+            }else{
+                cardImageArray[i].style.width = '275px';
+                cardImageArray[i].style.height = '175px';
+                cardExpandImgArray[i].style.maxWidth = '35px';
+                cardBasketImgArray[i].style.maxHeight = '35px';
+                cardTitleArray[i].style.fontSize = '16px';    
+            }
+        }
+    }
+    sizeElemSmall.addEventListener('click', () => {
+        switchingView(sizeElemSmall, sizeElemBig)
+    })
+    sizeElemBig.addEventListener('click', () => {
+        switchingView(sizeElemBig, sizeElemSmall)
+    })
+
+    let selectSort = <HTMLSelectElement>document.querySelector('.select-sort');
+    selectSort.onchange = function(){
+        if (selectSort.value === 'price-ASC'){
+            sortPriceASC();
+        }
+        if (selectSort.value === 'price-DESC'){
+            sortPriceDESC();
+        }
+        if (selectSort.value === 'raiting-ASC'){
+            sortRaitingASC();
+        }
+        if (selectSort.value === 'raiting-DESC'){
+            sortRaitingDESC()
+        }
+    }
+    function switchingViewBySort(){
+        for(let i=0; i<dataProducts.length; i++){
+            cardImageArray[i].src = `${dataProducts[i].thumbnail}`;
+            cardTitleArray[i].innerText = `${dataProducts[i].title}`;
+        }
+    }
+    function sortPriceASC(){
+        dataProducts.sort(function(a,b){return a.price - b.price});
+        console.log(dataProducts);
+        switchingViewBySort();
+    }
+    function sortPriceDESC(){
+        dataProducts.sort(function(a,b){return b.price - a.price});
+        console.log(dataProducts);
+        switchingViewBySort();
+    }
+    function sortRaitingASC(){
+        dataProducts.sort(function(a,b){return a.rating - b.rating});
+        console.log(dataProducts);
+        switchingViewBySort();
+    }
+    function sortRaitingDESC(){
+        dataProducts.sort(function(a,b){return b.rating - a.rating});
+        console.log(dataProducts);
+        switchingViewBySort();
     }
 }

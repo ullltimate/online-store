@@ -462,17 +462,20 @@ textarea {
     justify-content: space-evenly;
     padding-top: 20px;
 }
-.size-elem{
+.size-elem-big,
+.size-elem-small{
     width: 46px;
     height: 46px;
     border: 1px solid rgba(255, 173, 158, 0.5);
     justify-content: space-evenly;
     border-radius: 5px;
 }
-.size-elem:hover{
+.size-elem-big:hover,
+.size-elem-small:hover,
+.active-size{
     background: #fff;
 }
-.size-elem:last-child{
+.size-elem-big{
     margin-left: 10px;
 }
 .small-elem{
