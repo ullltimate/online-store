@@ -820,8 +820,10 @@ input[type="range"] {
   .empty-cart{
     text-align: center;
     padding-top: 40px;
-    margin-bottom: 80vh;
-    display: none;
+    height: 60vh;
+    margin-bottom: 19vh;
+    background: rgba(255, 173, 158, 0.29);
+    border-radius: 10px;
   }
   .cart-wrapper{
     justify-content: space-between;
@@ -846,7 +848,6 @@ input[type="range"] {
   .products-cart-wrapper {
     width: 100%;
     height: 85%;
-    border: 1px solid #ffad9e;
     padding: 1%;
   }
   
@@ -854,15 +855,20 @@ input[type="range"] {
     width: 100%;
     height: 30%;
     justify-content: space-between;
+    border: 1px solid #ffad9e;
+    padding: 1%;
   }
   
   .card-cart-photo {
-    width: 25%;
-    height: 100%;
+    width: 200px;
+    height: 100px;
     background-color: rgba(255, 173, 158, 0.29);
-    border-radius: 2vw;
+    border-radius: 10px;
+    margin-bottom: 10px;
   }
-  
+  .cart-info-desc{
+    max-width: 450px;
+  }
   .card-cart-info {
     width: 70%;
     height: 100%;
@@ -873,6 +879,7 @@ input[type="range"] {
     height: 40%;
     justify-content: space-between;
     padding-bottom: 10px;
+    padding-top: 10px;
   }
   
   .cart-info-count {

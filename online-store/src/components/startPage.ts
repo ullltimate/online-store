@@ -148,8 +148,7 @@ export default function home(): void{
         </div>`
         productsCards.append(productsCard);
         if (localStorage.getItem('idArrayCart') != '' && localStorage.getItem('idArrayCart') != undefined){
-            let idArrayCartLocSor = localStorage.getItem('idArrayCart')?.split('-')
-            console.log(idArrayCartLocSor);
+            let idArrayCartLocSor = localStorage.getItem('idArrayCart')?.split('-');
             if(idArrayCartLocSor != undefined){
                 for (let j=0; j<idArrayCartLocSor?.length; j++){
                     if(dataProducts[i].id === Number(idArrayCartLocSor[j])){
