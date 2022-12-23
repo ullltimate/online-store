@@ -136,6 +136,7 @@ export default function home(): void{
 
         let productsCard = <HTMLElement>document.createElement('div')
         productsCard.className = 'products-card';
+        productsCard.id = `${dataProducts[i].id}`
         productsCard.innerHTML = 
         `<div class="products-card-image">
             <img src="${dataProducts[i].thumbnail}" alt="" class="card-image">
@@ -146,6 +147,24 @@ export default function home(): void{
             <img src="https://i.ibb.co/b2V2ZLR/shopping-cart-icon-196876-1.png" alt='' class="card-basket-img">
         </div>`
         productsCards.append(productsCard);
+        if (localStorage.getItem('idArrayCart') != '' && localStorage.getItem('idArrayCart') != undefined){
+            let idArrayCartLocSor = localStorage.getItem('idArrayCart')?.split('-');
+            if(idArrayCartLocSor != undefined){
+                for (let j=0; j<idArrayCartLocSor?.length; j++){
+                    if(dataProducts[i].id === Number(idArrayCartLocSor[j])){
+                        productsCard.innerHTML = 
+                                `<div class="products-card-image">
+                                    <img src="${dataProducts[i].thumbnail}" alt="" class="card-image">
+                                </div>
+                                <div class="products-card-title wrap">
+                                    <img src="https://i.ibb.co/b1fRcKR/icons8-100-1.png" alt="" class="card-expand-img">
+                                    <p class="card-title font">${dataProducts[i].title}</p>
+                                    <img src="${localStorage.getItem('basketSrc')}" alt='' class="card-basket-img">
+                                </div>`
+                    }
+                }
+            }
+        }
     }
     arrayCategory = [...new Set(arrayCategory)];
 
@@ -177,10 +196,71 @@ export default function home(): void{
 
     if (allCards != undefined) {
     for (let i = 0; i < dataProducts.length; i++) {
-        allCards[i].addEventListener("click", () => {
-        productPage(i);
+        allCards[i].addEventListener("click", (e) => {
+            let eventElem = <HTMLImageElement>e.target;
+            if (eventElem.classList.contains('card-basket-img')){
+                addToCart(eventElem, eventElem.parentElement?.parentElement?.id);
+                console.log(eventElem.parentElement?.parentElement?.id);
+                console.log(idArrayElemAddCart);
+                localStorage.setItem('idArrayCart', idArrayElemAddCart);
+                localStorage.setItem('count', String(count));
+                localStorage.setItem('totalCard', String(summa));
+            } else {
+                productPage(i);
+            }
         });
     }
+    }
+
+    let count: number = 0;
+    let countProduct = <HTMLElement>document.querySelector('.count');
+    let totalCardSumma = <HTMLElement>document.querySelector('.summa');
+    let summa: number = 0;
+    if(localStorage.getItem('totalCard') != undefined){
+        summa = Number(localStorage.getItem('totalCard'));
+        totalCardSumma.innerHTML = String(summa);
+    }
+    if(localStorage.getItem('count') != undefined){
+        count = Number(localStorage.getItem('count'));
+        countProduct.innerHTML = String(count);
+    }
+    let idArrayElemAddCart: string = '';
+    if(localStorage.getItem('idArrayCart') != undefined){
+        idArrayElemAddCart = String(localStorage.getItem('idArrayCart'));
+    }
+
+    function addToCart(elem: HTMLImageElement, id?: string){
+        if (elem.src === 'https://i.ibb.co/b2V2ZLR/shopping-cart-icon-196876-1.png'){
+            elem.src = "https://i.ibb.co/V3mPKbP/icons8-48.png";
+            count += 1;
+            countProduct.innerHTML = `${count}`;
+            localStorage.setItem('basketSrc', elem.src);
+            if (id != undefined){
+                idArrayElemAddCart += `-${id}`;
+                for (let i=0; i<dataProducts.length; i++){
+                    if(dataProducts[i].id === Number(id)){
+                        summa += dataProducts[i].price;
+                        totalCardSumma.innerHTML = `${summa}`
+                    }
+                }
+            }
+
+        } else {
+            elem.src = 'https://i.ibb.co/b2V2ZLR/shopping-cart-icon-196876-1.png';
+            count -= 1;
+            countProduct.innerHTML = `${count}`;
+            if (id != undefined){
+                let str = `-${id}`;
+                idArrayElemAddCart = idArrayElemAddCart.replace(str, '');
+                for (let i=0; i<dataProducts.length; i++){
+                    if(dataProducts[i].id === Number(id)){
+                        summa -= dataProducts[i].price;
+                        totalCardSumma.innerHTML = `${summa}`;
+                    }
+                }
+            }
+
+        }
     }
     
     let sizeElemSmall = <HTMLElement>document.querySelector('.size-elem-small');
@@ -240,22 +320,19 @@ export default function home(): void{
     }
     function sortPriceASC(){
         dataProducts.sort(function(a,b){return a.price - b.price});
-        console.log(dataProducts);
         switchingViewBySort();
     }
     function sortPriceDESC(){
         dataProducts.sort(function(a,b){return b.price - a.price});
-        console.log(dataProducts);
         switchingViewBySort();
     }
     function sortRaitingASC(){
         dataProducts.sort(function(a,b){return a.rating - b.rating});
-        console.log(dataProducts);
         switchingViewBySort();
     }
     function sortRaitingDESC(){
         dataProducts.sort(function(a,b){return b.rating - a.rating});
-        console.log(dataProducts);
         switchingViewBySort();
-    }
+    }  
+
 }
