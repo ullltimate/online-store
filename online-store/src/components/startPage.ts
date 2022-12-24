@@ -200,13 +200,11 @@ export default function home(): void{
             let eventElem = <HTMLImageElement>e.target;
             if (eventElem.classList.contains('card-basket-img')){
                 addToCart(eventElem, eventElem.parentElement?.parentElement?.id);
-                console.log(eventElem.parentElement?.parentElement?.id);
-                console.log(idArrayElemAddCart);
                 localStorage.setItem('idArrayCart', idArrayElemAddCart);
                 localStorage.setItem('count', String(count));
                 localStorage.setItem('totalCard', String(summa));
             } else {
-                productPage(i);
+                productPage(i, allCards[i].id);
             }
         });
     }
