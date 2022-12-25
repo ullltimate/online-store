@@ -200,13 +200,11 @@ export default function home(): void{
             let eventElem = <HTMLImageElement>e.target;
             if (eventElem.classList.contains('card-basket-img')){
                 addToCart(eventElem, eventElem.parentElement?.parentElement?.id);
-                console.log(eventElem.parentElement?.parentElement?.id);
-                console.log(idArrayElemAddCart);
                 localStorage.setItem('idArrayCart', idArrayElemAddCart);
                 localStorage.setItem('count', String(count));
                 localStorage.setItem('totalCard', String(summa));
             } else {
-                productPage(i);
+                productPage(i, allCards[i].id);
             }
         });
     }
@@ -247,19 +245,37 @@ export default function home(): void{
 
         } else {
             elem.src = 'https://i.ibb.co/b2V2ZLR/shopping-cart-icon-196876-1.png';
-            count -= 1;
-            countProduct.innerHTML = `${count}`;
-            if (id != undefined){
-                let str = `-${id}`;
-                idArrayElemAddCart = idArrayElemAddCart.replace(str, '');
-                for (let i=0; i<dataProducts.length; i++){
-                    if(dataProducts[i].id === Number(id)){
-                        summa -= dataProducts[i].price;
-                        totalCardSumma.innerHTML = `${summa}`;
+            if(localStorage.getItem(`${id}`) != null){
+                let idArrAmountCountAndSum = localStorage.getItem(`${id}`)?.split('-');
+                if(idArrAmountCountAndSum != undefined){
+                    count -= Number(idArrAmountCountAndSum[0]);
+                    countProduct.innerHTML = `${count}`;
+                    if (id != undefined){
+                        let str = `-${id}`;
+                        idArrayElemAddCart = idArrayElemAddCart.replace(str, '');
+                        for (let i=0; i<dataProducts.length; i++){
+                            if(dataProducts[i].id === Number(id)){
+                                summa -= Number(idArrAmountCountAndSum[1]);
+                                totalCardSumma.innerHTML = `${summa}`;
+                            }
+                        }
+                    }
+                }
+                localStorage.removeItem(`${id}`);
+            } else {
+                count -= 1;
+                countProduct.innerHTML = `${count}`;
+                if (id != undefined){
+                    let str = `-${id}`;
+                    idArrayElemAddCart = idArrayElemAddCart.replace(str, '');
+                    for (let i=0; i<dataProducts.length; i++){
+                        if(dataProducts[i].id === Number(id)){
+                            summa -= dataProducts[i].price;
+                            totalCardSumma.innerHTML = `${summa}`;
+                        }
                     }
                 }
             }
-
         }
     }
     

@@ -35,14 +35,15 @@ const productPageLayout: string =
       </div>
     </div>
     <div class="wrapper-buttons">
-      <button class="button-product font">DROP FORM CART</button>
-      <button class="button-product font">BUY NOW</button>
+      <button class="button-product btn-add font">ADD TO CART</button>
+      <button class="button-product btn-buy font">BUY NOW</button>
     </div>
     <p class="cost-product font">€549.00</p>
   </div>
 </div>`
 
-export default function productPage(i: number): void{
+export default function productPage(i: number, id: string): void{
+
   let main = <HTMLElement>document.querySelector('.main');
   main.innerHTML = productPageLayout;
 
@@ -86,4 +87,82 @@ export default function productPage(i: number): void{
   }
   let cost = <HTMLElement>document.querySelector(".cost-product");
   cost.innerText = `€${dataProducts[i].price}`;
+
+  let btnAdd = <HTMLElement>document.querySelector('.btn-add');
+  let count: number = 0;
+  let countProduct = <HTMLElement>document.querySelector('.count');
+  let totalCardSumma = <HTMLElement>document.querySelector('.summa');
+  let summa: number = 0;
+  if(localStorage.getItem('totalCard') != undefined){
+    summa = Number(localStorage.getItem('totalCard'));
+    totalCardSumma.innerHTML = String(summa);
+  }
+  if(localStorage.getItem('count') != undefined){
+      count = Number(localStorage.getItem('count'));
+      countProduct.innerHTML = String(count);
+  }
+  let idArrayElemAddCart: string = '';
+  if(localStorage.getItem('idArrayCart') != undefined){
+      idArrayElemAddCart = String(localStorage.getItem('idArrayCart'));
+  }
+  console.log(localStorage.getItem('idArrayCart'));
+  console.log(id);
+  if(localStorage.getItem('idArrayCart') != undefined){
+    let idArrayCartLocSor = localStorage.getItem('idArrayCart')?.split('-');
+    console.log(idArrayCartLocSor);
+    if(idArrayCartLocSor != undefined){
+      for (let i=0; i<idArrayCartLocSor.length; i++){
+        if(idArrayCartLocSor[i] === id){
+          btnAdd.innerHTML = 'DROP FROM CART';
+          btnAdd.style.background = 'rgba(255, 173, 158, 1)';
+        }
+      }
+    }
+  }
+  btnAdd.addEventListener('click', () => {
+    btnChangeWhithAddToCart();
+  })
+  function btnChangeWhithAddToCart(){
+    if(btnAdd.innerHTML === 'ADD TO CART'){
+      btnAdd.innerHTML = 'DROP FROM CART';
+      btnAdd.style.background = 'rgba(255, 173, 158, 1)';
+      count += 1;
+      localStorage.setItem('count', `${count}`);
+      countProduct.innerHTML = `${count}`;
+      idArrayElemAddCart += `-${id}`;
+      localStorage.setItem('idArrayCart', idArrayElemAddCart);
+      summa += dataProducts[i].price;
+      localStorage.setItem('totalCard', `${summa}`);
+      totalCardSumma.innerHTML = `${summa}`;
+    } else {
+      btnAdd.innerHTML = 'ADD TO CART';
+      btnAdd.style.background = 'rgba(255, 173, 158, 0.5)';
+      if(localStorage.getItem(`${id}`) != null){
+        let idArrAmountCountAndSum = localStorage.getItem(`${id}`)?.split('-');
+        if(idArrAmountCountAndSum != undefined){
+          count -= Number(idArrAmountCountAndSum[0]);
+          localStorage.setItem('count', `${count}`);
+          countProduct.innerHTML = `${count}`;
+          let str = `-${id}`;
+          idArrayElemAddCart = idArrayElemAddCart.replace(str, '');
+          localStorage.setItem('idArrayCart', idArrayElemAddCart);
+          summa -= Number(idArrAmountCountAndSum[1]);
+          localStorage.setItem('totalCard', `${summa}`);
+          totalCardSumma.innerHTML = `${summa}`;
+        }
+        localStorage.removeItem(`${id}`);
+      } else {
+        count -= 1;
+        localStorage.setItem('count', `${count}`);
+        countProduct.innerHTML = `${count}`;
+        let str = `-${id}`;
+        idArrayElemAddCart = idArrayElemAddCart.replace(str, '');
+        localStorage.setItem('idArrayCart', idArrayElemAddCart);
+        summa -= dataProducts[i].price;
+        localStorage.setItem('totalCard', `${summa}`);
+        totalCardSumma.innerHTML = `${summa}`;
+      }
+    }
+  }
+
 }
