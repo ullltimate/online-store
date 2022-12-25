@@ -137,15 +137,31 @@ export default function productPage(i: number, id: string): void{
     } else {
       btnAdd.innerHTML = 'ADD TO CART';
       btnAdd.style.background = 'rgba(255, 173, 158, 0.5)';
-      count -= 1;
-      localStorage.setItem('count', `${count}`);
-      countProduct.innerHTML = `${count}`;
-      let str = `-${id}`;
-      idArrayElemAddCart = idArrayElemAddCart.replace(str, '');
-      localStorage.setItem('idArrayCart', idArrayElemAddCart);
-      summa -= dataProducts[i].price;
-      localStorage.setItem('totalCard', `${summa}`);
-      totalCardSumma.innerHTML = `${summa}`;
+      if(localStorage.getItem(`${id}`) != null){
+        let idArrAmountCountAndSum = localStorage.getItem(`${id}`)?.split('-');
+        if(idArrAmountCountAndSum != undefined){
+          count -= Number(idArrAmountCountAndSum[0]);
+          localStorage.setItem('count', `${count}`);
+          countProduct.innerHTML = `${count}`;
+          let str = `-${id}`;
+          idArrayElemAddCart = idArrayElemAddCart.replace(str, '');
+          localStorage.setItem('idArrayCart', idArrayElemAddCart);
+          summa -= Number(idArrAmountCountAndSum[1]);
+          localStorage.setItem('totalCard', `${summa}`);
+          totalCardSumma.innerHTML = `${summa}`;
+        }
+        localStorage.removeItem(`${id}`);
+      } else {
+        count -= 1;
+        localStorage.setItem('count', `${count}`);
+        countProduct.innerHTML = `${count}`;
+        let str = `-${id}`;
+        idArrayElemAddCart = idArrayElemAddCart.replace(str, '');
+        localStorage.setItem('idArrayCart', idArrayElemAddCart);
+        summa -= dataProducts[i].price;
+        localStorage.setItem('totalCard', `${summa}`);
+        totalCardSumma.innerHTML = `${summa}`;
+      }
     }
   }
 
