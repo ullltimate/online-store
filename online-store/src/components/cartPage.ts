@@ -1,4 +1,5 @@
 import dataProducts from "./dataProducts";
+import productPage from "./productPage";
 const cartPageLayout: string = 
 `<div class="wrapper">
     <div class="modal-background">
@@ -59,8 +60,8 @@ const cartPageLayout: string =
               <li>Total:</li>
             </ul>
             <ul>
-              <li>${localStorage.getItem('count')}</li>
-              <li>€${localStorage.getItem('totalCard')}</li>
+              <li>0</li>
+              <li>€0</li>
             </ul>
           </div>
           <input type="text" placeholder="Enter promo code" />
@@ -76,56 +77,172 @@ const cartPageLayoutEmpty: string =
 
 export default function cartProduct(): void{
   let main = <HTMLElement>document.querySelector('.main');
-  if (localStorage.getItem('count') === undefined || localStorage.getItem('count') === '0'){
+  if (localStorage.getItem('count') === null || localStorage.getItem('count') === '0'){
     main.innerHTML = cartPageLayoutEmpty;
   } else {
     main.innerHTML = cartPageLayout;
     let point:number = 0;
-    console.log(localStorage.getItem('idArrayCart'));
+
     let idArrayCartLocSor = localStorage.getItem('idArrayCart')?.split('-');
-    console.log(idArrayCartLocSor);
+
     let productsCartWrap = document.querySelector('.products-cart-wrapper');
     for (let i=0; i<dataProducts.length; i++){
       if(idArrayCartLocSor != undefined){
         for( let j=0; j<idArrayCartLocSor.length; j++){
           if(dataProducts[i].id === Number(idArrayCartLocSor[j])){
-            let cardCart = <HTMLElement>document.createElement('div');
-            cardCart.className = 'card-cart wrap';
-            cardCart.innerHTML = 
-            `<p class="font">${++point}</p>
-            <img class="card-cart-photo" src="${dataProducts[i].thumbnail}" alt="">
-            <div class="card-cart-info wrap">
-              <p class="header-text font">${dataProducts[i].title}</p>
-              <div class="cart-info-description-and-count wrap">
-                <p class="cart-info-desc font">${dataProducts[i].description}</p>
-                <div class="cart-info-count">
-                  <p class="font">STOCK: ${dataProducts[i].stock}</p>
-                  <div class="cart-info-current-count wrap">
-                    <div class="round-sign wrap">+</div>
-                    <p class="font">1</p>
-                    <div class="round-sign wrap">-</div>
+            if(localStorage.getItem(`${dataProducts[i].id}`) != null){
+              console.log(localStorage.getItem(`${dataProducts[i].id}`))
+              let idArrAmountCountAndSum = localStorage.getItem(`${dataProducts[i].id}`)?.split('-');
+              if (idArrAmountCountAndSum != undefined){
+                console.log(idArrAmountCountAndSum);
+                let cardCart = <HTMLElement>document.createElement('div');
+                cardCart.className = 'card-cart wrap';
+                cardCart.id = `${dataProducts[i].id}`;
+                cardCart.innerHTML = 
+                `<p class="font">${++point}</p>
+                <img class="card-cart-photo" src="${dataProducts[i].thumbnail}" alt="">
+                <div class="card-cart-info wrap">
+                  <p class="header-text font">${dataProducts[i].title}</p>
+                  <div class="cart-info-description-and-count wrap">
+                    <p class="cart-info-desc font">${dataProducts[i].description}</p>
+                    <div class="cart-info-count">
+                      <p class="font">STOCK: ${dataProducts[i].stock}</p>
+                      <div class="cart-info-current-count wrap">
+                        <div class="round-sign sign-add wrap">+</div>
+                        <p class="font sign-count">${idArrAmountCountAndSum[0]}</p>
+                        <div class="round-sign sign-remove wrap">-</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="cart-info-rating-discount-cost wrap">
+                    <div class="cart-info-rating-discount wrap">
+                      <ul class="font">
+                        <li>Rating: </li>
+                        <li>Discount: </li>
+                      </ul>
+                      <ul class="font">
+                        <li>${dataProducts[i].rating}</li>
+                        <li>${dataProducts[i].discountPercentage}</li>
+                      </ul>
+                    </div>
+                    <p class='count-summa'>${idArrAmountCountAndSum[1]}</p>
+                  </div>
+                </div>`
+                productsCartWrap?.append(cardCart);
+              }
+            } else {
+              let cardCart = <HTMLElement>document.createElement('div');
+              cardCart.className = 'card-cart wrap';
+              cardCart.id = `${dataProducts[i].id}`;
+              cardCart.innerHTML = 
+              `<p class="font">${++point}</p>
+              <img class="card-cart-photo" src="${dataProducts[i].thumbnail}" alt="">
+              <div class="card-cart-info wrap">
+                <p class="header-text font">${dataProducts[i].title}</p>
+                <div class="cart-info-description-and-count wrap">
+                  <p class="cart-info-desc font">${dataProducts[i].description}</p>
+                  <div class="cart-info-count">
+                    <p class="font">STOCK: ${dataProducts[i].stock}</p>
+                    <div class="cart-info-current-count wrap">
+                      <div class="round-sign sign-add wrap">+</div>
+                      <p class="font sign-count">1</p>
+                      <div class="round-sign sign-remove wrap">-</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="cart-info-rating-discount-cost wrap">
-                <div class="cart-info-rating-discount wrap">
-                  <ul class="font">
-                    <li>Rating: </li>
-                    <li>Discount: </li>
-                  </ul>
-                  <ul class="font">
-                    <li>${dataProducts[i].rating}</li>
-                    <li>${dataProducts[i].discountPercentage}</li>
-                  </ul>
+                <div class="cart-info-rating-discount-cost wrap">
+                  <div class="cart-info-rating-discount wrap">
+                    <ul class="font">
+                      <li>Rating: </li>
+                      <li>Discount: </li>
+                    </ul>
+                    <ul class="font">
+                      <li>${dataProducts[i].rating}</li>
+                      <li>${dataProducts[i].discountPercentage}</li>
+                    </ul>
+                  </div>
+                  <p class='count-summa'>${dataProducts[i].price}</p>
                 </div>
-                <p>€${dataProducts[i].price}</p>
-              </div>
-            </div>`
-              productsCartWrap?.append(cardCart);
+              </div>`
+                productsCartWrap?.append(cardCart);
+            }
           }
         }
       }
+    }
+    let allCardsToCart: HTMLElement[] = Array.from(document.querySelectorAll('.card-cart'));
+    let allSignCount: HTMLElement[] = Array.from(document.querySelectorAll('.sign-count'));
+    let allCountSumma: HTMLElement[] = Array.from(document.querySelectorAll('.count-summa'));
+    let countProduct = <HTMLElement>document.querySelector('.count');
+    let totalCardSumma = <HTMLElement>document.querySelector('.summa');
 
+    for(let i=0; i<allCardsToCart.length; i++){
+      allCardsToCart[i].addEventListener('click', (e) => {
+          let event = <HTMLElement>e.target;
+          if(event.classList.contains('sign-add')){
+            allSignCount[i].innerHTML = `${Number(allSignCount[i].innerHTML)+1}`;
+            for (let o=0; o<dataProducts.length; o++){
+              if(allCardsToCart[i].id === String(dataProducts[o].id)){
+                allCountSumma[i].innerHTML = `${dataProducts[o].price * Number(allSignCount[i].innerHTML)}`;
+                localStorage.setItem(`${allCardsToCart[i].id}`, `${allSignCount[i].innerHTML}-${allCountSumma[i].innerHTML }`);
+                localStorage.setItem('count', `${Number(localStorage.getItem('count'))+1}`);
+                countProduct.innerHTML = `${localStorage.getItem('count')}`;
+                localStorage.setItem('totalCard', `${Number(localStorage.getItem('totalCard'))+dataProducts[o].price}`);
+                totalCardSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
+              }
+            }
+          } else if(event.classList.contains('sign-remove')){
+            if(allSignCount[i].innerHTML === '1'){
+              if(productsCartWrap?.children.length === 1){
+                main.innerHTML = cartPageLayoutEmpty;
+                localStorage.removeItem(`${allCardsToCart[i].id}`);
+                localStorage.setItem('count', `${Number(localStorage.getItem('count'))-1}`);
+                countProduct.innerHTML = `${localStorage.getItem('count')}`;
+                for (let o=0; o<dataProducts.length; o++){
+                  if(allCardsToCart[i].id === String(dataProducts[o].id)){
+                    localStorage.setItem('totalCard', `${Number(localStorage.getItem('totalCard'))-dataProducts[o].price}`);
+                    totalCardSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
+                  }
+                }
+                let idArrCartLocal = localStorage.getItem('idArrayCart');
+                if (idArrCartLocal != null){
+                  let str = `-${allCardsToCart[i].id}`;
+                  idArrCartLocal = idArrCartLocal.replace(str, '');
+                  localStorage.setItem('idArrayCart', `${idArrCartLocal}`)
+                }
+              } else{
+                allCardsToCart[i].remove();
+                localStorage.removeItem(`${allCardsToCart[i].id}`);
+                for (let o=0; o<dataProducts.length; o++){
+                  if(allCardsToCart[i].id === String(dataProducts[o].id)){
+                    localStorage.setItem('totalCard', `${Number(localStorage.getItem('totalCard'))-dataProducts[o].price}`);
+                    totalCardSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
+                  }
+                }
+                let idArrCartLocal = localStorage.getItem('idArrayCart');
+                if (idArrCartLocal != null){
+                  let str = `-${allCardsToCart[i].id}`;
+                  idArrCartLocal = idArrCartLocal.replace(str, '');
+                  localStorage.setItem('idArrayCart', `${idArrCartLocal}`);
+                  localStorage.setItem('count', `${Number(localStorage.getItem('count'))-1}`);
+                  countProduct.innerHTML = `${localStorage.getItem('count')}`;
+                }
+              }
+            } else {
+              allSignCount[i].innerHTML = `${Number(allSignCount[i].innerHTML)-1}`;
+              localStorage.setItem('count', `${Number(localStorage.getItem('count'))-1}`);
+              countProduct.innerHTML = `${localStorage.getItem('count')}`;
+              for (let o=0; o<dataProducts.length; o++){
+                if(allCardsToCart[i].id === String(dataProducts[o].id)){
+                  allCountSumma[i].innerHTML = `${Number(allCountSumma[i].innerHTML) - dataProducts[o].price}`;
+                  localStorage.setItem(`${allCardsToCart[i].id}`, `${allSignCount[i].innerHTML}-${allCountSumma[i].innerHTML }`);
+                  localStorage.setItem('totalCard', `${Number(localStorage.getItem('totalCard'))-dataProducts[o].price}`);
+                  totalCardSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
+                }
+              }
+            }
+          }
+      })
     }
 
 
