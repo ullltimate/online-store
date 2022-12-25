@@ -558,7 +558,7 @@ input[type=checkbox]:checked{
     padding-bottom: 10px;
 }
 .products-cards{
-    max-width: 870px;
+    width: 870px;
     justify-content: space-between;
 }
 .products-card-title{
