@@ -60,8 +60,8 @@ const cartPageLayout: string =
               <li>Total:</li>
             </ul>
             <ul>
-              <li>0</li>
-              <li>€0</li>
+              <li class="summary-count">0</li>
+              <li class="summary-total-summa">€0</li>
             </ul>
           </div>
           <input type="text" placeholder="Enter promo code" />
@@ -82,9 +82,12 @@ export default function cartProduct(): void{
   } else {
     main.innerHTML = cartPageLayout;
     let point:number = 0;
+    let summaryCount = <HTMLElement>document.querySelector('.summary-count');
+    let summaryTotalSumma = <HTMLElement>document.querySelector('.summary-total-summa');
+    summaryCount.innerHTML = `${localStorage.getItem('count')}`;
+    summaryTotalSumma.innerHTML = `€${localStorage.getItem('totalCard')}`;
 
     let idArrayCartLocSor = localStorage.getItem('idArrayCart')?.split('-');
-
     let productsCartWrap = document.querySelector('.products-cart-wrapper');
     for (let i=0; i<dataProducts.length; i++){
       if(idArrayCartLocSor != undefined){
@@ -106,7 +109,7 @@ export default function cartProduct(): void{
                   <div class="cart-info-description-and-count wrap">
                     <p class="cart-info-desc font">${dataProducts[i].description}</p>
                     <div class="cart-info-count">
-                      <p class="font">STOCK: ${dataProducts[i].stock}</p>
+                      <p class="font">STOCK: <a class='stock-amount'>${dataProducts[i].stock}</a></p>
                       <div class="cart-info-current-count wrap">
                         <div class="round-sign sign-add wrap">+</div>
                         <p class="font sign-count">${idArrAmountCountAndSum[0]}</p>
@@ -142,7 +145,7 @@ export default function cartProduct(): void{
                 <div class="cart-info-description-and-count wrap">
                   <p class="cart-info-desc font">${dataProducts[i].description}</p>
                   <div class="cart-info-count">
-                    <p class="font">STOCK: ${dataProducts[i].stock}</p>
+                    <p class="font">STOCK: <a class='stock-amount'>${dataProducts[i].stock}</a></p>
                     <div class="cart-info-current-count wrap">
                       <div class="round-sign sign-add wrap">+</div>
                       <p class="font sign-count">1</p>
@@ -175,20 +178,27 @@ export default function cartProduct(): void{
     let allCountSumma: HTMLElement[] = Array.from(document.querySelectorAll('.count-summa'));
     let countProduct = <HTMLElement>document.querySelector('.count');
     let totalCardSumma = <HTMLElement>document.querySelector('.summa');
+    let amountStock: HTMLElement[] = Array.from(document.querySelectorAll('.stock-amount'));
 
     for(let i=0; i<allCardsToCart.length; i++){
       allCardsToCart[i].addEventListener('click', (e) => {
           let event = <HTMLElement>e.target;
           if(event.classList.contains('sign-add')){
-            allSignCount[i].innerHTML = `${Number(allSignCount[i].innerHTML)+1}`;
-            for (let o=0; o<dataProducts.length; o++){
-              if(allCardsToCart[i].id === String(dataProducts[o].id)){
-                allCountSumma[i].innerHTML = `${dataProducts[o].price * Number(allSignCount[i].innerHTML)}`;
-                localStorage.setItem(`${allCardsToCart[i].id}`, `${allSignCount[i].innerHTML}-${allCountSumma[i].innerHTML }`);
-                localStorage.setItem('count', `${Number(localStorage.getItem('count'))+1}`);
-                countProduct.innerHTML = `${localStorage.getItem('count')}`;
-                localStorage.setItem('totalCard', `${Number(localStorage.getItem('totalCard'))+dataProducts[o].price}`);
-                totalCardSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
+            if (amountStock[i].innerHTML === allSignCount[i].innerHTML){
+              return;
+            } else {
+              allSignCount[i].innerHTML = `${Number(allSignCount[i].innerHTML)+1}`;
+              for (let o=0; o<dataProducts.length; o++){
+                if(allCardsToCart[i].id === String(dataProducts[o].id)){
+                  allCountSumma[i].innerHTML = `${dataProducts[o].price * Number(allSignCount[i].innerHTML)}`;
+                  localStorage.setItem(`${allCardsToCart[i].id}`, `${allSignCount[i].innerHTML}-${allCountSumma[i].innerHTML }`);
+                  localStorage.setItem('count', `${Number(localStorage.getItem('count'))+1}`);
+                  countProduct.innerHTML = `${localStorage.getItem('count')}`;
+                  localStorage.setItem('totalCard', `${Number(localStorage.getItem('totalCard'))+dataProducts[o].price}`);
+                  totalCardSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
+                  summaryCount.innerHTML = `${localStorage.getItem('count')}`;
+                  summaryTotalSumma.innerHTML = `€${localStorage.getItem('totalCard')}`;
+                }
               }
             }
           } else if(event.classList.contains('sign-remove')){
@@ -210,6 +220,8 @@ export default function cartProduct(): void{
                   idArrCartLocal = idArrCartLocal.replace(str, '');
                   localStorage.setItem('idArrayCart', `${idArrCartLocal}`)
                 }
+                summaryCount.innerHTML = `${localStorage.getItem('count')}`;
+                summaryTotalSumma.innerHTML = `€${localStorage.getItem('totalCard')}`;
               } else{
                 allCardsToCart[i].remove();
                 localStorage.removeItem(`${allCardsToCart[i].id}`);
@@ -227,6 +239,8 @@ export default function cartProduct(): void{
                   localStorage.setItem('count', `${Number(localStorage.getItem('count'))-1}`);
                   countProduct.innerHTML = `${localStorage.getItem('count')}`;
                 }
+                summaryCount.innerHTML = `${localStorage.getItem('count')}`;
+                summaryTotalSumma.innerHTML = `€${localStorage.getItem('totalCard')}`;
               }
             } else {
               allSignCount[i].innerHTML = `${Number(allSignCount[i].innerHTML)-1}`;
@@ -240,6 +254,8 @@ export default function cartProduct(): void{
                   totalCardSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
                 }
               }
+              summaryCount.innerHTML = `${localStorage.getItem('count')}`;
+              summaryTotalSumma.innerHTML = `€${localStorage.getItem('totalCard')}`;
             }
           }
       })
