@@ -62,9 +62,10 @@ const cartPageLayout: string =
             <ul>
               <li class="summary-count">0</li>
               <li class="summary-total-summa">€0</li>
+              <li class="summary-total-summa-discount"></li>
             </ul>
           </div>
-          <input type="text" placeholder="Enter promo code" />
+          <input type="text" class="search-promo" placeholder="Enter promo code" />
           <p class="promo font">Promo for Test: 'RS', 'EPM'</p>
           <button class="toModal">Buy now</button>
         </div>
@@ -85,7 +86,7 @@ export default function cartProduct(): void{
     let summaryCount = <HTMLElement>document.querySelector('.summary-count');
     let summaryTotalSumma = <HTMLElement>document.querySelector('.summary-total-summa');
     summaryCount.innerHTML = `${localStorage.getItem('count')}`;
-    summaryTotalSumma.innerHTML = `€${localStorage.getItem('totalCard')}`;
+    summaryTotalSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
 
     let idArrayCartLocSor = localStorage.getItem('idArrayCart')?.split('-');
     let productsCartWrap = document.querySelector('.products-cart-wrapper');
@@ -173,6 +174,7 @@ export default function cartProduct(): void{
         }
       }
     }
+
     let allCardsToCart: HTMLElement[] = Array.from(document.querySelectorAll('.card-cart'));
     let allSignCount: HTMLElement[] = Array.from(document.querySelectorAll('.sign-count'));
     let allCountSumma: HTMLElement[] = Array.from(document.querySelectorAll('.count-summa'));
@@ -197,7 +199,19 @@ export default function cartProduct(): void{
                   localStorage.setItem('totalCard', `${Number(localStorage.getItem('totalCard'))+dataProducts[o].price}`);
                   totalCardSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
                   summaryCount.innerHTML = `${localStorage.getItem('count')}`;
-                  summaryTotalSumma.innerHTML = `€${localStorage.getItem('totalCard')}`;
+                  summaryTotalSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
+                  if(localStorage.getItem('promo') != undefined){
+                    if(localStorage.getItem('promo')?.split('-').length === 3){
+                      summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.2}`;
+                      summaryTotalSumma.style.textDecoration = 'line-through';
+                    } else if(localStorage.getItem('promo')?.split('-').length === 2) {
+                      summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.1}`;
+                      summaryTotalSumma.style.textDecoration = 'line-through';
+                    } else if(localStorage.getItem('promo')?.split('-').length === 1){
+                      summaryTotalSummaDiscount.innerHTML = '';
+                      summaryTotalSumma.style.textDecoration = 'none';
+                    }
+                  }
                 }
               }
             }
@@ -221,7 +235,7 @@ export default function cartProduct(): void{
                   localStorage.setItem('idArrayCart', `${idArrCartLocal}`)
                 }
                 summaryCount.innerHTML = `${localStorage.getItem('count')}`;
-                summaryTotalSumma.innerHTML = `€${localStorage.getItem('totalCard')}`;
+                summaryTotalSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
               } else{
                 allCardsToCart[i].remove();
                 localStorage.removeItem(`${allCardsToCart[i].id}`);
@@ -240,7 +254,19 @@ export default function cartProduct(): void{
                   countProduct.innerHTML = `${localStorage.getItem('count')}`;
                 }
                 summaryCount.innerHTML = `${localStorage.getItem('count')}`;
-                summaryTotalSumma.innerHTML = `€${localStorage.getItem('totalCard')}`;
+                summaryTotalSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
+                if(localStorage.getItem('promo') != undefined){
+                  if(localStorage.getItem('promo')?.split('-').length === 3){
+                    summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.2}`;
+                    summaryTotalSumma.style.textDecoration = 'line-through';
+                  } else if(localStorage.getItem('promo')?.split('-').length === 2) {
+                    summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.1}`;
+                    summaryTotalSumma.style.textDecoration = 'line-through';
+                  } else if(localStorage.getItem('promo')?.split('-').length === 1){
+                    summaryTotalSummaDiscount.innerHTML = '';
+                    summaryTotalSumma.style.textDecoration = 'none';
+                  }
+                }
               }
             } else {
               allSignCount[i].innerHTML = `${Number(allSignCount[i].innerHTML)-1}`;
@@ -255,12 +281,142 @@ export default function cartProduct(): void{
                 }
               }
               summaryCount.innerHTML = `${localStorage.getItem('count')}`;
-              summaryTotalSumma.innerHTML = `€${localStorage.getItem('totalCard')}`;
+              summaryTotalSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
+              if(localStorage.getItem('promo') != undefined){
+                if(localStorage.getItem('promo')?.split('-').length === 3){
+                  summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.2}`;
+                  summaryTotalSumma.style.textDecoration = 'line-through';
+                } else if(localStorage.getItem('promo')?.split('-').length === 2) {
+                  summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.1}`;
+                  summaryTotalSumma.style.textDecoration = 'line-through';
+                } else if(localStorage.getItem('promo')?.split('-').length === 1){
+                  summaryTotalSummaDiscount.innerHTML = '';
+                  summaryTotalSumma.style.textDecoration = 'none';
+                }
+              }
             }
           }
       })
     }
 
+    let inputSearchPromo = <HTMLInputElement>document.querySelector('.search-promo');
+    let summaryTotalSummaDiscount = <HTMLElement>document.querySelector('.summary-total-summa-discount');
+
+    let rsPromo: HTMLElement = document.createElement('div');
+    rsPromo.className = 'rs-promo';
+    rsPromo.innerHTML = `Rolling Scopes School - 10% <span>ADD</span>`;
+
+    let epmPromo: HTMLElement = document.createElement('div');
+    epmPromo.className = 'epm-promo';
+    epmPromo.innerHTML = `EPAM Systems - 10% <span>ADD</span>`;
+
+    let rsPromoAdded: HTMLElement = document.createElement('div');
+    rsPromoAdded.className = 'rs-promo-added';
+    rsPromoAdded.innerHTML = `Rolling Scopes School - 10% <span>DROP</span>`;
+
+    let epmPromoAdded: HTMLElement = document.createElement('div');
+    epmPromoAdded.className = 'epm-promo-added';
+    epmPromoAdded.innerHTML = `EPAM Systems - 10% <span>DROP</span>`;
+
+    let summaryBlock = <HTMLElement>document.querySelector('.summary-cart');
+    let allSummaryElement: HTMLCollection = summaryBlock.children;
+
+    rsPromo.addEventListener('click', (e) => {
+      let eventElem = <HTMLElement>e.target;
+      addBlockPromocod(eventElem);
+    });
+    epmPromo.addEventListener('click', (e) => {
+      let eventElem = <HTMLElement>e.target;
+      addBlockPromocod(eventElem);
+    })
+
+    epmPromoAdded.addEventListener('click', (e) => {
+      let eventElem = <HTMLElement>e.target;
+      addBlockPromocod(eventElem);
+    });
+    rsPromoAdded.addEventListener('click', (e) => {
+      let eventElem = <HTMLElement>e.target;
+      addBlockPromocod(eventElem);
+    });
+
+    inputSearchPromo.addEventListener('input', () => {
+        if (inputSearchPromo.value.toLocaleLowerCase() === 'rs' || inputSearchPromo.value.toLocaleLowerCase() === 'epm'){
+          if (inputSearchPromo.value.toLocaleLowerCase() === 'rs'){
+            inputSearchPromo.after(rsPromo);
+          }
+          if (inputSearchPromo.value.toLocaleLowerCase() === 'epm'){
+            inputSearchPromo.after(epmPromo);
+          }
+        } else {
+          rsPromo.remove();
+          epmPromo.remove();
+        }
+    })
+    
+    let promoLocal:string ='';
+    if(localStorage.getItem('promo') != undefined){
+      promoLocal = String(localStorage.getItem('promo'));
+    }
+
+    function addBlockPromocod(promo: HTMLElement){
+      if (promo.innerHTML === 'ADD'){
+        if (promo.parentElement != null){
+          if(promo.parentElement.classList.contains('rs-promo')){
+            inputSearchPromo.before(rsPromoAdded);
+            promoLocal += '-rs';
+          } else {
+            inputSearchPromo.before(epmPromoAdded);
+            promoLocal += '-epm';
+          }
+          if (allSummaryElement.length === 7){
+            summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.1}`;
+            summaryTotalSumma.style.textDecoration = 'line-through';
+          } 
+          if(allSummaryElement.length === 8){
+            summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.2}`;
+            summaryTotalSumma.style.textDecoration = 'line-through';
+          }
+        }
+        promoLocal = [...new Set(promoLocal.split('-'))].join('-');
+        localStorage.setItem('promo', `${promoLocal}`);
+      } else if (promo.innerHTML === 'DROP'){
+        if(promo.parentElement != null){
+          if(promo.parentElement.classList.contains('rs-promo-added')){
+            promo.parentElement.remove();
+            let str = '-rs';
+            promoLocal = promoLocal.replace(str, '');
+          } else {
+            promo.parentElement.remove();
+            let str = '-epm';
+            promoLocal = promoLocal.replace(str, '');
+          }
+          summaryTotalSummaDiscount.innerHTML = `${Math.round(Number(summaryTotalSummaDiscount.innerHTML)+Number(localStorage.getItem('totalCard'))*0.1)}`;
+        }
+        if(summaryTotalSummaDiscount.innerHTML === summaryTotalSumma.innerHTML){
+          summaryTotalSummaDiscount.innerHTML = '';
+          summaryTotalSumma.style.textDecoration = 'none';
+        }
+        localStorage.setItem('promo', `${promoLocal}`);
+        console.log(promoLocal)
+      } 
+    }
+
+    if(localStorage.getItem('promo') != undefined){
+      if(localStorage.getItem('promo')?.split('-').length === 3){
+        inputSearchPromo.before(epmPromoAdded);
+        inputSearchPromo.before(rsPromoAdded);
+        summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.2}`;
+        summaryTotalSumma.style.textDecoration = 'line-through';
+      } else if(localStorage.getItem('promo') === '-rs'){
+        inputSearchPromo.before(rsPromoAdded);
+        summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.1}`;
+        summaryTotalSumma.style.textDecoration = 'line-through';
+      } else if(localStorage.getItem('promo') === '-epm'){
+        inputSearchPromo.before(epmPromoAdded);
+        summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.1}`;
+        summaryTotalSumma.style.textDecoration = 'line-through';
+      }
+    }
 
     let toModal = <HTMLElement>document.querySelector(".toModal");
     let modalBg = <HTMLElement>document.querySelector(".modal-background");
