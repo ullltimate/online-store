@@ -1,4 +1,6 @@
+import cartProduct from './cartPage';
 import dataProducts from './dataProducts';
+import { buyNow } from './cartPage';
 const productPageLayout: string = 
 `
 <div class="wrapper">
@@ -164,5 +166,25 @@ export default function productPage(i: number, id: string): void{
       }
     }
   }
-
+  let btnBuy = <HTMLElement>document.querySelector('.btn-buy');
+  btnBuy.addEventListener('click', () => {
+    addToCartBuyNow();
+  });
+  function addToCartBuyNow(){
+    if (btnAdd.innerHTML === 'ADD TO CART'){
+      count += 1;
+      localStorage.setItem('count', `${count}`);
+      countProduct.innerHTML = `${count}`;
+      idArrayElemAddCart += `-${id}`;
+      localStorage.setItem('idArrayCart', idArrayElemAddCart);
+      summa += dataProducts[i].price;
+      localStorage.setItem('totalCard', `${summa}`);
+      totalCardSumma.innerHTML = `${summa}`;
+      cartProduct();
+      buyNow();
+    } else {
+      cartProduct();
+      buyNow();
+    }
+  }
 }

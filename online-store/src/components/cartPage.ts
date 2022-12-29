@@ -424,8 +424,7 @@ export default function cartProduct(): void{
     let closeModal = <HTMLElement>document.querySelector(".modal-close");
   
     toModal.addEventListener("click", () => {
-      modalBg.style.display = "block";
-      modalWindow.style.display = "flex";
+      buyNow();
     });
   
     closeModal.addEventListener("click", () => {
@@ -433,4 +432,10 @@ export default function cartProduct(): void{
       modalWindow.style.display = "none";
     });
   }
+}
+export function buyNow(){
+  let modalBg = <HTMLElement>document.querySelector(".modal-background");
+  let modalWindow = <HTMLElement>document.querySelector(".modal-window");
+  modalBg.style.display = "block";
+  modalWindow.style.display = "flex";
 }
