@@ -672,6 +672,11 @@ input[type="range"] {
     width: 78%;
     justify-content: space-between;
   }
+  .wrapper-empty-product{
+    display: none;
+    width: 870px;
+    justify-content: center;
+  }
   
   /* Main styles for product page */
   
