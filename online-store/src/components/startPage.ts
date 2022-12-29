@@ -706,6 +706,15 @@ function checkAllFilters(resultSearch:string[], checkboxC:string[], checkboxB:st
       emptyPage.style.display = "flex";
       productsCards.style.display="none"; 
       p_found.innerText = `Found: 0`;
+      priceMinValue.innerText = String(Math.min.apply(null, priceRange));
+      priceMaxValue.innerText = String(Math.max.apply(null, priceRange));
+      stockMinValue.innerText = String(Math.min.apply(null, stockRange));
+      stockMaxValue.innerText = String(Math.max.apply(null, stockRange));
+
+      priceMin.value = String(priceRange.indexOf(Number(priceMinValue.innerText)));
+      priceMax.value = String(priceRange.indexOf(Number(priceMaxValue.innerText)));
+      stockMin.value = String(stockRange.indexOf(Number(stockMinValue.innerText)));
+      stockMax.value = String(stockRange.indexOf(Number(stockMaxValue.innerText)));
     } else {
       emptyPage.style.display = "none";
       productsCards.style.display="flex"; 
