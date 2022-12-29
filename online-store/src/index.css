@@ -682,6 +682,11 @@ input[type="range"] {
     width: 80vw;
     height: 70vh;
   } */
+
+  .wrapper-empty-product{
+    width: 870px;
+    justify-content: center;
+  }
   
   /* Path for product page */
   .path-product {

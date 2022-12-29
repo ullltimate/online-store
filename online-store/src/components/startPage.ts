@@ -116,10 +116,10 @@ const startPageLayout: string = `<div class="wrapper">
             </div>
         </div>
         <div class="products-cards wrap">
-          <div class="wrapper-empty-product">
+        </div>
+        <div class="wrapper-empty-product">
             <h2 class='font'>No products found &#129402</h2>
           </div> 
-        </div>
     </section>
 </div>`;
 
@@ -524,6 +524,7 @@ let checkedArrId: string[] = [];
 
 function filter() {
   emptyPage.style.display = "none";
+  productsCards.style.display="flex"; 
   checkboxC.length = 0;
   checkboxB.length = 0;
   checkedArrId.length = 0;
@@ -558,6 +559,7 @@ let resultSearch:string[] = [];
 let textSearch:string = "";
 searchFilter.addEventListener("input", () => {
   emptyPage.style.display = "none";
+  productsCards.style.display="flex"; 
   resultSearch.length = 0;
   textSearch = searchFilter.value.toLowerCase();
   for (let i = 0; i < dataProducts.length; i++) {
@@ -580,9 +582,7 @@ searchFilter.addEventListener("input", () => {
   checkAllFilters(resultSearch, checkboxC, checkboxB, rangeCarts);
   if(textSearch!=""&&resultSearch.length==0){
     emptyPage.style.display="flex";
-    for(let i=0; i<cards.length; i++){
-      cards[i].style.display="none";
-    }
+    productsCards.style.display="none";  
   }
   changeSpanForCheckbox(0, mathcedFinal);
 });
@@ -704,12 +704,11 @@ function checkAllFilters(resultSearch:string[], checkboxC:string[], checkboxB:st
     changeSpanForCheckbox(0, mathcedFinal);
     if (mathcedFinal.length == 0) {
       emptyPage.style.display = "flex";
-      for (let i = 0; i < cards.length; i++) {
-        cards[i].style.display = "none";
-      }
+      productsCards.style.display="none"; 
       p_found.innerText = `Found: 0`;
     } else {
       emptyPage.style.display = "none";
+      productsCards.style.display="flex"; 
       for (let i = 0; i < cards.length; i++) {
         if (mathcedFinal.includes(cards[i].innerText.trim())) {
           cards[i].style.display = "block";
