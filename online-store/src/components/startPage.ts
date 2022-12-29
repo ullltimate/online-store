@@ -70,18 +70,19 @@ const startPageLayout: string = `<div class="wrapper">
                     <input
                         type="range"
                         min="0"
-                        max="17"
+                        max="20"
                         step="1"
                         value="0"
                         multiple
+                        class="min-price-dot"
                     />
                     <input
                         type="range"
                         min="0"
-                        max="17"
+                        max="20"
                         step="1"
-                        value="17"
-                        class="input-max"
+                        value="20"
+                        class="max-price-dot"
                     />
                 </div>
             </div>
@@ -97,23 +98,27 @@ const startPageLayout: string = `<div class="wrapper">
                     <input
                         type="range"
                         min="0"
-                        max="17"
+                        max="20"
                         step="1"
                         value="0"
                         multiple
+                        class="min-stock-dot"
                     />
                     <input
                         type="range"
                         min="0"
-                        max="17"
+                        max="20"
                         step="1"
-                        value="17"
-                        class="input-max"
+                        value="20"
+                        class="max-stock-dot"
                     />
                 </div>
             </div>
         </div>
-        <div class="products-cards wrap"> 
+        <div class="products-cards wrap">
+          <div class="wrapper-empty-product">
+            <h2 class='font'>No products found &#129402</h2>
+          </div> 
         </div>
     </section>
 </div>`;
@@ -360,113 +365,479 @@ export default function home(): void {
     switchingViewBySort();
   }
 
-  let checkboxes: Array<HTMLInputElement> = Array.from(
-    document.querySelectorAll(`input[type="checkbox"]`)
-  );
+//   let checkboxes: Array<HTMLInputElement> = Array.from(
+//     document.querySelectorAll(`input[type="checkbox"]`)
+//   );
 
-  const mainPageLayoutEmpty: string = `<div class="wrapper">
-    <h2 class='empty-cart header-text font'>No products found &#129402</h2>
-  </div>`;
+//   const mainPageLayoutEmpty: string = `<div class="wrapper">
+//     <h2 class='empty-cart header-text font'>No products found &#129402</h2>
+//   </div>`;
 
-  let p_found = <HTMLElement>document.querySelector(".found");
-  let counter_found = 21;
-  let product_block = <HTMLElement>document.querySelector(".products-cards");
+//   let p_found = <HTMLElement>document.querySelector(".found");
+//   let counter_found = 21;
+//   let product_block = <HTMLElement>document.querySelector(".products-cards");
 
-  for (let i = 0; i < checkboxes.length; i++) {
-    checkboxes[i].addEventListener("click", (e) => {
-      let eventElem = e.target;
-      eventElem?.addEventListener("change", (eventElem)=>{
-        filter()
-      });
-    });
-  }
+//   for (let i = 0; i < checkboxes.length; i++) {
+//     checkboxes[i].addEventListener("click", (e) => {
+//       let eventElem = e.target;
+//       eventElem?.addEventListener("change", (eventElem)=>{
+//         filter()
+//       });
+//     });
+//   }
 
-  let cards: Array<HTMLElement> = Array.from(
-      document.querySelectorAll(".products-card")
-    ),
-    cardTitle: string[] = [];
-  for (let i = 0; i < cards.length; i++) {
-    cardTitle[i] = cards[i].innerText;
-  }
-  let checkedArrId: string[] = [];
+//   let cards: Array<HTMLElement> = Array.from(
+//       document.querySelectorAll(".products-card")
+//     ),
+//     cardTitle: string[] = [];
+//   for (let i = 0; i < cards.length; i++) {
+//     cardTitle[i] = cards[i].innerText;
+//   }
+//   let checkedArrId: string[] = [];
 
-  function filter() {
-    let checkedArr = checkboxes.filter((item) => item.checked);
-    for (let i = 0; i < checkedArr.length; i++) {
-      checkedArrId[i] = checkedArr[i].id;
-    }
-    counter_found = 21;
-    let tempIndex = 0;
-    for (let i = 0; i < cards.length; i++) {
-      tempIndex = cardTitle.indexOf(dataProducts[i].title);
-      let matchArrB = arrayBrand.some((r) => checkedArrId.indexOf(r) >= 0);
-      let matchArrC = arrayCategory.some((r) => checkedArrId.indexOf(r) >= 0);
-      if (matchArrB && matchArrC) {
-        if (
-          checkedArrId.includes(dataProducts[i].brand) &&
-          checkedArrId.includes(dataProducts[i].category)
-        ) {
-          cards[tempIndex].style.display = "block";
-          counter_found++;
-        } else {
-          cards[tempIndex].style.display = "none";
-          counter_found--;
-        }
-      } else if (
-        checkedArrId.includes(dataProducts[i].brand) ||
-        checkedArrId.includes(dataProducts[i].category)
-      ) {
-        cards[tempIndex].style.display = "block";
-        counter_found++;
-      } else {
-        cards[tempIndex].style.display = "none";
-        counter_found--;
-      }
-    }
-    p_found.innerText = `Found: ${counter_found / 2}`;
-    if (counter_found == 0) {
-      product_block.innerHTML = mainPageLayoutEmpty;
-    }
-  }
+//   function filter() {
+//     let checkedArr = checkboxes.filter((item) => item.checked);
+//     for (let i = 0; i < checkedArr.length; i++) {
+//       checkedArrId[i] = checkedArr[i].id;
+//     }
+//     counter_found = 21;
+//     let tempIndex = 0;
+//     for (let i = 0; i < cards.length; i++) {
+//       tempIndex = cardTitle.indexOf(dataProducts[i].title);
+//       let matchArrB = arrayBrand.some((r) => checkedArrId.indexOf(r) >= 0);
+//       let matchArrC = arrayCategory.some((r) => checkedArrId.indexOf(r) >= 0);
+//       if (matchArrB && matchArrC) {
+//         if (
+//           checkedArrId.includes(dataProducts[i].brand) &&
+//           checkedArrId.includes(dataProducts[i].category)
+//         ) {
+//           cards[tempIndex].style.display = "block";
+//           counter_found++;
+//         } else {
+//           cards[tempIndex].style.display = "none";
+//           counter_found--;
+//         }
+//       } else if (
+//         checkedArrId.includes(dataProducts[i].brand) ||
+//         checkedArrId.includes(dataProducts[i].category)
+//       ) {
+//         cards[tempIndex].style.display = "block";
+//         counter_found++;
+//       } else {
+//         cards[tempIndex].style.display = "none";
+//         counter_found--;
+//       }
+//     }
+//     p_found.innerText = `Found: ${counter_found / 2}`;
+//     if (counter_found == 0) {
+//       product_block.innerHTML = mainPageLayoutEmpty;
+//     }
+//   }
 
-  let searchFilter = <HTMLInputElement>document.querySelector(".search");
-  let resultSearch = [];
-  searchFilter?.addEventListener("search", () => {
-    resultSearch = [];
-    let textSearch:string = searchFilter?.value.toLowerCase();
+//   let searchFilter = <HTMLInputElement>document.querySelector(".search");
+//   let resultSearch = [];
+//   searchFilter?.addEventListener("search", () => {
+//     resultSearch = [];
+//     let textSearch:string = searchFilter?.value.toLowerCase();
+//     for (let i = 0; i < dataProducts.length; i++) {
+//       let currentCard: { [index: string]: any } = dataProducts[i];
+//       for (let key in currentCard) {
+//         if (
+//           currentCard.hasOwnProperty(key) &&
+//           key != "id" &&
+//           key != "thumbnail" &&
+//           key != "images"
+//         ) {
+//           if (currentCard[key].toString().toLowerCase().includes(textSearch)) {
+//             resultSearch.push(dataProducts[i].title);
+//             break;
+//           }
+//         }
+//       }
+//     }
+//     for (let i = 0; i < cards.length; i++) {
+//       if (resultSearch.includes(cards[i].innerText)) {
+//         cards[i].style.display = "block";
+//       } else {
+//         cards[i].style.display = "none";
+//       }
+//     }
+
+//     p_found.innerText = `Found: ${resultSearch.length}`;
+//     if (textSearch == "") {
+//       for (let i = 0; i < cards.length; i++) {
+//         cards[i].style.display = "block";
+//       }
+//       p_found.innerText = `Found: ${cards.length}`;
+//     } else if (textSearch != "" && resultSearch.length == 0) {
+//       product_block.innerHTML = mainPageLayoutEmpty;
+//       p_found.innerText = `Found: ${resultSearch.length}`;
+//     }
+//   });
+// }
+
+
+
+
+let foundProducts = <HTMLElement>document.querySelector(".found");
+foundProducts.innerText=`Found: 21`
+
+
+function startSPanForCheckbox() {
+  let allSpan: Array<HTMLElement> = Array.from(document.querySelectorAll(".countFilters"));
+  for (let j = 0; j < allSpan.length; j++) {
+    let currentCountF = 0;
+    let label = <HTMLElement>allSpan[j].previousSibling;
+    let check = <HTMLElement>label.previousSibling;
     for (let i = 0; i < dataProducts.length; i++) {
-      let currentCard: { [index: string]: any } = dataProducts[i];
-      for (let key in currentCard) {
-        if (
-          currentCard.hasOwnProperty(key) &&
-          key != "id" &&
-          key != "thumbnail" &&
-          key != "images"
-        ) {
-          if (currentCard[key].toString().toLowerCase().includes(textSearch)) {
-            resultSearch.push(dataProducts[i].title);
-            break;
-          }
-        }
+      if (dataProducts[i].category == check.innerText) {
+        currentCountF++;
       }
     }
-    for (let i = 0; i < cards.length; i++) {
-      if (resultSearch.includes(cards[i].innerText)) {
-        cards[i].style.display = "block";
-      } else {
-        cards[i].style.display = "none";
+    allSpan[j].innerText = `(${currentCountF}/${currentCountF})`;
+  }
+  for (let j = 5; j < allSpan.length; j++) {
+    let currentCountF = 0;
+    let label = <HTMLElement>allSpan[j].previousSibling;
+    let check = <HTMLElement>label.previousSibling;
+    for (let i = 0; i < dataProducts.length; i++) {
+      if (dataProducts[i].brand == check.innerText) {
+        currentCountF++;
       }
     }
+    allSpan[j].innerText = `(${currentCountF}/${currentCountF})`;
+  }
+}
 
-    p_found.innerText = `Found: ${resultSearch.length}`;
-    if (textSearch == "") {
-      for (let i = 0; i < cards.length; i++) {
-        cards[i].style.display = "block";
+let checkboxesP: Array<HTMLElement> = Array.from(document.querySelectorAll(`.checkbox-line`));
+let checkboxes: Array<HTMLInputElement> = Array.from(document.querySelectorAll(`input[type="checkbox"]`));
+
+function changeSpanForCheckbox(currentSpan:any, filterArray:string []) {
+  let allSpan: Array<HTMLElement> = Array.from(document.querySelectorAll(".countFilters"));
+  let brands = [];
+  let categories = [];
+  let prices = [];
+  let stocks = [];
+
+  for (let i = 0; i < dataProducts.length; i++) {
+    if (filterArray.includes(dataProducts[i].title)) {
+      brands.push(dataProducts[i].brand);
+      categories.push(dataProducts[i].category);
+      prices.push(dataProducts[i].price);
+      stocks.push(dataProducts[i].stock);
+    }
+  }
+  // if (currentSpan != 0) {
+  let k = 0;
+  for (let i = 0; i < allSpan.length; i++) {
+    let startCount = allSpan[i].innerText;
+    let silceStartCount = startCount.slice(2, 5);
+    allSpan[i].innerText = `(${k}` + silceStartCount;
+  }
+
+  let countForSpanB = brands.reduce<Record<string, number>>(function (acc, el) {
+    acc[el] = (acc[el] || 0) + 1;
+    return acc;
+  }, {});
+  console.log(countForSpanB);
+  let countForSpanC = categories.reduce<Record<string, number>>(function (acc, el) {
+    acc[el] = (acc[el] || 0) + 1;
+    return acc;
+  }, {});
+  console.log(countForSpanC);
+
+  for (let i = 0; i < allSpan.length; i++) {
+    let startCount = allSpan[i].innerText;
+    let silceStartCount = startCount.slice(2, 5);
+    let label = <HTMLElement>allSpan[i].previousSibling;
+    let check = <HTMLElement>label.previousSibling;
+    if (brands.indexOf(check.innerText) != -1) {
+      if (allSpan[i] != currentSpan) {
+        allSpan[i].innerText =
+          `(${countForSpanB[check.innerText]}` + silceStartCount;
+        if (allSpan[i].innerText == "(undefined" + silceStartCount) {
+          allSpan[i].innerText =
+            `(${silceStartCount.slice(1, 2)}` + silceStartCount;
+        }
+      } else {
+        allSpan[i].innerText =
+          `(${silceStartCount.slice(1, 2)}` + silceStartCount;
       }
-      p_found.innerText = `Found: ${cards.length}`;
-    } else if (textSearch != "" && resultSearch.length == 0) {
-      product_block.innerHTML = mainPageLayoutEmpty;
-      p_found.innerText = `Found: ${resultSearch.length}`;
+    }
+  }
+  for (let i = 0; i < allSpan.length; i++) {
+    let startCount = allSpan[i].innerText;
+    let silceStartCount = startCount.slice(2, 5);
+    let label = <HTMLElement>allSpan[i].previousSibling;
+    let check = <HTMLElement>label.previousSibling;
+    if (categories.indexOf(check.innerText) != -1) {
+      if (allSpan[i] != currentSpan) {
+        allSpan[i].innerText =
+          `(${countForSpanC[check.innerText]}` + silceStartCount;
+        if (allSpan[i].innerText == "(undefined" + silceStartCount) {
+          allSpan[i].innerText =
+            `(${silceStartCount.slice(1, 2)}` + silceStartCount;
+        }
+      } else {
+        allSpan[i].innerText =
+          `(${silceStartCount.slice(1, 2)}` + silceStartCount;
+      }
+    }
+  }
+  // }
+
+  let priceMinValue = <HTMLInputElement>document.querySelector(".from-price");
+  let priceMaxValue = <HTMLInputElement>document.querySelector(".to-price");
+  let stockMinValue = <HTMLInputElement>document.querySelector(".from-stock");
+  let stockMaxValue = <HTMLInputElement>document.querySelector(".to-stock");
+
+  let priceMin = <HTMLInputElement>document.querySelector(".min-price-dot");
+  let priceMax = <HTMLInputElement>document.querySelector(".max-price-dot");
+  let stockMin = <HTMLInputElement>document.querySelector(".min-stock-dot");
+  let stockMax = <HTMLInputElement>document.querySelector(".max-stock-dot");
+
+  if (emptyPage !=null && emptyPage.style.display == "flex") {
+    priceMinValue.innerText = String(Math.min.apply(null, priceRange));
+    priceMaxValue.innerText = String(Math.max.apply(null, priceRange));
+    stockMinValue.innerText = String(Math.min.apply(null, stockRange));
+    stockMaxValue.innerText = String(Math.max.apply(null, stockRange));
+  } else {
+    priceMinValue.innerText = String(Math.min.apply(null, prices));
+    priceMaxValue.innerText = String(Math.max.apply(null, prices));
+    stockMinValue.innerText = String(Math.min.apply(null, stocks));
+    stockMaxValue.innerText = String(Math.max.apply(null, stocks));
+  }
+  priceMin.value = String(priceRange.indexOf(Number(priceMinValue.innerText)));
+  priceMax.value = String(priceRange.indexOf(Number(priceMaxValue.innerText)));
+  stockMin.value = String(stockRange.indexOf(Number(stockMinValue.innerText)));
+  stockMax.value = String(stockRange.indexOf(Number(stockMaxValue.innerText)));
+}
+
+startSPanForCheckbox();
+let p_found = <HTMLElement>document.querySelector(".found");
+let counter_found = 21;
+for (let i = 0; i < checkboxesP.length; i++) {
+  checkboxesP[i].addEventListener("click", (e) => {
+    let eventElem = <HTMLInputElement>e.target;
+    let currentSpan = <HTMLElement>checkboxesP[i].lastElementChild;
+    if (eventElem.nodeName == "INPUT") {
+      eventElem.addEventListener("change", (eventElem)=>{
+        filter()});
+      changeSpanForCheckbox(currentSpan, mathcedFinal);
     }
   });
 }
+
+let cards: Array<HTMLElement> = Array.from(document.querySelectorAll(".products-card")),
+  cardTitle:string[] = [],
+  cardCountLeft = document.querySelectorAll(".countFilters"),
+  cardCountLeftActive = [],
+  checkedArr = [];
+
+for (let i = 0; i < cards.length; i++) {
+  cardTitle[i] = cards[i].innerText.trim();
+}
+let checkboxC:string[] = [];
+let checkboxB:string[] = [];
+let checkedArrId: string[] = [];
+
+function filter() {
+  emptyPage.style.display = "none";
+  checkboxC.length = 0;
+  checkboxB.length = 0;
+  let checkedArr = checkboxes.filter((item) => item.checked);
+  for (let i = 0; i < checkedArr.length; i++) {
+    checkedArrId[i] = checkedArr[i].id;
+  }
+  counter_found = 0;
+  for (let i = 0; i < cards.length; i++) {
+    if (checkedArrId.includes(dataProducts[i].brand)) {
+      checkboxB.push(dataProducts[i].title);
+    } else {
+      if (checkboxB.includes(dataProducts[i].title)) {
+        checkboxB.splice(checkboxB.indexOf(dataProducts[i].title), 1);
+      }
+    }
+    if (checkedArrId.includes(dataProducts[i].category)) {
+      checkboxC.push(dataProducts[i].title);
+    } else {
+      if (checkboxC.includes(dataProducts[i].title)) {
+        checkboxC.splice(checkboxC.indexOf(dataProducts[i].title), 1);
+      }
+    }
+  }
+  checkAllFilters(resultSearch, checkboxC, checkboxB, rangeCarts);
+}
+
+let emptyPage = <HTMLElement>document.querySelector(".wrapper-empty-product");
+let searchFilter = <HTMLInputElement>document.querySelector(".search");
+let resultSearch:string[] = [];
+let textSearch = "";
+searchFilter.addEventListener("input", () => {
+  emptyPage.style.display = "none";
+  resultSearch.length = 0;
+  textSearch = searchFilter.value.toLowerCase();
+  for (let i = 0; i < dataProducts.length; i++) {
+          let currentCard: { [index: string]: any } = dataProducts[i];
+          for (let key in currentCard) {
+            if (
+              currentCard.hasOwnProperty(key) &&
+              key != "id" &&
+              key != "thumbnail" &&
+              key != "images"
+            ) {
+              if (currentCard[key].toString().toLowerCase().includes(textSearch)) {
+                resultSearch.push(dataProducts[i].title);
+                break;
+              }
+            }
+          }
+        }
+  checkAllFilters(resultSearch, checkboxC, checkboxB, rangeCarts);
+  changeSpanForCheckbox(0, mathcedFinal);
+});
+
+//фильтрация по стоимости и по стоку
+
+let priceRange:number[] = [];
+let stockRange:number[] = [];
+for (let i = 0; i < dataProducts.length; i++) {
+  priceRange.push(dataProducts[i].price);
+  stockRange.push(dataProducts[i].stock);
+}
+
+let priceMinValue = <HTMLInputElement>document.querySelector(".from-price");
+let priceMaxValue = <HTMLInputElement>document.querySelector(".to-price");
+let stockMinValue = <HTMLInputElement>document.querySelector(".from-stock");
+let stockMaxValue = <HTMLInputElement>document.querySelector(".to-stock");
+
+let priceMin = <HTMLInputElement>document.querySelector(".min-price-dot");
+let priceMax = <HTMLInputElement>document.querySelector(".max-price-dot");
+let stockMin = <HTMLInputElement>document.querySelector(".min-stock-dot");
+let stockMax = <HTMLInputElement>document.querySelector(".max-stock-dot");
+
+priceMinValue.innerText = String(Math.min.apply(null, priceRange));
+priceMaxValue.innerText = String(Math.max.apply(null, priceRange));
+stockMinValue.innerText = String(Math.min.apply(null, stockRange));
+stockMaxValue.innerText = String(Math.max.apply(null, stockRange));
+
+priceRange.sort(function (a, b) {
+  return a - b;
+});
+
+stockRange.sort(function (a, b) {
+  return a - b;
+});
+
+// let priceMin = document.querySelector(".min-price-dot");
+// let priceMax = document.querySelector(".max-price-dot");
+
+// let stockMin = document.querySelector(".min-stock-dot");
+// let stockMax = document.querySelector(".max-stock-dot");
+
+let rangeCarts:string[] = [];
+
+function priceRangeFilter(toInnerText:HTMLElement, arrayRange:number[], innerText:HTMLInputElement) {
+  rangeCarts.length = 0;
+  counter_found = 0;
+  let minP = Number(priceRange[Number(priceMin.value)]);
+  let maxP = Number(priceRange[Number(priceMax.value)]);
+  let minS = Number(stockRange[Number(stockMin.value)]);
+  let maxS = Number(stockRange[Number(stockMax.value)]);
+  let filtValuesP = priceRange.filter((item) => item >= minP && item <= maxP);
+  let filtValuesS = stockRange.filter((item) => item >= minS && item <= maxS);
+
+  for (let i = 0; i < cards.length; i++) {
+    for (let j = 0; j < filtValuesP.length; j++) {
+      if (
+        filtValuesP.includes(dataProducts[i].price) &&
+        filtValuesS.includes(dataProducts[i].stock)
+      ) {
+        cards[cardTitle.indexOf(dataProducts[i].title)].style.display = "block";
+        counter_found++;
+        rangeCarts.push(
+          cards[cardTitle.indexOf(dataProducts[i].title)].innerText
+        );
+        break;
+      }
+      cards[cardTitle.indexOf(dataProducts[i].title)].style.display = "none";
+    }
+  }
+  toInnerText.innerText = String(arrayRange[Number(innerText.value)]);
+  p_found.innerText = `Found: ${counter_found}`;
+
+  checkAllFilters(resultSearch, checkboxC, checkboxB, rangeCarts);
+  
+}
+
+priceMin.addEventListener("change", () => {
+  priceRangeFilter(priceMinValue, priceRange, priceMin);
+});
+
+priceMax.addEventListener("change", () => {
+  priceRangeFilter(priceMaxValue, priceRange, priceMax);
+});
+
+stockMin.addEventListener("change", () => {
+  priceRangeFilter(stockMinValue, stockRange, stockMin);
+});
+
+stockMax.addEventListener("change", () => {
+  priceRangeFilter(stockMaxValue, stockRange, stockMax);
+});
+
+let mathcedFinal:string[] = [];
+function checkAllFilters(searchFilter:string[], checkboxC:string[], checkboxB:string[], rangeFilter:string[]) {
+  if (checkedArr.length == 0 && textSearch == "" && rangeFilter.length == 21) {
+    for (let i = 0; i < cards.length; i++) {
+      cards[i].style.display = "block";
+    }
+    priceMinValue.innerText = String(Math.min.apply(null, priceRange));
+    priceMaxValue.innerText = String(Math.max.apply(null, priceRange));
+    stockMinValue.innerText = String(Math.min.apply(null, stockRange));
+    stockMaxValue.innerText = String(Math.max.apply(null, stockRange));
+
+    priceMin.value = String(priceRange.indexOf(Number(priceMinValue.innerText)));
+    priceMax.value = String(priceRange.indexOf(Number(priceMaxValue.innerText)));
+    stockMin.value = String(stockRange.indexOf(Number(stockMinValue.innerText)));
+    stockMax.value = String(stockRange.indexOf(Number(stockMaxValue.innerText)));
+    startSPanForCheckbox();
+    p_found.innerText = `Found: 21`;
+  } else {
+    if (searchFilter.length == 0) {
+      searchFilter = cardTitle;
+    }
+    if (checkboxC.length == 0) {
+      checkboxC = cardTitle;
+    }
+    if (checkboxB.length == 0) {
+      checkboxB = cardTitle;
+    }
+    if (rangeFilter.length == 0) {
+      rangeFilter = cardTitle;
+    }
+    let matched1 = searchFilter.filter((el) => rangeFilter.indexOf(el) > -1);
+    let matched2 = checkboxB.filter((el) => checkboxC.indexOf(el) > -1);
+    mathcedFinal = matched1.filter((el) => matched2.indexOf(el) > -1);
+    changeSpanForCheckbox(0, mathcedFinal);
+    if (mathcedFinal.length == 0) {
+      emptyPage.style.display = "flex";
+      for (let i = 0; i < cards.length; i++) {
+        cards[i].style.display = "none";
+      }
+      p_found.innerText = `Found: 0`;
+    } else {
+      emptyPage.style.display = "none";
+      for (let i = 0; i < cards.length; i++) {
+        if (mathcedFinal.includes(cards[i].innerText.trim())) {
+          cards[i].style.display = "block";
+        } else {
+          cards[i].style.display = "none";
+        }
+      }
+      p_found.innerText = `Found: ${mathcedFinal.length}`;
+    }
+  }
+}
+}
+

@@ -600,7 +600,12 @@ input[type="range"] {
     outline: 0;
   }
   
-  .input-max {
+  .max-price-dot {
+    position: absolute;
+    top: -6px;
+  }
+  
+  .max-stock-dot {
     position: absolute;
     top: -6px;
   }
