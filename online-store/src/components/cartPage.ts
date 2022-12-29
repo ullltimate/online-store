@@ -60,11 +60,12 @@ const cartPageLayout: string =
               <li>Total:</li>
             </ul>
             <ul>
-              <li>0</li>
-              <li>€0</li>
+              <li class="summary-count">0</li>
+              <li class="summary-total-summa">€0</li>
+              <li class="summary-total-summa-discount"></li>
             </ul>
           </div>
-          <input type="text" placeholder="Enter promo code" />
+          <input type="text" class="search-promo" placeholder="Enter promo code" />
           <p class="promo font">Promo for Test: 'RS', 'EPM'</p>
           <button class="toModal">Buy now</button>
         </div>
@@ -82,9 +83,12 @@ export default function cartProduct(): void{
   } else {
     main.innerHTML = cartPageLayout;
     let point:number = 0;
+    let summaryCount = <HTMLElement>document.querySelector('.summary-count');
+    let summaryTotalSumma = <HTMLElement>document.querySelector('.summary-total-summa');
+    summaryCount.innerHTML = `${localStorage.getItem('count')}`;
+    summaryTotalSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
 
     let idArrayCartLocSor = localStorage.getItem('idArrayCart')?.split('-');
-
     let productsCartWrap = document.querySelector('.products-cart-wrapper');
     for (let i=0; i<dataProducts.length; i++){
       if(idArrayCartLocSor != undefined){
@@ -106,7 +110,7 @@ export default function cartProduct(): void{
                   <div class="cart-info-description-and-count wrap">
                     <p class="cart-info-desc font">${dataProducts[i].description}</p>
                     <div class="cart-info-count">
-                      <p class="font">STOCK: ${dataProducts[i].stock}</p>
+                      <p class="font">STOCK: <a class='stock-amount'>${dataProducts[i].stock}</a></p>
                       <div class="cart-info-current-count wrap">
                         <div class="round-sign sign-add wrap">+</div>
                         <p class="font sign-count">${idArrAmountCountAndSum[0]}</p>
@@ -142,7 +146,7 @@ export default function cartProduct(): void{
                 <div class="cart-info-description-and-count wrap">
                   <p class="cart-info-desc font">${dataProducts[i].description}</p>
                   <div class="cart-info-count">
-                    <p class="font">STOCK: ${dataProducts[i].stock}</p>
+                    <p class="font">STOCK: <a class='stock-amount'>${dataProducts[i].stock}</a></p>
                     <div class="cart-info-current-count wrap">
                       <div class="round-sign sign-add wrap">+</div>
                       <p class="font sign-count">1</p>
@@ -170,25 +174,45 @@ export default function cartProduct(): void{
         }
       }
     }
+
     let allCardsToCart: HTMLElement[] = Array.from(document.querySelectorAll('.card-cart'));
     let allSignCount: HTMLElement[] = Array.from(document.querySelectorAll('.sign-count'));
     let allCountSumma: HTMLElement[] = Array.from(document.querySelectorAll('.count-summa'));
     let countProduct = <HTMLElement>document.querySelector('.count');
     let totalCardSumma = <HTMLElement>document.querySelector('.summa');
+    let amountStock: HTMLElement[] = Array.from(document.querySelectorAll('.stock-amount'));
 
     for(let i=0; i<allCardsToCart.length; i++){
       allCardsToCart[i].addEventListener('click', (e) => {
           let event = <HTMLElement>e.target;
           if(event.classList.contains('sign-add')){
-            allSignCount[i].innerHTML = `${Number(allSignCount[i].innerHTML)+1}`;
-            for (let o=0; o<dataProducts.length; o++){
-              if(allCardsToCart[i].id === String(dataProducts[o].id)){
-                allCountSumma[i].innerHTML = `${dataProducts[o].price * Number(allSignCount[i].innerHTML)}`;
-                localStorage.setItem(`${allCardsToCart[i].id}`, `${allSignCount[i].innerHTML}-${allCountSumma[i].innerHTML }`);
-                localStorage.setItem('count', `${Number(localStorage.getItem('count'))+1}`);
-                countProduct.innerHTML = `${localStorage.getItem('count')}`;
-                localStorage.setItem('totalCard', `${Number(localStorage.getItem('totalCard'))+dataProducts[o].price}`);
-                totalCardSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
+            if (amountStock[i].innerHTML === allSignCount[i].innerHTML){
+              return;
+            } else {
+              allSignCount[i].innerHTML = `${Number(allSignCount[i].innerHTML)+1}`;
+              for (let o=0; o<dataProducts.length; o++){
+                if(allCardsToCart[i].id === String(dataProducts[o].id)){
+                  allCountSumma[i].innerHTML = `${dataProducts[o].price * Number(allSignCount[i].innerHTML)}`;
+                  localStorage.setItem(`${allCardsToCart[i].id}`, `${allSignCount[i].innerHTML}-${allCountSumma[i].innerHTML }`);
+                  localStorage.setItem('count', `${Number(localStorage.getItem('count'))+1}`);
+                  countProduct.innerHTML = `${localStorage.getItem('count')}`;
+                  localStorage.setItem('totalCard', `${Number(localStorage.getItem('totalCard'))+dataProducts[o].price}`);
+                  totalCardSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
+                  summaryCount.innerHTML = `${localStorage.getItem('count')}`;
+                  summaryTotalSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
+                  if(localStorage.getItem('promo') != undefined){
+                    if(localStorage.getItem('promo')?.split('-').length === 3){
+                      summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.2}`;
+                      summaryTotalSumma.style.textDecoration = 'line-through';
+                    } else if(localStorage.getItem('promo')?.split('-').length === 2) {
+                      summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.1}`;
+                      summaryTotalSumma.style.textDecoration = 'line-through';
+                    } else if(localStorage.getItem('promo')?.split('-').length === 1){
+                      summaryTotalSummaDiscount.innerHTML = '';
+                      summaryTotalSumma.style.textDecoration = 'none';
+                    }
+                  }
+                }
               }
             }
           } else if(event.classList.contains('sign-remove')){
@@ -210,6 +234,8 @@ export default function cartProduct(): void{
                   idArrCartLocal = idArrCartLocal.replace(str, '');
                   localStorage.setItem('idArrayCart', `${idArrCartLocal}`)
                 }
+                summaryCount.innerHTML = `${localStorage.getItem('count')}`;
+                summaryTotalSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
               } else{
                 allCardsToCart[i].remove();
                 localStorage.removeItem(`${allCardsToCart[i].id}`);
@@ -227,6 +253,20 @@ export default function cartProduct(): void{
                   localStorage.setItem('count', `${Number(localStorage.getItem('count'))-1}`);
                   countProduct.innerHTML = `${localStorage.getItem('count')}`;
                 }
+                summaryCount.innerHTML = `${localStorage.getItem('count')}`;
+                summaryTotalSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
+                if(localStorage.getItem('promo') != undefined){
+                  if(localStorage.getItem('promo')?.split('-').length === 3){
+                    summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.2}`;
+                    summaryTotalSumma.style.textDecoration = 'line-through';
+                  } else if(localStorage.getItem('promo')?.split('-').length === 2) {
+                    summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.1}`;
+                    summaryTotalSumma.style.textDecoration = 'line-through';
+                  } else if(localStorage.getItem('promo')?.split('-').length === 1){
+                    summaryTotalSummaDiscount.innerHTML = '';
+                    summaryTotalSumma.style.textDecoration = 'none';
+                  }
+                }
               }
             } else {
               allSignCount[i].innerHTML = `${Number(allSignCount[i].innerHTML)-1}`;
@@ -240,11 +280,143 @@ export default function cartProduct(): void{
                   totalCardSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
                 }
               }
+              summaryCount.innerHTML = `${localStorage.getItem('count')}`;
+              summaryTotalSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
+              if(localStorage.getItem('promo') != undefined){
+                if(localStorage.getItem('promo')?.split('-').length === 3){
+                  summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.2}`;
+                  summaryTotalSumma.style.textDecoration = 'line-through';
+                } else if(localStorage.getItem('promo')?.split('-').length === 2) {
+                  summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.1}`;
+                  summaryTotalSumma.style.textDecoration = 'line-through';
+                } else if(localStorage.getItem('promo')?.split('-').length === 1){
+                  summaryTotalSummaDiscount.innerHTML = '';
+                  summaryTotalSumma.style.textDecoration = 'none';
+                }
+              }
             }
           }
       })
     }
 
+    let inputSearchPromo = <HTMLInputElement>document.querySelector('.search-promo');
+    let summaryTotalSummaDiscount = <HTMLElement>document.querySelector('.summary-total-summa-discount');
+
+    let rsPromo: HTMLElement = document.createElement('div');
+    rsPromo.className = 'rs-promo';
+    rsPromo.innerHTML = `Rolling Scopes School - 10% <span>ADD</span>`;
+
+    let epmPromo: HTMLElement = document.createElement('div');
+    epmPromo.className = 'epm-promo';
+    epmPromo.innerHTML = `EPAM Systems - 10% <span>ADD</span>`;
+
+    let rsPromoAdded: HTMLElement = document.createElement('div');
+    rsPromoAdded.className = 'rs-promo-added';
+    rsPromoAdded.innerHTML = `Rolling Scopes School - 10% <span>DROP</span>`;
+
+    let epmPromoAdded: HTMLElement = document.createElement('div');
+    epmPromoAdded.className = 'epm-promo-added';
+    epmPromoAdded.innerHTML = `EPAM Systems - 10% <span>DROP</span>`;
+
+    let summaryBlock = <HTMLElement>document.querySelector('.summary-cart');
+    let allSummaryElement: HTMLCollection = summaryBlock.children;
+
+    rsPromo.addEventListener('click', (e) => {
+      let eventElem = <HTMLElement>e.target;
+      addBlockPromocod(eventElem);
+    });
+    epmPromo.addEventListener('click', (e) => {
+      let eventElem = <HTMLElement>e.target;
+      addBlockPromocod(eventElem);
+    })
+
+    epmPromoAdded.addEventListener('click', (e) => {
+      let eventElem = <HTMLElement>e.target;
+      addBlockPromocod(eventElem);
+    });
+    rsPromoAdded.addEventListener('click', (e) => {
+      let eventElem = <HTMLElement>e.target;
+      addBlockPromocod(eventElem);
+    });
+
+    inputSearchPromo.addEventListener('input', () => {
+        if (inputSearchPromo.value.toLocaleLowerCase() === 'rs' || inputSearchPromo.value.toLocaleLowerCase() === 'epm'){
+          if (inputSearchPromo.value.toLocaleLowerCase() === 'rs'){
+            inputSearchPromo.after(rsPromo);
+          }
+          if (inputSearchPromo.value.toLocaleLowerCase() === 'epm'){
+            inputSearchPromo.after(epmPromo);
+          }
+        } else {
+          rsPromo.remove();
+          epmPromo.remove();
+        }
+    })
+    
+    let promoLocal:string ='';
+    if(localStorage.getItem('promo') != undefined){
+      promoLocal = String(localStorage.getItem('promo'));
+    }
+
+    function addBlockPromocod(promo: HTMLElement){
+      if (promo.innerHTML === 'ADD'){
+        if (promo.parentElement != null){
+          if(promo.parentElement.classList.contains('rs-promo')){
+            inputSearchPromo.before(rsPromoAdded);
+            promoLocal += '-rs';
+          } else {
+            inputSearchPromo.before(epmPromoAdded);
+            promoLocal += '-epm';
+          }
+          if (allSummaryElement.length === 7){
+            summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.1}`;
+            summaryTotalSumma.style.textDecoration = 'line-through';
+          } 
+          if(allSummaryElement.length === 8){
+            summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.2}`;
+            summaryTotalSumma.style.textDecoration = 'line-through';
+          }
+        }
+        promoLocal = [...new Set(promoLocal.split('-'))].join('-');
+        localStorage.setItem('promo', `${promoLocal}`);
+      } else if (promo.innerHTML === 'DROP'){
+        if(promo.parentElement != null){
+          if(promo.parentElement.classList.contains('rs-promo-added')){
+            promo.parentElement.remove();
+            let str = '-rs';
+            promoLocal = promoLocal.replace(str, '');
+          } else {
+            promo.parentElement.remove();
+            let str = '-epm';
+            promoLocal = promoLocal.replace(str, '');
+          }
+          summaryTotalSummaDiscount.innerHTML = `${Math.round(Number(summaryTotalSummaDiscount.innerHTML)+Number(localStorage.getItem('totalCard'))*0.1)}`;
+        }
+        if(summaryTotalSummaDiscount.innerHTML === summaryTotalSumma.innerHTML){
+          summaryTotalSummaDiscount.innerHTML = '';
+          summaryTotalSumma.style.textDecoration = 'none';
+        }
+        localStorage.setItem('promo', `${promoLocal}`);
+        console.log(promoLocal)
+      } 
+    }
+
+    if(localStorage.getItem('promo') != undefined){
+      if(localStorage.getItem('promo')?.split('-').length === 3){
+        inputSearchPromo.before(epmPromoAdded);
+        inputSearchPromo.before(rsPromoAdded);
+        summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.2}`;
+        summaryTotalSumma.style.textDecoration = 'line-through';
+      } else if(localStorage.getItem('promo') === '-rs'){
+        inputSearchPromo.before(rsPromoAdded);
+        summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.1}`;
+        summaryTotalSumma.style.textDecoration = 'line-through';
+      } else if(localStorage.getItem('promo') === '-epm'){
+        inputSearchPromo.before(epmPromoAdded);
+        summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.1}`;
+        summaryTotalSumma.style.textDecoration = 'line-through';
+      }
+    }
 
     let toModal = <HTMLElement>document.querySelector(".toModal");
     let modalBg = <HTMLElement>document.querySelector(".modal-background");
@@ -252,8 +424,7 @@ export default function cartProduct(): void{
     let closeModal = <HTMLElement>document.querySelector(".modal-close");
   
     toModal.addEventListener("click", () => {
-      modalBg.style.display = "block";
-      modalWindow.style.display = "flex";
+      buyNow();
     });
   
     closeModal.addEventListener("click", () => {
@@ -261,4 +432,10 @@ export default function cartProduct(): void{
       modalWindow.style.display = "none";
     });
   }
+}
+export function buyNow(){
+  let modalBg = <HTMLElement>document.querySelector(".modal-background");
+  let modalWindow = <HTMLElement>document.querySelector(".modal-window");
+  modalBg.style.display = "block";
+  modalWindow.style.display = "flex";
 }

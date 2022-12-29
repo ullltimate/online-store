@@ -1174,3 +1174,17 @@ input[type="range"] {
     color: #fff;
     cursor: pointer;
   }
+
+  .rs-promo,
+  .epm-promo,
+  .rs-promo-added,
+  .epm-promo-added{
+    margin-bottom: 10px;
+  }
+  .rs-promo span,
+  .rs-promo-added span,
+  .epm-promo-added span,
+  .epm-promo span{
+    background: #940030;
+    color: #fff;
+  }
