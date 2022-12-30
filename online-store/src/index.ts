@@ -19,15 +19,20 @@ const getRoute = () => {
             path: '/404',
             data: page404,
         },
-        {
-            path: '/product',
-            data: productPage,
-        },
     ];
 
+    for (let i=0; i<dataProducts.length; i++){
+        routes.unshift(
+            {
+                path: `/product-${dataProducts[i].id}`,
+                data: productPage,
+            }
+        )
+    }
+    
     let handleLocation = () => {
         const html = routes.find((route) => route.path === location.pathname) || routes.at(-1);
-
+        console.log(html)
         const main = <HTMLElement | null> document.querySelector('.main');
 
         if (main !== null) {
