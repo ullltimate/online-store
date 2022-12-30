@@ -139,13 +139,18 @@ export default function home(): void {
     let productsCard = <HTMLElement>document.createElement("div");
     productsCard.className = "products-card";
     productsCard.id = `${dataProducts[i].id}`;
-    productsCard.innerHTML = `<div class="products-card-image">
-            <img src="${dataProducts[i].thumbnail}" alt="" class="card-image">
-        </div>
+    productsCard.innerHTML = 
+        `<a href = '/product-${dataProducts[i].id}'>
+          <div class="products-card-image">
+              <img src="${dataProducts[i].thumbnail}" alt="" class="card-image">
+          </div>
+        </a>
         <div class="products-card-title wrap">
+          <a href = '/product-${dataProducts[i].id}'>  
             <img src="https://i.ibb.co/b1fRcKR/icons8-100-1.png" alt="" class="card-expand-img">
-            <p class="card-title font">${dataProducts[i].title}</p>
-            <img src="https://i.ibb.co/b2V2ZLR/shopping-cart-icon-196876-1.png" alt='' class="card-basket-img">
+          </a>
+          <p class="card-title font">${dataProducts[i].title}</p>
+          <img src="https://i.ibb.co/b2V2ZLR/shopping-cart-icon-196876-1.png" alt='' class="card-basket-img">
         </div>`;
     productsCards.append(productsCard);
     if (
@@ -156,20 +161,19 @@ export default function home(): void {
       if (idArrayCartLocSor != undefined) {
         for (let j = 0; j < idArrayCartLocSor?.length; j++) {
           if (dataProducts[i].id === Number(idArrayCartLocSor[j])) {
-            productsCard.innerHTML = `<div class="products-card-image">
-                                    <img src="${
-                                      dataProducts[i].thumbnail
-                                    }" alt="" class="card-image">
-                                </div>
-                                <div class="products-card-title wrap">
-                                    <img src="https://i.ibb.co/b1fRcKR/icons8-100-1.png" alt="" class="card-expand-img">
-                                    <p class="card-title font">${
-                                      dataProducts[i].title
-                                    }</p>
-                                    <img src="${localStorage.getItem(
-                                      "basketSrc"
-                                    )}" alt='' class="card-basket-img">
-                                </div>`;
+            productsCard.innerHTML = 
+            `<a href = '/product-${dataProducts[i].id}'>
+              <div class="products-card-image">
+                <img src="${dataProducts[i].thumbnail}" alt="" class="card-image">
+              </div>
+            </a>    
+            <div class="products-card-title wrap">
+              <a href = '/product-${dataProducts[i].id}'>  
+                <img src="https://i.ibb.co/b1fRcKR/icons8-100-1.png" alt="" class="card-expand-img">
+              </a>
+              <p class="card-title font">${dataProducts[i].title}</p>
+              <img src="https://i.ibb.co/V3mPKbP/icons8-48.png" alt='' class="card-basket-img">
+            </div>`;
           }
         }
       }
@@ -208,7 +212,7 @@ export default function home(): void {
                 localStorage.setItem('count', String(count));
                 localStorage.setItem('totalCard', String(summa));
             } else {
-                productPage(i, allCards[i].id);
+                //productPage(i, allCards[i].id);
             }
         });
     }
@@ -236,7 +240,7 @@ export default function home(): void {
             elem.src = "https://i.ibb.co/V3mPKbP/icons8-48.png";
             count += 1;
             countProduct.innerHTML = `${count}`;
-            localStorage.setItem('basketSrc', elem.src);
+            //localStorage.setItem('basketSrc', elem.src);
             if (id != undefined){
                 idArrayElemAddCart += `-${id}`;
                 for (let i=0; i<dataProducts.length; i++){

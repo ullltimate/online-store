@@ -44,51 +44,84 @@ const productPageLayout: string =
   </div>
 </div>`
 
-export default function productPage(i: number, id: string): void{
-
+export default function productPage(): void{
+  console.log(location.pathname)
+  let id: string = location.pathname.slice(location.pathname.indexOf('-')+1);
+  console.log(id);
   let main = <HTMLElement>document.querySelector('.main');
   main.innerHTML = productPageLayout;
 
   let title = <HTMLElement>document.querySelector(".product-title");
-  title.innerText = dataProducts[i].title;
-
-  let description = <HTMLElement>(
-    document.querySelector(".product-description")
-  );
-  description.innerText = dataProducts[i].description;
-
+  let description = <HTMLElement>(document.querySelector(".product-description"));
   let rating = <HTMLElement>document.querySelector(".product-rating");
-  rating.innerText = String(dataProducts[i].rating);
-
   let stock = <HTMLElement>document.querySelector(".product-stock");
-  stock.innerText = String(dataProducts[i].stock);
-
   let brand = <HTMLElement>document.querySelector(".product-brand");
-  brand.innerText = dataProducts[i].brand;
-
   let category = <HTMLElement>document.querySelector(".product-category");
-  category.innerText = dataProducts[i].category;
-
-  let discount = <HTMLElement>(
-    document.querySelector(".product-discountPercentage")
-  );
-  discount.innerText = String(dataProducts[i].discountPercentage);
-
+  let discount = <HTMLElement>(document.querySelector(".product-discountPercentage"));
   let path = <HTMLElement>document.querySelector(".path-product");
-  path.innerText = `Store > ${dataProducts[i].category} > ${dataProducts[i].brand} > ${dataProducts[i].title}`;
-
-  let main_page = <HTMLElement>document.querySelector(".photos-main");
-  main_page.style.background = `url('${dataProducts[i].images[0]}') no-repeat`;
-  for (let j = 0; j < 3; j++) {
-    let k = <HTMLElement>document.getElementsByClassName("photo-other")[j];
-    k.style.backgroundImage = `url('${dataProducts[i].images[j]}')`;
-    k.style.backgroundSize = "cover";
-    k.addEventListener("click", () => {
-      main_page.style.backgroundImage = `url('${dataProducts[i].images[j]}')`;
-    });
-  }
   let cost = <HTMLElement>document.querySelector(".cost-product");
-  cost.innerText = `€${dataProducts[i].price}`;
+  let main_page = <HTMLElement>document.querySelector(".photos-main");
+  for (let j=0; j<dataProducts.length; j++){
+    if (dataProducts[j].id === Number(id)){
+      title.innerText = dataProducts[j].title;
+      description.innerText = dataProducts[j].description;
+      rating.innerText = String(dataProducts[j].rating);
+      stock.innerText = String(dataProducts[j].stock);
+      brand.innerText = dataProducts[j].brand;
+      category.innerText = dataProducts[j].category;
+      discount.innerText = String(dataProducts[j].discountPercentage);
+      path.innerText = `Store > ${dataProducts[j].category} > ${dataProducts[j].brand} > ${dataProducts[j].title}`;
+      cost.innerText = `${dataProducts[j].price}`;
+      main_page.style.background = `url('${dataProducts[j].thumbnail}') no-repeat`;
+      for (let o = 0; o < 3; o++) {
+        let k = <HTMLElement>document.getElementsByClassName("photo-other")[o];
+        k.style.backgroundImage = `url('${dataProducts[j].images[o]}')`;
+        k.style.backgroundSize = "cover";
+        k.addEventListener("click", () => {
+          main_page.style.backgroundImage = `url('${dataProducts[j].images[o]}')`;
+        });
+      }
+    }
+  }
+  //let title = <HTMLElement>document.querySelector(".product-title");
+  //title.innerText = dataProducts[i].title;
+
+  //let description = <HTMLElement>(document.querySelector(".product-description"));
+  //description.innerText = dataProducts[i].description;
+
+  //let rating = <HTMLElement>document.querySelector(".product-rating");
+  //rating.innerText = String(dataProducts[i].rating);
+
+  //let stock = <HTMLElement>document.querySelector(".product-stock");
+  //stock.innerText = String(dataProducts[i].stock);
+
+  //let brand = <HTMLElement>document.querySelector(".product-brand");
+  //brand.innerText = dataProducts[i].brand;
+
+  //let category = <HTMLElement>document.querySelector(".product-category");
+  //category.innerText = dataProducts[i].category;
+
+  //let discount = <HTMLElement>(document.querySelector(".product-discountPercentage"));
+  //discount.innerText = String(dataProducts[i].discountPercentage);
+
+  //let path = <HTMLElement>document.querySelector(".path-product");
+  //path.innerText = `Store > ${dataProducts[i].category} > ${dataProducts[i].brand} > ${dataProducts[i].title}`;
+
+  //let main_page = <HTMLElement>document.querySelector(".photos-main");
+  //main_page.style.background = `url('${dataProducts[i].images[0]}') no-repeat`;
+  //for (let j = 0; j < 3; j++) {
+  //  let k = <HTMLElement>document.getElementsByClassName("photo-other")[j];
+  //  k.style.backgroundImage = `url('${dataProducts[i].images[j]}')`;
+  //  k.style.backgroundSize = "cover";
+  //  k.addEventListener("click", () => {
+  //    main_page.style.backgroundImage = `url('${dataProducts[i].images[j]}')`;
+  //  });
+  //}
+  //let cost = <HTMLElement>document.querySelector(".cost-product");
+  //cost.innerText = `€${dataProducts[i].price}`;
+
+
+
 
   let btnAdd = <HTMLElement>document.querySelector('.btn-add');
   let count: number = 0;
@@ -133,7 +166,7 @@ export default function productPage(i: number, id: string): void{
       countProduct.innerHTML = `${count}`;
       idArrayElemAddCart += `-${id}`;
       localStorage.setItem('idArrayCart', idArrayElemAddCart);
-      summa += dataProducts[i].price;
+      summa += Number(cost.innerText);
       localStorage.setItem('totalCard', `${summa}`);
       totalCardSumma.innerHTML = `${summa}`;
     } else {
@@ -160,7 +193,7 @@ export default function productPage(i: number, id: string): void{
         let str = `-${id}`;
         idArrayElemAddCart = idArrayElemAddCart.replace(str, '');
         localStorage.setItem('idArrayCart', idArrayElemAddCart);
-        summa -= dataProducts[i].price;
+        summa -= Number(cost.innerText);
         localStorage.setItem('totalCard', `${summa}`);
         totalCardSumma.innerHTML = `${summa}`;
       }
@@ -177,7 +210,7 @@ export default function productPage(i: number, id: string): void{
       countProduct.innerHTML = `${count}`;
       idArrayElemAddCart += `-${id}`;
       localStorage.setItem('idArrayCart', idArrayElemAddCart);
-      summa += dataProducts[i].price;
+      summa += Number(cost.innerText);
       localStorage.setItem('totalCard', `${summa}`);
       totalCardSumma.innerHTML = `${summa}`;
       cartProduct();

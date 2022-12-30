@@ -427,6 +427,9 @@ textarea {
 .basket-img{
     width: 44px;
 }
+.header a{
+  text-decoration: none;
+}
 
 /* end header style */
 
@@ -579,6 +582,11 @@ input[type=checkbox]:checked{
 }
 .card-basket-img{
     max-width: 35px;
+}
+.card-basket-img:hover{
+  cursor: pointer;
+  border: 2px solid #940030;
+  border-radius: 10px;
 }
 .products-card-title{
     padding: 10px;
@@ -832,13 +840,17 @@ input[type="range"] {
     width: 80vw;
     height: 70vh;
   } */ 
-  .empty-cart{
+  .empty-cart,
+  .not-fount{
     text-align: center;
     padding-top: 40px;
     height: 60vh;
     margin-bottom: 19vh;
     background: rgba(255, 173, 158, 0.29);
     border-radius: 10px;
+  }
+  .not-fount{
+    font-size: 50px;
   }
   .cart-wrapper{
     justify-content: space-between;
