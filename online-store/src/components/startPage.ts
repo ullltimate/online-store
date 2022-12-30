@@ -172,7 +172,7 @@ export default function home(): void {
                 <img src="https://i.ibb.co/b1fRcKR/icons8-100-1.png" alt="" class="card-expand-img">
               </a>
               <p class="card-title font">${dataProducts[i].title}</p>
-              <img src="${localStorage.getItem("basketSrc")}" alt='' class="card-basket-img">
+              <img src="https://i.ibb.co/V3mPKbP/icons8-48.png" alt='' class="card-basket-img">
             </div>`;
           }
         }
@@ -240,7 +240,7 @@ export default function home(): void {
             elem.src = "https://i.ibb.co/V3mPKbP/icons8-48.png";
             count += 1;
             countProduct.innerHTML = `${count}`;
-            localStorage.setItem('basketSrc', elem.src);
+            //localStorage.setItem('basketSrc', elem.src);
             if (id != undefined){
                 idArrayElemAddCart += `-${id}`;
                 for (let i=0; i<dataProducts.length; i++){
