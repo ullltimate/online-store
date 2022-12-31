@@ -1,17 +1,13 @@
-import cartProduct from './cartPage';
-import dataProducts from './dataProducts';
-import { buyNow } from './cartPage';
-const productPageLayout: string = 
-`
+import cartProduct from "./cartPage";
+import dataProducts from "./dataProducts";
+import { buyNow } from "./cartPage";
+const productPageLayout: string = `
 <div class="wrapper">
   <p class="path-product font">STORE ></p>
   <div class="wrapper-product wrap">
     <div class="photos-product wrap">
       <div class="photos-main"></div>
       <div class="photos-other">
-        <div class="photo-other"></div>
-        <div class="photo-other"></div>
-        <div class="photo-other"></div>
       </div>
     </div>
     <div class="info-product wrap">
@@ -42,27 +38,30 @@ const productPageLayout: string =
     </div>
     <p class="cost-product font">€549.00</p>
   </div>
-</div>`
+</div>`;
 
-export default function productPage(): void{
-  console.log(location.pathname)
-  let id: string = location.pathname.slice(location.pathname.indexOf('-')+1);
+export default function productPage(): void {
+  console.log(location.pathname);
+  let id: string = location.pathname.slice(location.pathname.indexOf("-") + 1);
   console.log(id);
-  let main = <HTMLElement>document.querySelector('.main');
+  let main = <HTMLElement>document.querySelector(".main");
   main.innerHTML = productPageLayout;
 
   let title = <HTMLElement>document.querySelector(".product-title");
-  let description = <HTMLElement>(document.querySelector(".product-description"));
+  let description = <HTMLElement>document.querySelector(".product-description");
   let rating = <HTMLElement>document.querySelector(".product-rating");
   let stock = <HTMLElement>document.querySelector(".product-stock");
   let brand = <HTMLElement>document.querySelector(".product-brand");
   let category = <HTMLElement>document.querySelector(".product-category");
-  let discount = <HTMLElement>(document.querySelector(".product-discountPercentage"));
+  let discount = <HTMLElement>(
+    document.querySelector(".product-discountPercentage")
+  );
   let path = <HTMLElement>document.querySelector(".path-product");
   let cost = <HTMLElement>document.querySelector(".cost-product");
   let main_page = <HTMLElement>document.querySelector(".photos-main");
-  for (let j=0; j<dataProducts.length; j++){
-    if (dataProducts[j].id === Number(id)){
+  let other_photos_parent_block = <HTMLElement>document.querySelector(".photos-other");
+  for (let j = 0; j < dataProducts.length; j++) {
+    if (dataProducts[j].id === Number(id)) {
       title.innerText = dataProducts[j].title;
       description.innerText = dataProducts[j].description;
       rating.innerText = String(dataProducts[j].rating);
@@ -73,13 +72,15 @@ export default function productPage(): void{
       path.innerText = `Store > ${dataProducts[j].category} > ${dataProducts[j].brand} > ${dataProducts[j].title}`;
       cost.innerText = `${dataProducts[j].price}`;
       main_page.style.background = `url('${dataProducts[j].thumbnail}') no-repeat`;
-      for (let o = 0; o < 3; o++) {
-        let k = <HTMLElement>document.getElementsByClassName("photo-other")[o];
+      main_page.style.backgroundSize = "cover";
+      for (let o = 0; o < dataProducts[j].images.length; o++) {
+        let k = document.createElement("div");
+        k.classList.add("photo-other");
         k.style.backgroundImage = `url('${dataProducts[j].images[o]}')`;
-        k.style.backgroundSize = "cover";
         k.addEventListener("click", () => {
           main_page.style.backgroundImage = `url('${dataProducts[j].images[o]}')`;
         });
+        other_photos_parent_block.appendChild(k);
       }
     }
   }
@@ -120,98 +121,95 @@ export default function productPage(): void{
   //let cost = <HTMLElement>document.querySelector(".cost-product");
   //cost.innerText = `€${dataProducts[i].price}`;
 
-
-
-
-  let btnAdd = <HTMLElement>document.querySelector('.btn-add');
+  let btnAdd = <HTMLElement>document.querySelector(".btn-add");
   let count: number = 0;
-  let countProduct = <HTMLElement>document.querySelector('.count');
-  let totalCardSumma = <HTMLElement>document.querySelector('.summa');
+  let countProduct = <HTMLElement>document.querySelector(".count");
+  let totalCardSumma = <HTMLElement>document.querySelector(".summa");
   let summa: number = 0;
-  if(localStorage.getItem('totalCard') != undefined){
-    summa = Number(localStorage.getItem('totalCard'));
+  if (localStorage.getItem("totalCard") != undefined) {
+    summa = Number(localStorage.getItem("totalCard"));
     totalCardSumma.innerHTML = String(summa);
   }
-  if(localStorage.getItem('count') != undefined){
-      count = Number(localStorage.getItem('count'));
-      countProduct.innerHTML = String(count);
+  if (localStorage.getItem("count") != undefined) {
+    count = Number(localStorage.getItem("count"));
+    countProduct.innerHTML = String(count);
   }
-  let idArrayElemAddCart: string = '';
-  if(localStorage.getItem('idArrayCart') != undefined){
-      idArrayElemAddCart = String(localStorage.getItem('idArrayCart'));
+  let idArrayElemAddCart: string = "";
+  if (localStorage.getItem("idArrayCart") != undefined) {
+    idArrayElemAddCart = String(localStorage.getItem("idArrayCart"));
   }
-  console.log(localStorage.getItem('idArrayCart'));
+  console.log(localStorage.getItem("idArrayCart"));
   console.log(id);
-  if(localStorage.getItem('idArrayCart') != undefined){
-    let idArrayCartLocSor = localStorage.getItem('idArrayCart')?.split('-');
+  if (localStorage.getItem("idArrayCart") != undefined) {
+    let idArrayCartLocSor = localStorage.getItem("idArrayCart")?.split("-");
     console.log(idArrayCartLocSor);
-    if(idArrayCartLocSor != undefined){
-      for (let i=0; i<idArrayCartLocSor.length; i++){
-        if(idArrayCartLocSor[i] === id){
-          btnAdd.innerHTML = 'DROP FROM CART';
-          btnAdd.style.background = 'rgba(255, 173, 158, 1)';
+    if (idArrayCartLocSor != undefined) {
+      for (let i = 0; i < idArrayCartLocSor.length; i++) {
+        if (idArrayCartLocSor[i] === id) {
+          btnAdd.innerHTML = "DROP FROM CART";
+          btnAdd.style.background = "rgba(255, 173, 158, 1)";
         }
       }
     }
   }
-  btnAdd.addEventListener('click', () => {
+  btnAdd.addEventListener("click", () => {
     btnChangeWhithAddToCart();
-  })
-  function btnChangeWhithAddToCart(){
-    if(btnAdd.innerHTML === 'ADD TO CART'){
-      btnAdd.innerHTML = 'DROP FROM CART';
-      btnAdd.style.background = 'rgba(255, 173, 158, 1)';
+  });
+  function btnChangeWhithAddToCart() {
+    if (btnAdd.innerHTML === "ADD TO CART") {
+      btnAdd.innerHTML = "DROP FROM CART";
+      btnAdd.style.background = "rgba(255, 173, 158, 1)";
       count += 1;
-      localStorage.setItem('count', `${count}`);
+      localStorage.setItem("count", `${count}`);
       countProduct.innerHTML = `${count}`;
       idArrayElemAddCart += `-${id}`;
-      localStorage.setItem('idArrayCart', idArrayElemAddCart);
+      localStorage.setItem("idArrayCart", idArrayElemAddCart);
       summa += Number(cost.innerText);
-      localStorage.setItem('totalCard', `${summa}`);
+      localStorage.setItem("totalCard", `${summa}`);
       totalCardSumma.innerHTML = `${summa}`;
     } else {
-      btnAdd.innerHTML = 'ADD TO CART';
-      btnAdd.style.background = 'rgba(255, 173, 158, 0.5)';
-      if(localStorage.getItem(`${id}`) != null){
-        let idArrAmountCountAndSum = localStorage.getItem(`${id}`)?.split('-');
-        if(idArrAmountCountAndSum != undefined){
+      btnAdd.innerHTML = "ADD TO CART";
+      btnAdd.style.background = "rgba(255, 173, 158, 0.5)";
+      if (localStorage.getItem(`${id}`) != null) {
+        let idArrAmountCountAndSum = localStorage.getItem(`${id}`)?.split("-");
+        if (idArrAmountCountAndSum != undefined) {
           count -= Number(idArrAmountCountAndSum[0]);
-          localStorage.setItem('count', `${count}`);
+          localStorage.setItem("count", `${count}`);
           countProduct.innerHTML = `${count}`;
           let str = `-${id}`;
-          idArrayElemAddCart = idArrayElemAddCart.replace(str, '');
-          localStorage.setItem('idArrayCart', idArrayElemAddCart);
+          idArrayElemAddCart = idArrayElemAddCart.replace(str, "");
+          localStorage.setItem("idArrayCart", idArrayElemAddCart);
           summa -= Number(idArrAmountCountAndSum[1]);
-          localStorage.setItem('totalCard', `${summa}`);
+          localStorage.setItem("totalCard", `${summa}`);
           totalCardSumma.innerHTML = `${summa}`;
         }
         localStorage.removeItem(`${id}`);
       } else {
         count -= 1;
-        localStorage.setItem('count', `${count}`);
+        localStorage.setItem("count", `${count}`);
         countProduct.innerHTML = `${count}`;
         let str = `-${id}`;
-        idArrayElemAddCart = idArrayElemAddCart.replace(str, '');
-        localStorage.setItem('idArrayCart', idArrayElemAddCart);
+        idArrayElemAddCart = idArrayElemAddCart.replace(str, "");
+        localStorage.setItem("idArrayCart", idArrayElemAddCart);
         summa -= Number(cost.innerText);
-        localStorage.setItem('totalCard', `${summa}`);
+        localStorage.setItem("totalCard", `${summa}`);
         totalCardSumma.innerHTML = `${summa}`;
       }
     }
   }
-  let btnBuy = <HTMLElement>document.querySelector('.btn-buy');
-  btnBuy.addEventListener('click', () => {
+  let btnBuy = <HTMLElement>document.querySelector(".btn-buy");
+  btnBuy.addEventListener("click", () => {
     addToCartBuyNow();
   });
-  function addToCartBuyNow(){
-    if (btnAdd.innerHTML === 'ADD TO CART'){
+  function addToCartBuyNow() {
+    if (btnAdd.innerHTML === "ADD TO CART") {
       count += 1;
-      localStorage.setItem('count', `${count}`);
+      localStorage.setItem("count", `${count}`);
       countProduct.innerHTML = `${count}`;
       idArrayElemAddCart += `-${id}`;
-      localStorage.setItem('idArrayCart', idArrayElemAddCart);
+      localStorage.setItem("idArrayCart", idArrayElemAddCart);
       summa += Number(cost.innerText);
-      localStorage.setItem('totalCard', `${summa}`);
+      localStorage.setItem("totalCard", `${summa}`);
       totalCardSumma.innerHTML = `${summa}`;
       cartProduct();
       buyNow();
