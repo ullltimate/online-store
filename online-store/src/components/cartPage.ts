@@ -91,6 +91,10 @@ export default function cartProduct(): void {
     );
     summaryCount.innerHTML = `${localStorage.getItem("count")}`;
     summaryTotalSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
+    let countProduct = <HTMLElement>document.querySelector(".count");
+    let totalCardSumma = <HTMLElement>document.querySelector(".summa");
+    countProduct.innerHTML = `${localStorage.getItem("count")}`;
+    totalCardSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
 
     let idArrayCartLocSor = localStorage.getItem("idArrayCart")?.split("-");
     let productsCartWrap = document.querySelector(".products-cart-wrapper");
@@ -202,8 +206,6 @@ export default function cartProduct(): void {
     let allCountSumma: HTMLElement[] = Array.from(
       document.querySelectorAll(".count-summa")
     );
-    let countProduct = <HTMLElement>document.querySelector(".count");
-    let totalCardSumma = <HTMLElement>document.querySelector(".summa");
     let amountStock: HTMLElement[] = Array.from(
       document.querySelectorAll(".stock-amount")
     );
