@@ -77,8 +77,9 @@ export default function productPage(): void {
         let k = document.createElement("div");
         k.classList.add("photo-other");
         k.style.backgroundImage = `url('${dataProducts[j].images[o]}')`;
+        k.style.backgroundSize = 'cover';
         k.addEventListener("click", () => {
-          main_page.style.backgroundImage = `url('${dataProducts[j].images[o]}')`;
+          main_page.style.background = `url('${dataProducts[j].images[o]}')`;
         });
         other_photos_parent_block.appendChild(k);
       }
