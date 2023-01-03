@@ -13,10 +13,8 @@ const dataProducts = [
             "images":
             [
                 "https://i.dummyjson.com/data/products/1/1.jpg",
-                "https://i.dummyjson.com/data/products/1/2.jpg",
                 "https://i.dummyjson.com/data/products/1/3.jpg",
                 "https://i.dummyjson.com/data/products/1/4.jpg",
-                "https://i.dummyjson.com/data/products/1/thumbnail.jpg"
             ]
         },
         {
@@ -165,7 +163,6 @@ const dataProducts = [
             [
                 "https://i.dummyjson.com/data/products/9/1.jpg",
                 "https://i.dummyjson.com/data/products/9/2.png",
-                "https://i.dummyjson.com/data/products/9/3.png",
                 "https://i.dummyjson.com/data/products/9/4.jpg",
                 "https://i.dummyjson.com/data/products/9/thumbnail.jpg"
             ]
@@ -183,7 +180,6 @@ const dataProducts = [
             "thumbnail":"https://i.dummyjson.com/data/products/10/thumbnail.jpeg",
             "images":
             [
-                "https://i.dummyjson.com/data/products/10/1.jpg",
                 "https://i.dummyjson.com/data/products/10/2.jpg",
                 "https://i.dummyjson.com/data/products/10/3.jpg",
                 "https://i.dummyjson.com/data/products/10/thumbnail.jpeg"
@@ -303,7 +299,6 @@ const dataProducts = [
                 "https://i.dummyjson.com/data/products/16/2.webp",
                 "https://i.dummyjson.com/data/products/16/3.jpg",
                 "https://i.dummyjson.com/data/products/16/4.jpg",
-                "https://i.dummyjson.com/data/products/16/thumbnail.jpg"
             ]
         },
         {
@@ -378,8 +373,6 @@ const dataProducts = [
                 "https://i.dummyjson.com/data/products/20/1.jpg",
                 "https://i.dummyjson.com/data/products/20/2.jpg",
                 "https://i.dummyjson.com/data/products/20/3.jpg",
-                "https://i.dummyjson.com/data/products/20/4.jpg",
-                "https://i.dummyjson.com/data/products/20/thumbnail.jpg"
             ]
         },
         {

@@ -200,12 +200,13 @@ export default function home(): void {
     filterBrand.append(checkboxBrand);
   }
 
-  let allCards: HTMLCollection = productsCards.children;
+  let allCards: Array<HTMLElement> = Array.from(document.querySelectorAll('.products-card'));
 
   if (allCards != undefined) {
     for (let i = 0; i < dataProducts.length; i++) {
         allCards[i].addEventListener("click", (e) => {
             let eventElem = <HTMLImageElement>e.target;
+            console.log(eventElem)
             if (eventElem.classList.contains('card-basket-img')){
                 addToCart(eventElem, eventElem.parentElement?.parentElement?.id);
                 localStorage.setItem('idArrayCart', idArrayElemAddCart);
@@ -216,7 +217,7 @@ export default function home(): void {
             }
         });
     }
-    }
+  }
 
     let count: number = 0;
     let countProduct = <HTMLElement>document.querySelector('.count');
@@ -339,9 +340,67 @@ export default function home(): void {
   };
 
   function switchingViewBySort() {
+    productsCards.innerHTML = '';
     for (let i = 0; i < dataProducts.length; i++) {
-      cardImageArray[i].src = `${dataProducts[i].thumbnail}`;
-      cardTitleArray[i].innerText = `${dataProducts[i].title}`;
+      let productsCard = <HTMLElement>document.createElement("div");
+      productsCard.className = "products-card";
+      productsCard.id = `${dataProducts[i].id}`;
+      productsCard.innerHTML = 
+          `<a href = '/product-${dataProducts[i].id}'>
+            <div class="products-card-image">
+                <img src="${dataProducts[i].thumbnail}" alt="" class="card-image">
+            </div>
+          </a>
+          <div class="products-card-title wrap">
+            <a href = '/product-${dataProducts[i].id}'>  
+              <img src="https://i.ibb.co/b1fRcKR/icons8-100-1.png" alt="" class="card-expand-img">
+            </a>
+            <p class="card-title font">${dataProducts[i].title}</p>
+            <img src="https://i.ibb.co/b2V2ZLR/shopping-cart-icon-196876-1.png" alt='' class="card-basket-img">
+          </div>`;
+      productsCards.append(productsCard);
+      if (
+        localStorage.getItem("idArrayCart") != "" &&
+        localStorage.getItem("idArrayCart") != undefined
+      ) {
+        let idArrayCartLocSor = localStorage.getItem("idArrayCart")?.split("-");
+        if (idArrayCartLocSor != undefined) {
+          for (let j = 0; j < idArrayCartLocSor?.length; j++) {
+            if (dataProducts[i].id === Number(idArrayCartLocSor[j])) {
+              productsCard.innerHTML = 
+              `<a href = '/product-${dataProducts[i].id}'>
+                <div class="products-card-image">
+                  <img src="${dataProducts[i].thumbnail}" alt="" class="card-image">
+                </div>
+              </a>    
+              <div class="products-card-title wrap">
+                <a href = '/product-${dataProducts[i].id}'>  
+                  <img src="https://i.ibb.co/b1fRcKR/icons8-100-1.png" alt="" class="card-expand-img">
+                </a>
+                <p class="card-title font">${dataProducts[i].title}</p>
+                <img src="https://i.ibb.co/V3mPKbP/icons8-48.png" alt='' class="card-basket-img">
+              </div>`;
+            }
+          }
+        }
+      }
+    }
+    let allCards: Array<HTMLElement> = Array.from(document.querySelectorAll('.products-card'));
+    if (allCards != undefined) {
+      for (let i = 0; i < dataProducts.length; i++) {
+          allCards[i].addEventListener("click", (e) => {
+              let eventElem = <HTMLImageElement>e.target;
+              console.log(eventElem)
+              if (eventElem.classList.contains('card-basket-img')){
+                  addToCart(eventElem, eventElem.parentElement?.parentElement?.id);
+                  localStorage.setItem('idArrayCart', idArrayElemAddCart);
+                  localStorage.setItem('count', String(count));
+                  localStorage.setItem('totalCard', String(summa));
+              } else {
+                  //productPage(i, allCards[i].id);
+              }
+          });
+      }
     }
   }
   function sortPriceASC() {
