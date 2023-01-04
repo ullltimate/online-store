@@ -220,6 +220,13 @@ input {
     line-height: normal;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
 /**
  * Address inconsistent `text-transform` inheritance for `button` and `select`.
  * All other form control elements do not inherit `text-transform` values.
@@ -1092,7 +1099,7 @@ input[type="range"] {
   
   .modal-personal {
     height: 90%;
-    width: 35%;
+    width: 40%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -1100,7 +1107,8 @@ input[type="range"] {
   
   .modal-personal input {
     border: rgba(255, 173, 158, 0.29) 2px solid;
-    height: 17%;
+    height: 100%;
+    width: 85%;
     border-radius: 1vw;
     padding-left: 1vw;
   }
@@ -1159,6 +1167,19 @@ input[type="range"] {
     border: none;
     border-radius: 10px;
     height: 50px;
+  }
+
+  .personal-input-err{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-self: center;
+    flex-direction: row;
+  }
+  
+  .input-err{
+    display: none;
+    color: red;
   }
   
   .credit-card-bg {

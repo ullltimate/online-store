@@ -1,7 +1,6 @@
 import dataProducts from "./dataProducts";
 import productPage from "./productPage";
-const cartPageLayout: string = 
-`<div class="wrapper">
+const cartPageLayout: string = `<div class="wrapper">
     <div class="modal-background">
       <div class="modal-window">
         <img class="modal-close" src="https://i.ibb.co/q70WLs6/close.png">
@@ -14,17 +13,18 @@ const cartPageLayout: string =
                   <div class="credit-card-bg">
                     <img src="https://i.ibb.co/TLqbk79/default-card.png" />
                   </div>
-                  <input type="text" placeholder="Card number" />
+                  <p class="input-err">Err</p>
+                  <input type="number" placeholder="Card number" onkeypress="if(this.value.length==16) return false;" class="cardNumber validCheckCard"/>
                 </div>
                 <div class="credit-card-private-info">
                   <ul>
                     <li>
                       <p>Valid:</p>
-                      <input type="text" placeholder="Valid thru" />
+                      <input type="text" placeholder="Valid thru" onkeypress="if(this.value.length==5) return false;" class="cardDate validCheckCard"/>
                     </li>
                     <li>
                       <p>CVV:</p>
-                      <input type="text" placeholder="Code" />
+                      <input type="number" placeholder="Code" onkeypress="if(this.value.length==3) return false;" class="cardCVV validCheckCard"/>
                     </li>
                   </ul>
                 </div>
@@ -32,13 +32,13 @@ const cartPageLayout: string =
             </div>
             <div class="modal-personal">
               <p>Personal details</p>
-              <input type="text" placeholder="Name" />
-              <input type="tel" placeholder="Phone number" />
-              <input type="text" placeholder="Delivery address" />
-              <input type="email" placeholder="E-mail" />
+              <div class="personal-input-err"><p class="input-err">Err</p><input type="text" placeholder="Name" class="cardName validCheck"/></div>
+              <div class="personal-input-err"><p class="input-err">Err</p><input type="tel" placeholder="Phone number" class="cardPhone validCheck"/></div>
+              <div class="personal-input-err"><p class="input-err">Err</p><input type="text" placeholder="Delivery address" class="cardAddress validCheck"/></div>
+              <div class="personal-input-err"><p class="input-err">Err</p><input type="email" placeholder="E-mail" class="cardEmail validCheck"/></div>
             </div>
           </div>
-          <button>Confirm</button>
+          <button class="confirmButton">Confirm</button>
         </div>
       </div>
       <div class="cart-wrapper wrap">
@@ -70,54 +70,67 @@ const cartPageLayout: string =
           <button class="toModal">Buy now</button>
         </div>
       </div> 
-</div>`
-const cartPageLayoutEmpty: string = 
-`<div class="wrapper">
+</div>`;
+const cartPageLayoutEmpty: string = `<div class="wrapper">
   <h2 class='empty-cart header-text font'>Cart is Empty &#129402</h2>
-</div>`
+</div>`;
 
-export default function cartProduct(): void{
-  let main = <HTMLElement>document.querySelector('.main');
-  if (localStorage.getItem('count') === null || localStorage.getItem('count') === '0'){
+export default function cartProduct(): void {
+  let main = <HTMLElement>document.querySelector(".main");
+  if (
+    localStorage.getItem("count") === null ||
+    localStorage.getItem("count") === "0"
+  ) {
     main.innerHTML = cartPageLayoutEmpty;
   } else {
     main.innerHTML = cartPageLayout;
-    let point:number = 0;
-    let summaryCount = <HTMLElement>document.querySelector('.summary-count');
-    let summaryTotalSumma = <HTMLElement>document.querySelector('.summary-total-summa');
-    summaryCount.innerHTML = `${localStorage.getItem('count')}`;
-    summaryTotalSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
-    let countProduct = <HTMLElement>document.querySelector('.count');
-    let totalCardSumma = <HTMLElement>document.querySelector('.summa');
-    countProduct.innerHTML = `${localStorage.getItem('count')}`;
-    totalCardSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
+    let point: number = 0;
+    let summaryCount = <HTMLElement>document.querySelector(".summary-count");
+    let summaryTotalSumma = <HTMLElement>(
+      document.querySelector(".summary-total-summa")
+    );
+    summaryCount.innerHTML = `${localStorage.getItem("count")}`;
+    summaryTotalSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
+    let countProduct = <HTMLElement>document.querySelector(".count");
+    let totalCardSumma = <HTMLElement>document.querySelector(".summa");
+    countProduct.innerHTML = `${localStorage.getItem("count")}`;
+    totalCardSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
 
-    let idArrayCartLocSor = localStorage.getItem('idArrayCart')?.split('-');
-    let productsCartWrap = document.querySelector('.products-cart-wrapper');
-    for (let i=0; i<dataProducts.length; i++){
-      if(idArrayCartLocSor != undefined){
-        for( let j=0; j<idArrayCartLocSor.length; j++){
-          if(dataProducts[i].id === Number(idArrayCartLocSor[j])){
-            if(localStorage.getItem(`${dataProducts[i].id}`) != null){
-              console.log(localStorage.getItem(`${dataProducts[i].id}`))
-              let idArrAmountCountAndSum = localStorage.getItem(`${dataProducts[i].id}`)?.split('-');
-              if (idArrAmountCountAndSum != undefined){
+    let idArrayCartLocSor = localStorage.getItem("idArrayCart")?.split("-");
+    let productsCartWrap = document.querySelector(".products-cart-wrapper");
+    for (let i = 0; i < dataProducts.length; i++) {
+      if (idArrayCartLocSor != undefined) {
+        for (let j = 0; j < idArrayCartLocSor.length; j++) {
+          if (dataProducts[i].id === Number(idArrayCartLocSor[j])) {
+            if (localStorage.getItem(`${dataProducts[i].id}`) != null) {
+              console.log(localStorage.getItem(`${dataProducts[i].id}`));
+              let idArrAmountCountAndSum = localStorage
+                .getItem(`${dataProducts[i].id}`)
+                ?.split("-");
+              if (idArrAmountCountAndSum != undefined) {
                 console.log(idArrAmountCountAndSum);
-                let cardCart = <HTMLElement>document.createElement('div');
-                cardCart.className = 'card-cart wrap';
+                let cardCart = <HTMLElement>document.createElement("div");
+                cardCart.className = "card-cart wrap";
                 cardCart.id = `${dataProducts[i].id}`;
-                cardCart.innerHTML = 
-                `<p class="font">${++point}</p>
-                <img class="card-cart-photo" src="${dataProducts[i].thumbnail}" alt="">
+                cardCart.innerHTML = `<p class="font">${++point}</p>
+                <img class="card-cart-photo" src="${
+                  dataProducts[i].thumbnail
+                }" alt="">
                 <div class="card-cart-info wrap">
                   <p class="header-text font">${dataProducts[i].title}</p>
                   <div class="cart-info-description-and-count wrap">
-                    <p class="cart-info-desc font">${dataProducts[i].description}</p>
+                    <p class="cart-info-desc font">${
+                      dataProducts[i].description
+                    }</p>
                     <div class="cart-info-count">
-                      <p class="font">STOCK: <a class='stock-amount'>${dataProducts[i].stock}</a></p>
+                      <p class="font">STOCK: <a class='stock-amount'>${
+                        dataProducts[i].stock
+                      }</a></p>
                       <div class="cart-info-current-count wrap">
                         <div class="round-sign sign-add wrap">+</div>
-                        <p class="font sign-count">${idArrAmountCountAndSum[0]}</p>
+                        <p class="font sign-count">${
+                          idArrAmountCountAndSum[0]
+                        }</p>
                         <div class="round-sign sign-remove wrap">-</div>
                       </div>
                     </div>
@@ -135,22 +148,27 @@ export default function cartProduct(): void{
                     </div>
                     <p class='count-summa'>${idArrAmountCountAndSum[1]}</p>
                   </div>
-                </div>`
+                </div>`;
                 productsCartWrap?.append(cardCart);
               }
             } else {
-              let cardCart = <HTMLElement>document.createElement('div');
-              cardCart.className = 'card-cart wrap';
+              let cardCart = <HTMLElement>document.createElement("div");
+              cardCart.className = "card-cart wrap";
               cardCart.id = `${dataProducts[i].id}`;
-              cardCart.innerHTML = 
-              `<p class="font">${++point}</p>
-              <img class="card-cart-photo" src="${dataProducts[i].thumbnail}" alt="">
+              cardCart.innerHTML = `<p class="font">${++point}</p>
+              <img class="card-cart-photo" src="${
+                dataProducts[i].thumbnail
+              }" alt="">
               <div class="card-cart-info wrap">
                 <p class="header-text font">${dataProducts[i].title}</p>
                 <div class="cart-info-description-and-count wrap">
-                  <p class="cart-info-desc font">${dataProducts[i].description}</p>
+                  <p class="cart-info-desc font">${
+                    dataProducts[i].description
+                  }</p>
                   <div class="cart-info-count">
-                    <p class="font">STOCK: <a class='stock-amount'>${dataProducts[i].stock}</a></p>
+                    <p class="font">STOCK: <a class='stock-amount'>${
+                      dataProducts[i].stock
+                    }</a></p>
                     <div class="cart-info-current-count wrap">
                       <div class="round-sign sign-add wrap">+</div>
                       <p class="font sign-count">1</p>
@@ -171,252 +189,383 @@ export default function cartProduct(): void{
                   </div>
                   <p class='count-summa'>${dataProducts[i].price}</p>
                 </div>
-              </div>`
-                productsCartWrap?.append(cardCart);
+              </div>`;
+              productsCartWrap?.append(cardCart);
             }
           }
         }
       }
     }
 
-    let allCardsToCart: HTMLElement[] = Array.from(document.querySelectorAll('.card-cart'));
-    let allSignCount: HTMLElement[] = Array.from(document.querySelectorAll('.sign-count'));
-    let allCountSumma: HTMLElement[] = Array.from(document.querySelectorAll('.count-summa'));
-    let amountStock: HTMLElement[] = Array.from(document.querySelectorAll('.stock-amount'));
+    let allCardsToCart: HTMLElement[] = Array.from(
+      document.querySelectorAll(".card-cart")
+    );
+    let allSignCount: HTMLElement[] = Array.from(
+      document.querySelectorAll(".sign-count")
+    );
+    let allCountSumma: HTMLElement[] = Array.from(
+      document.querySelectorAll(".count-summa")
+    );
+    let amountStock: HTMLElement[] = Array.from(
+      document.querySelectorAll(".stock-amount")
+    );
 
-    for(let i=0; i<allCardsToCart.length; i++){
-      allCardsToCart[i].addEventListener('click', (e) => {
-          let event = <HTMLElement>e.target;
-          if(event.classList.contains('sign-add')){
-            if (amountStock[i].innerHTML === allSignCount[i].innerHTML){
-              return;
-            } else {
-              allSignCount[i].innerHTML = `${Number(allSignCount[i].innerHTML)+1}`;
-              for (let o=0; o<dataProducts.length; o++){
-                if(allCardsToCart[i].id === String(dataProducts[o].id)){
-                  allCountSumma[i].innerHTML = `${dataProducts[o].price * Number(allSignCount[i].innerHTML)}`;
-                  localStorage.setItem(`${allCardsToCart[i].id}`, `${allSignCount[i].innerHTML}-${allCountSumma[i].innerHTML }`);
-                  localStorage.setItem('count', `${Number(localStorage.getItem('count'))+1}`);
-                  countProduct.innerHTML = `${localStorage.getItem('count')}`;
-                  localStorage.setItem('totalCard', `${Number(localStorage.getItem('totalCard'))+dataProducts[o].price}`);
-                  totalCardSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
-                  summaryCount.innerHTML = `${localStorage.getItem('count')}`;
-                  summaryTotalSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
-                  if(localStorage.getItem('promo') != undefined){
-                    if(localStorage.getItem('promo')?.split('-').length === 3){
-                      summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.2}`;
-                      summaryTotalSumma.style.textDecoration = 'line-through';
-                    } else if(localStorage.getItem('promo')?.split('-').length === 2) {
-                      summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.1}`;
-                      summaryTotalSumma.style.textDecoration = 'line-through';
-                    } else if(localStorage.getItem('promo')?.split('-').length === 1){
-                      summaryTotalSummaDiscount.innerHTML = '';
-                      summaryTotalSumma.style.textDecoration = 'none';
-                    }
+    for (let i = 0; i < allCardsToCart.length; i++) {
+      allCardsToCart[i].addEventListener("click", (e) => {
+        let event = <HTMLElement>e.target;
+        if (event.classList.contains("sign-add")) {
+          if (amountStock[i].innerHTML === allSignCount[i].innerHTML) {
+            return;
+          } else {
+            allSignCount[i].innerHTML = `${
+              Number(allSignCount[i].innerHTML) + 1
+            }`;
+            for (let o = 0; o < dataProducts.length; o++) {
+              if (allCardsToCart[i].id === String(dataProducts[o].id)) {
+                allCountSumma[i].innerHTML = `${
+                  dataProducts[o].price * Number(allSignCount[i].innerHTML)
+                }`;
+                localStorage.setItem(
+                  `${allCardsToCart[i].id}`,
+                  `${allSignCount[i].innerHTML}-${allCountSumma[i].innerHTML}`
+                );
+                localStorage.setItem(
+                  "count",
+                  `${Number(localStorage.getItem("count")) + 1}`
+                );
+                countProduct.innerHTML = `${localStorage.getItem("count")}`;
+                localStorage.setItem(
+                  "totalCard",
+                  `${
+                    Number(localStorage.getItem("totalCard")) +
+                    dataProducts[o].price
+                  }`
+                );
+                totalCardSumma.innerHTML = `${localStorage.getItem(
+                  "totalCard"
+                )}`;
+                summaryCount.innerHTML = `${localStorage.getItem("count")}`;
+                summaryTotalSumma.innerHTML = `${localStorage.getItem(
+                  "totalCard"
+                )}`;
+                if (localStorage.getItem("promo") != undefined) {
+                  if (localStorage.getItem("promo")?.split("-").length === 3) {
+                    summaryTotalSummaDiscount.innerHTML = `${
+                      Number(localStorage.getItem("totalCard")) -
+                      Number(localStorage.getItem("totalCard")) * 0.2
+                    }`;
+                    summaryTotalSumma.style.textDecoration = "line-through";
+                  } else if (
+                    localStorage.getItem("promo")?.split("-").length === 2
+                  ) {
+                    summaryTotalSummaDiscount.innerHTML = `${
+                      Number(localStorage.getItem("totalCard")) -
+                      Number(localStorage.getItem("totalCard")) * 0.1
+                    }`;
+                    summaryTotalSumma.style.textDecoration = "line-through";
+                  } else if (
+                    localStorage.getItem("promo")?.split("-").length === 1
+                  ) {
+                    summaryTotalSummaDiscount.innerHTML = "";
+                    summaryTotalSumma.style.textDecoration = "none";
                   }
-                }
-              }
-            }
-          } else if(event.classList.contains('sign-remove')){
-            if(allSignCount[i].innerHTML === '1'){
-              if(productsCartWrap?.children.length === 1){
-                main.innerHTML = cartPageLayoutEmpty;
-                localStorage.removeItem(`${allCardsToCart[i].id}`);
-                localStorage.setItem('count', `${Number(localStorage.getItem('count'))-1}`);
-                countProduct.innerHTML = `${localStorage.getItem('count')}`;
-                for (let o=0; o<dataProducts.length; o++){
-                  if(allCardsToCart[i].id === String(dataProducts[o].id)){
-                    localStorage.setItem('totalCard', `${Number(localStorage.getItem('totalCard'))-dataProducts[o].price}`);
-                    totalCardSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
-                  }
-                }
-                let idArrCartLocal = localStorage.getItem('idArrayCart');
-                if (idArrCartLocal != null){
-                  let str = `-${allCardsToCart[i].id}`;
-                  idArrCartLocal = idArrCartLocal.replace(str, '');
-                  localStorage.setItem('idArrayCart', `${idArrCartLocal}`)
-                }
-                summaryCount.innerHTML = `${localStorage.getItem('count')}`;
-                summaryTotalSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
-              } else{
-                allCardsToCart[i].remove();
-                localStorage.removeItem(`${allCardsToCart[i].id}`);
-                for (let o=0; o<dataProducts.length; o++){
-                  if(allCardsToCart[i].id === String(dataProducts[o].id)){
-                    localStorage.setItem('totalCard', `${Number(localStorage.getItem('totalCard'))-dataProducts[o].price}`);
-                    totalCardSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
-                  }
-                }
-                let idArrCartLocal = localStorage.getItem('idArrayCart');
-                if (idArrCartLocal != null){
-                  let str = `-${allCardsToCart[i].id}`;
-                  idArrCartLocal = idArrCartLocal.replace(str, '');
-                  localStorage.setItem('idArrayCart', `${idArrCartLocal}`);
-                  localStorage.setItem('count', `${Number(localStorage.getItem('count'))-1}`);
-                  countProduct.innerHTML = `${localStorage.getItem('count')}`;
-                }
-                summaryCount.innerHTML = `${localStorage.getItem('count')}`;
-                summaryTotalSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
-                if(localStorage.getItem('promo') != undefined){
-                  if(localStorage.getItem('promo')?.split('-').length === 3){
-                    summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.2}`;
-                    summaryTotalSumma.style.textDecoration = 'line-through';
-                  } else if(localStorage.getItem('promo')?.split('-').length === 2) {
-                    summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.1}`;
-                    summaryTotalSumma.style.textDecoration = 'line-through';
-                  } else if(localStorage.getItem('promo')?.split('-').length === 1){
-                    summaryTotalSummaDiscount.innerHTML = '';
-                    summaryTotalSumma.style.textDecoration = 'none';
-                  }
-                }
-              }
-            } else {
-              allSignCount[i].innerHTML = `${Number(allSignCount[i].innerHTML)-1}`;
-              localStorage.setItem('count', `${Number(localStorage.getItem('count'))-1}`);
-              countProduct.innerHTML = `${localStorage.getItem('count')}`;
-              for (let o=0; o<dataProducts.length; o++){
-                if(allCardsToCart[i].id === String(dataProducts[o].id)){
-                  allCountSumma[i].innerHTML = `${Number(allCountSumma[i].innerHTML) - dataProducts[o].price}`;
-                  localStorage.setItem(`${allCardsToCart[i].id}`, `${allSignCount[i].innerHTML}-${allCountSumma[i].innerHTML }`);
-                  localStorage.setItem('totalCard', `${Number(localStorage.getItem('totalCard'))-dataProducts[o].price}`);
-                  totalCardSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
-                }
-              }
-              summaryCount.innerHTML = `${localStorage.getItem('count')}`;
-              summaryTotalSumma.innerHTML = `${localStorage.getItem('totalCard')}`;
-              if(localStorage.getItem('promo') != undefined){
-                if(localStorage.getItem('promo')?.split('-').length === 3){
-                  summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.2}`;
-                  summaryTotalSumma.style.textDecoration = 'line-through';
-                } else if(localStorage.getItem('promo')?.split('-').length === 2) {
-                  summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.1}`;
-                  summaryTotalSumma.style.textDecoration = 'line-through';
-                } else if(localStorage.getItem('promo')?.split('-').length === 1){
-                  summaryTotalSummaDiscount.innerHTML = '';
-                  summaryTotalSumma.style.textDecoration = 'none';
                 }
               }
             }
           }
-      })
+        } else if (event.classList.contains("sign-remove")) {
+          if (allSignCount[i].innerHTML === "1") {
+            if (productsCartWrap?.children.length === 1) {
+              main.innerHTML = cartPageLayoutEmpty;
+              localStorage.removeItem(`${allCardsToCart[i].id}`);
+              localStorage.setItem(
+                "count",
+                `${Number(localStorage.getItem("count")) - 1}`
+              );
+              countProduct.innerHTML = `${localStorage.getItem("count")}`;
+              for (let o = 0; o < dataProducts.length; o++) {
+                if (allCardsToCart[i].id === String(dataProducts[o].id)) {
+                  localStorage.setItem(
+                    "totalCard",
+                    `${
+                      Number(localStorage.getItem("totalCard")) -
+                      dataProducts[o].price
+                    }`
+                  );
+                  totalCardSumma.innerHTML = `${localStorage.getItem(
+                    "totalCard"
+                  )}`;
+                }
+              }
+              let idArrCartLocal = localStorage.getItem("idArrayCart");
+              if (idArrCartLocal != null) {
+                let str = `-${allCardsToCart[i].id}`;
+                idArrCartLocal = idArrCartLocal.replace(str, "");
+                localStorage.setItem("idArrayCart", `${idArrCartLocal}`);
+              }
+              summaryCount.innerHTML = `${localStorage.getItem("count")}`;
+              summaryTotalSumma.innerHTML = `${localStorage.getItem(
+                "totalCard"
+              )}`;
+            } else {
+              allCardsToCart[i].remove();
+              localStorage.removeItem(`${allCardsToCart[i].id}`);
+              for (let o = 0; o < dataProducts.length; o++) {
+                if (allCardsToCart[i].id === String(dataProducts[o].id)) {
+                  localStorage.setItem(
+                    "totalCard",
+                    `${
+                      Number(localStorage.getItem("totalCard")) -
+                      dataProducts[o].price
+                    }`
+                  );
+                  totalCardSumma.innerHTML = `${localStorage.getItem(
+                    "totalCard"
+                  )}`;
+                }
+              }
+              let idArrCartLocal = localStorage.getItem("idArrayCart");
+              if (idArrCartLocal != null) {
+                let str = `-${allCardsToCart[i].id}`;
+                idArrCartLocal = idArrCartLocal.replace(str, "");
+                localStorage.setItem("idArrayCart", `${idArrCartLocal}`);
+                localStorage.setItem(
+                  "count",
+                  `${Number(localStorage.getItem("count")) - 1}`
+                );
+                countProduct.innerHTML = `${localStorage.getItem("count")}`;
+              }
+              summaryCount.innerHTML = `${localStorage.getItem("count")}`;
+              summaryTotalSumma.innerHTML = `${localStorage.getItem(
+                "totalCard"
+              )}`;
+              if (localStorage.getItem("promo") != undefined) {
+                if (localStorage.getItem("promo")?.split("-").length === 3) {
+                  summaryTotalSummaDiscount.innerHTML = `${
+                    Number(localStorage.getItem("totalCard")) -
+                    Number(localStorage.getItem("totalCard")) * 0.2
+                  }`;
+                  summaryTotalSumma.style.textDecoration = "line-through";
+                } else if (
+                  localStorage.getItem("promo")?.split("-").length === 2
+                ) {
+                  summaryTotalSummaDiscount.innerHTML = `${
+                    Number(localStorage.getItem("totalCard")) -
+                    Number(localStorage.getItem("totalCard")) * 0.1
+                  }`;
+                  summaryTotalSumma.style.textDecoration = "line-through";
+                } else if (
+                  localStorage.getItem("promo")?.split("-").length === 1
+                ) {
+                  summaryTotalSummaDiscount.innerHTML = "";
+                  summaryTotalSumma.style.textDecoration = "none";
+                }
+              }
+            }
+          } else {
+            allSignCount[i].innerHTML = `${
+              Number(allSignCount[i].innerHTML) - 1
+            }`;
+            localStorage.setItem(
+              "count",
+              `${Number(localStorage.getItem("count")) - 1}`
+            );
+            countProduct.innerHTML = `${localStorage.getItem("count")}`;
+            for (let o = 0; o < dataProducts.length; o++) {
+              if (allCardsToCart[i].id === String(dataProducts[o].id)) {
+                allCountSumma[i].innerHTML = `${
+                  Number(allCountSumma[i].innerHTML) - dataProducts[o].price
+                }`;
+                localStorage.setItem(
+                  `${allCardsToCart[i].id}`,
+                  `${allSignCount[i].innerHTML}-${allCountSumma[i].innerHTML}`
+                );
+                localStorage.setItem(
+                  "totalCard",
+                  `${
+                    Number(localStorage.getItem("totalCard")) -
+                    dataProducts[o].price
+                  }`
+                );
+                totalCardSumma.innerHTML = `${localStorage.getItem(
+                  "totalCard"
+                )}`;
+              }
+            }
+            summaryCount.innerHTML = `${localStorage.getItem("count")}`;
+            summaryTotalSumma.innerHTML = `${localStorage.getItem(
+              "totalCard"
+            )}`;
+            if (localStorage.getItem("promo") != undefined) {
+              if (localStorage.getItem("promo")?.split("-").length === 3) {
+                summaryTotalSummaDiscount.innerHTML = `${
+                  Number(localStorage.getItem("totalCard")) -
+                  Number(localStorage.getItem("totalCard")) * 0.2
+                }`;
+                summaryTotalSumma.style.textDecoration = "line-through";
+              } else if (
+                localStorage.getItem("promo")?.split("-").length === 2
+              ) {
+                summaryTotalSummaDiscount.innerHTML = `${
+                  Number(localStorage.getItem("totalCard")) -
+                  Number(localStorage.getItem("totalCard")) * 0.1
+                }`;
+                summaryTotalSumma.style.textDecoration = "line-through";
+              } else if (
+                localStorage.getItem("promo")?.split("-").length === 1
+              ) {
+                summaryTotalSummaDiscount.innerHTML = "";
+                summaryTotalSumma.style.textDecoration = "none";
+              }
+            }
+          }
+        }
+      });
     }
 
-    let inputSearchPromo = <HTMLInputElement>document.querySelector('.search-promo');
-    let summaryTotalSummaDiscount = <HTMLElement>document.querySelector('.summary-total-summa-discount');
+    let inputSearchPromo = <HTMLInputElement>(
+      document.querySelector(".search-promo")
+    );
+    let summaryTotalSummaDiscount = <HTMLElement>(
+      document.querySelector(".summary-total-summa-discount")
+    );
 
-    let rsPromo: HTMLElement = document.createElement('div');
-    rsPromo.className = 'rs-promo';
+    let rsPromo: HTMLElement = document.createElement("div");
+    rsPromo.className = "rs-promo";
     rsPromo.innerHTML = `Rolling Scopes School - 10% <span>ADD</span>`;
 
-    let epmPromo: HTMLElement = document.createElement('div');
-    epmPromo.className = 'epm-promo';
+    let epmPromo: HTMLElement = document.createElement("div");
+    epmPromo.className = "epm-promo";
     epmPromo.innerHTML = `EPAM Systems - 10% <span>ADD</span>`;
 
-    let rsPromoAdded: HTMLElement = document.createElement('div');
-    rsPromoAdded.className = 'rs-promo-added';
+    let rsPromoAdded: HTMLElement = document.createElement("div");
+    rsPromoAdded.className = "rs-promo-added";
     rsPromoAdded.innerHTML = `Rolling Scopes School - 10% <span>DROP</span>`;
 
-    let epmPromoAdded: HTMLElement = document.createElement('div');
-    epmPromoAdded.className = 'epm-promo-added';
+    let epmPromoAdded: HTMLElement = document.createElement("div");
+    epmPromoAdded.className = "epm-promo-added";
     epmPromoAdded.innerHTML = `EPAM Systems - 10% <span>DROP</span>`;
 
-    let summaryBlock = <HTMLElement>document.querySelector('.summary-cart');
+    let summaryBlock = <HTMLElement>document.querySelector(".summary-cart");
     let allSummaryElement: HTMLCollection = summaryBlock.children;
 
-    rsPromo.addEventListener('click', (e) => {
+    rsPromo.addEventListener("click", (e) => {
       let eventElem = <HTMLElement>e.target;
       addBlockPromocod(eventElem);
     });
-    epmPromo.addEventListener('click', (e) => {
-      let eventElem = <HTMLElement>e.target;
-      addBlockPromocod(eventElem);
-    })
-
-    epmPromoAdded.addEventListener('click', (e) => {
-      let eventElem = <HTMLElement>e.target;
-      addBlockPromocod(eventElem);
-    });
-    rsPromoAdded.addEventListener('click', (e) => {
+    epmPromo.addEventListener("click", (e) => {
       let eventElem = <HTMLElement>e.target;
       addBlockPromocod(eventElem);
     });
 
-    inputSearchPromo.addEventListener('input', () => {
-        if (inputSearchPromo.value.toLocaleLowerCase() === 'rs' || inputSearchPromo.value.toLocaleLowerCase() === 'epm'){
-          if (inputSearchPromo.value.toLocaleLowerCase() === 'rs'){
-            inputSearchPromo.after(rsPromo);
-          }
-          if (inputSearchPromo.value.toLocaleLowerCase() === 'epm'){
-            inputSearchPromo.after(epmPromo);
-          }
-        } else {
-          rsPromo.remove();
-          epmPromo.remove();
+    epmPromoAdded.addEventListener("click", (e) => {
+      let eventElem = <HTMLElement>e.target;
+      addBlockPromocod(eventElem);
+    });
+    rsPromoAdded.addEventListener("click", (e) => {
+      let eventElem = <HTMLElement>e.target;
+      addBlockPromocod(eventElem);
+    });
+
+    inputSearchPromo.addEventListener("input", () => {
+      if (
+        inputSearchPromo.value.toLocaleLowerCase() === "rs" ||
+        inputSearchPromo.value.toLocaleLowerCase() === "epm"
+      ) {
+        if (inputSearchPromo.value.toLocaleLowerCase() === "rs") {
+          inputSearchPromo.after(rsPromo);
         }
-    })
-    
-    let promoLocal:string ='';
-    if(localStorage.getItem('promo') != undefined){
-      promoLocal = String(localStorage.getItem('promo'));
+        if (inputSearchPromo.value.toLocaleLowerCase() === "epm") {
+          inputSearchPromo.after(epmPromo);
+        }
+      } else {
+        rsPromo.remove();
+        epmPromo.remove();
+      }
+    });
+
+    let promoLocal: string = "";
+    if (localStorage.getItem("promo") != undefined) {
+      promoLocal = String(localStorage.getItem("promo"));
     }
 
-    function addBlockPromocod(promo: HTMLElement){
-      if (promo.innerHTML === 'ADD'){
-        if (promo.parentElement != null){
-          if(promo.parentElement.classList.contains('rs-promo')){
+    function addBlockPromocod(promo: HTMLElement) {
+      if (promo.innerHTML === "ADD") {
+        if (promo.parentElement != null) {
+          if (promo.parentElement.classList.contains("rs-promo")) {
             inputSearchPromo.before(rsPromoAdded);
-            promoLocal += '-rs';
+            promoLocal += "-rs";
           } else {
             inputSearchPromo.before(epmPromoAdded);
-            promoLocal += '-epm';
+            promoLocal += "-epm";
           }
-          if (allSummaryElement.length === 7){
-            summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.1}`;
-            summaryTotalSumma.style.textDecoration = 'line-through';
-          } 
-          if(allSummaryElement.length === 8){
-            summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.2}`;
-            summaryTotalSumma.style.textDecoration = 'line-through';
+          if (allSummaryElement.length === 7) {
+            summaryTotalSummaDiscount.innerHTML = `${
+              Number(localStorage.getItem("totalCard")) -
+              Number(localStorage.getItem("totalCard")) * 0.1
+            }`;
+            summaryTotalSumma.style.textDecoration = "line-through";
+          }
+          if (allSummaryElement.length === 8) {
+            summaryTotalSummaDiscount.innerHTML = `${
+              Number(localStorage.getItem("totalCard")) -
+              Number(localStorage.getItem("totalCard")) * 0.2
+            }`;
+            summaryTotalSumma.style.textDecoration = "line-through";
           }
         }
-        promoLocal = [...new Set(promoLocal.split('-'))].join('-');
-        localStorage.setItem('promo', `${promoLocal}`);
-      } else if (promo.innerHTML === 'DROP'){
-        if(promo.parentElement != null){
-          if(promo.parentElement.classList.contains('rs-promo-added')){
+        promoLocal = [...new Set(promoLocal.split("-"))].join("-");
+        localStorage.setItem("promo", `${promoLocal}`);
+      } else if (promo.innerHTML === "DROP") {
+        if (promo.parentElement != null) {
+          if (promo.parentElement.classList.contains("rs-promo-added")) {
             promo.parentElement.remove();
-            let str = '-rs';
-            promoLocal = promoLocal.replace(str, '');
+            let str = "-rs";
+            promoLocal = promoLocal.replace(str, "");
           } else {
             promo.parentElement.remove();
-            let str = '-epm';
-            promoLocal = promoLocal.replace(str, '');
+            let str = "-epm";
+            promoLocal = promoLocal.replace(str, "");
           }
-          summaryTotalSummaDiscount.innerHTML = `${Math.round(Number(summaryTotalSummaDiscount.innerHTML)+Number(localStorage.getItem('totalCard'))*0.1)}`;
+          summaryTotalSummaDiscount.innerHTML = `${Math.round(
+            Number(summaryTotalSummaDiscount.innerHTML) +
+              Number(localStorage.getItem("totalCard")) * 0.1
+          )}`;
         }
-        if(summaryTotalSummaDiscount.innerHTML === summaryTotalSumma.innerHTML){
-          summaryTotalSummaDiscount.innerHTML = '';
-          summaryTotalSumma.style.textDecoration = 'none';
+        if (
+          summaryTotalSummaDiscount.innerHTML === summaryTotalSumma.innerHTML
+        ) {
+          summaryTotalSummaDiscount.innerHTML = "";
+          summaryTotalSumma.style.textDecoration = "none";
         }
-        localStorage.setItem('promo', `${promoLocal}`);
-        console.log(promoLocal)
-      } 
+        localStorage.setItem("promo", `${promoLocal}`);
+        console.log(promoLocal);
+      }
     }
 
-    if(localStorage.getItem('promo') != undefined){
-      if(localStorage.getItem('promo')?.split('-').length === 3){
+    if (localStorage.getItem("promo") != undefined) {
+      if (localStorage.getItem("promo")?.split("-").length === 3) {
         inputSearchPromo.before(epmPromoAdded);
         inputSearchPromo.before(rsPromoAdded);
-        summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.2}`;
-        summaryTotalSumma.style.textDecoration = 'line-through';
-      } else if(localStorage.getItem('promo') === '-rs'){
+        summaryTotalSummaDiscount.innerHTML = `${
+          Number(localStorage.getItem("totalCard")) -
+          Number(localStorage.getItem("totalCard")) * 0.2
+        }`;
+        summaryTotalSumma.style.textDecoration = "line-through";
+      } else if (localStorage.getItem("promo") === "-rs") {
         inputSearchPromo.before(rsPromoAdded);
-        summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.1}`;
-        summaryTotalSumma.style.textDecoration = 'line-through';
-      } else if(localStorage.getItem('promo') === '-epm'){
+        summaryTotalSummaDiscount.innerHTML = `${
+          Number(localStorage.getItem("totalCard")) -
+          Number(localStorage.getItem("totalCard")) * 0.1
+        }`;
+        summaryTotalSumma.style.textDecoration = "line-through";
+      } else if (localStorage.getItem("promo") === "-epm") {
         inputSearchPromo.before(epmPromoAdded);
-        summaryTotalSummaDiscount.innerHTML = `${Number(localStorage.getItem('totalCard'))-Number(localStorage.getItem('totalCard'))*0.1}`;
-        summaryTotalSumma.style.textDecoration = 'line-through';
+        summaryTotalSummaDiscount.innerHTML = `${
+          Number(localStorage.getItem("totalCard")) -
+          Number(localStorage.getItem("totalCard")) * 0.1
+        }`;
+        summaryTotalSumma.style.textDecoration = "line-through";
       }
     }
 
@@ -424,18 +573,193 @@ export default function cartProduct(): void{
     let modalBg = <HTMLElement>document.querySelector(".modal-background");
     let modalWindow = <HTMLElement>document.querySelector(".modal-window");
     let closeModal = <HTMLElement>document.querySelector(".modal-close");
-  
+
     toModal.addEventListener("click", () => {
       buyNow();
     });
-  
+
     closeModal.addEventListener("click", () => {
       modalBg.style.display = "none";
       modalWindow.style.display = "none";
     });
+
+    let cardNumber = <HTMLInputElement>document.querySelector(".cardNumber");
+    cardNumber.addEventListener("input", () => {
+      let reg = /^\d{16}$/;
+      let valid = reg.test(cardNumber.value);
+      valid
+        ? (cardNumber.style.border = "3px solid green")
+        : (cardNumber.style.border = "3px solid red");
+      if (cardNumber.style.border == "3px solid green") {
+        let err_p = <HTMLElement>cardNumber.previousElementSibling;
+        err_p.style.display = "none";
+      }
+      let creditCardPage = <HTMLElement>(
+        document.querySelector(".credit-card-bg")
+      );
+      if (cardNumber.value[0] == "4" && cardNumber.value.length == 16) {
+        creditCardPage.innerHTML = "";
+        creditCardPage.innerHTML = `<img src="https://i.ibb.co/KN4gFv9/visa-card.png" />`;
+      } else if (cardNumber.value[0] == "5" && cardNumber.value.length == 16) {
+        creditCardPage.innerHTML = "";
+        creditCardPage.innerHTML = `<img src="https://i.ibb.co/KN6WwGT/master-card.png" />`;
+      } else if (cardNumber.value[0] == "2" && cardNumber.value.length == 16) {
+        creditCardPage.innerHTML = "";
+        creditCardPage.innerHTML = `<img src="https://i.ibb.co/9gbqm6W/mir-card.png" />`;
+      } else {
+        creditCardPage.innerHTML = `<img src="https://i.ibb.co/TLqbk79/default-card.png" />`;
+      }
+    });
+    let cardDate = <HTMLInputElement>document.querySelector(".cardDate");
+    cardDate.addEventListener("input", () => {
+      let reg = /^(0[1-9]|1[0-2])[/](2[3-9])$/;
+      let valid = reg.test(cardDate.value);
+      valid
+        ? (cardDate.style.border = "3px solid green")
+        : (cardDate.style.border = "3px solid red");
+      // if (cardDate.value.length == 2 && !cardDate.value.includes('/')) {
+      //   cardDate.value = cardDate.value+`/`;
+      // }
+      if (cardDate.style.border == "3px solid green") {
+        let err_p = <HTMLElement>cardDate.previousElementSibling;
+        err_p.style.color = "black";
+      }
+      if (cardDate.value.length == 3 && !cardDate.value.includes("/")) {
+        cardDate.value =
+          cardDate.value.slice(0, 2) + "/" + cardDate.value.slice(2);
+      }
+    });
+
+    let cardCVV = <HTMLInputElement>document.querySelector(".cardCVV");
+    cardCVV.addEventListener("input", () => {
+      let reg = /^\d{3}$/;
+      let valid = reg.test(cardCVV.value);
+      valid
+        ? (cardCVV.style.border = "3px solid green")
+        : (cardCVV.style.border = "3px solid red");
+        if (cardCVV.style.border == "3px solid green") {
+          let err_p = <HTMLElement>cardCVV.previousElementSibling;
+          err_p.style.color = "black";
+        }
+    });
+
+    let cardName = <HTMLInputElement>document.querySelector(".cardName");
+    cardName.addEventListener("input", () => {
+      let strName = cardName.value.split(" ");
+      let validCount = strName.length >= 2 ? true : false;
+      let validLength = true;
+      for (let i = 0; i < strName.length; i++) {
+        if (strName[i].length < 3) {
+          validLength = false;
+          break;
+        }
+      }
+      validCount &&
+      validLength &&
+      /^[A-Za-zА-Яа-яё ]+$/.test(cardName.value) == true
+        ? (cardName.style.border = "3px solid green")
+        : (cardName.style.border = "3px solid red");
+      if (cardName.style.border == "3px solid green") {
+        let err_p = <HTMLElement>cardName.previousElementSibling;
+        err_p.style.display = "none";
+      }
+    });
+
+    let cardAddress = <HTMLInputElement>document.querySelector(".cardAddress");
+    cardAddress.addEventListener("input", () => {
+      let strAdress = cardAddress.value.split(" ");
+      let validCount = strAdress.length >= 3 ? true : false;
+      let validLength = true;
+      for (let i = 0; i < strAdress.length; i++) {
+        if (strAdress[i].length < 5) {
+          validLength = false;
+          break;
+        }
+      }
+      validCount &&
+      validLength &&
+      /^[A-Za-zА-Яа-яё ]+$/.test(cardAddress.value) == true
+        ? (cardAddress.style.border = "3px solid green")
+        : (cardAddress.style.border = "3px solid red");
+      if (cardAddress.style.border == "3px solid green") {
+        let err_p = <HTMLElement>cardAddress.previousElementSibling;
+        err_p.style.display = "none";
+      }
+    });
+
+    let cardPhone = <HTMLInputElement>document.querySelector(".cardPhone");
+    cardPhone.addEventListener("input", () => {
+      let reg = /^[\+][\d]{9,}\d$/;
+      let valid = reg.test(cardPhone.value);
+      valid
+        ? (cardPhone.style.border = "3px solid green")
+        : (cardPhone.style.border = "3px solid red");
+      if (cardPhone.style.border == "3px solid green") {
+        let err_p = <HTMLElement>cardPhone.previousElementSibling;
+        err_p.style.display = "none";
+      }
+    });
+
+    let cardEmail = <HTMLInputElement>document.querySelector(".cardEmail");
+    cardEmail.addEventListener("input", () => {
+      let reg = /^[\w]{1}[\w-\.]*@[\w-]+\.[a-z]{2,4}$/i;
+      let valid = reg.test(cardEmail.value);
+      valid
+        ? (cardEmail.style.border = "3px solid green")
+        : (cardEmail.style.border = "3px solid red");
+      if (cardEmail.style.border == "3px solid green") {
+        let err_p = <HTMLElement>cardEmail.previousElementSibling;
+        err_p.style.display = "none";
+      }
+    });
+
+    let inputModalPersonal: Array<HTMLInputElement> = Array.from(
+      document.querySelectorAll(".validCheck")
+    );
+    let inputModalCard: Array<HTMLInputElement> = Array.from(
+      document.querySelectorAll(".validCheckCard")
+    );
+    let confirmButton = <HTMLButtonElement>(
+      document.querySelector(".confirmButton")
+    );
+    let allInputModal: Array<HTMLInputElement> = [inputModalCard, inputModalPersonal].flat();
+    console.log(allInputModal)
+    confirmButton.addEventListener("click", () => {
+      for (let i = 0; i < inputModalPersonal.length; i++) {
+        if (inputModalPersonal[i].style.border != "3px solid green") {
+          let err_p = <HTMLElement>inputModalPersonal[i].previousElementSibling;
+          err_p.style.display = "block";
+          inputModalPersonal[i].style.border = "3px solid red";
+        }
+      }
+      for (let i = 0; i < inputModalCard.length; i++) {
+        if (inputModalCard[i].style.border != "3px solid green") {
+          if (inputModalCard[i].classList.contains("cardNumber")) {
+            let err_p = <HTMLElement>inputModalCard[i].previousElementSibling;
+            err_p.style.display = "block";
+            inputModalCard[i].style.border = "3px solid red";
+          } else {
+            let err_p = <HTMLElement>inputModalCard[i].previousElementSibling;
+            err_p.style.color = "red";
+            inputModalCard[i].style.border = "3px solid red";
+          }
+        }
+      }
+      let inputValidCheck = allInputModal.every((elem) => {
+        if (elem.style.border === "3px solid green"){
+          return true;
+        } else {
+          return false;
+        } 
+      })
+      if (inputValidCheck === true){
+        modalWindow.innerHTML = `<h2 style='padding:20%'>Thanks for your order. Redirect to the store after 3 sec</h2>`;
+        setTimeout(() =>{localStorage.clear();location.href = "/";} , 3000);
+      }
+    });
   }
 }
-export function buyNow(){
+export function buyNow() {
   let modalBg = <HTMLElement>document.querySelector(".modal-background");
   let modalWindow = <HTMLElement>document.querySelector(".modal-window");
   modalBg.style.display = "block";
