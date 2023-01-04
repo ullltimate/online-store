@@ -723,7 +723,7 @@ export default function cartProduct(): void {
       document.querySelector(".confirmButton")
     );
     let allInputModal: Array<HTMLInputElement> = [inputModalCard, inputModalPersonal].flat();
-    
+    console.log(allInputModal)
     confirmButton.addEventListener("click", () => {
       for (let i = 0; i < inputModalPersonal.length; i++) {
         if (inputModalPersonal[i].style.border != "3px solid green") {
@@ -745,17 +745,18 @@ export default function cartProduct(): void {
           }
         }
       }
-      for (let i=0; i<allInputModal.length; i++){
-        if (allInputModal[i].style.border === "3px solid green"){
-          modalWindow.innerHTML = `<h2 style='padding:20%'>Thanks for your order. Redirect to the store after 3 sec</h2>`;
-          setTimeout(redirectForStartPage, 3000);
-        }
+      let inputValidCheck = allInputModal.every((elem) => {
+        if (elem.style.border === "3px solid green"){
+          return true;
+        } else {
+          return false;
+        } 
+      })
+      if (inputValidCheck === true){
+        modalWindow.innerHTML = `<h2 style='padding:20%'>Thanks for your order. Redirect to the store after 3 sec</h2>`;
+        setTimeout(() =>{localStorage.clear();location.href = "/";} , 3000);
       }
     });
-    function redirectForStartPage(){
-      localStorage.clear();
-      location.href = "/";
-    }
   }
 }
 export function buyNow() {
