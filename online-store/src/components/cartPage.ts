@@ -722,6 +722,8 @@ export default function cartProduct(): void {
     let confirmButton = <HTMLButtonElement>(
       document.querySelector(".confirmButton")
     );
+    let allInputModal: Array<HTMLInputElement> = [inputModalCard, inputModalPersonal].flat();
+    console.log(allInputModal)
     confirmButton.addEventListener("click", () => {
       for (let i = 0; i < inputModalPersonal.length; i++) {
         if (inputModalPersonal[i].style.border != "3px solid green") {
@@ -742,6 +744,17 @@ export default function cartProduct(): void {
             inputModalCard[i].style.border = "3px solid red";
           }
         }
+      }
+      let inputValidCheck = allInputModal.every((elem) => {
+        if (elem.style.border === "3px solid green"){
+          return true;
+        } else {
+          return false;
+        } 
+      })
+      if (inputValidCheck === true){
+        modalWindow.innerHTML = `<h2 style='padding:20%'>Thanks for your order. Redirect to the store after 3 sec</h2>`;
+        setTimeout(() =>{localStorage.clear();location.href = "/";} , 3000);
       }
     });
   }
