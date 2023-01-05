@@ -105,7 +105,7 @@ export default function cartProduct(): void {
                 let cardCart = <HTMLElement>document.createElement("div");
                 cardCart.className = "card-cart wrap";
                 cardCart.id = `${dataProducts[i].id}`;
-                cardCart.innerHTML = `<p class="font">${++point}</p>
+                cardCart.innerHTML = `<p class="font currentNumber">${++point}</p>
                 <img class="card-cart-photo" src="${
                   dataProducts[i].thumbnail
                 }" alt="">
@@ -148,7 +148,7 @@ export default function cartProduct(): void {
               let cardCart = <HTMLElement>document.createElement("div");
               cardCart.className = "card-cart wrap";
               cardCart.id = `${dataProducts[i].id}`;
-              cardCart.innerHTML = `<p class="font">${++point}</p>
+              cardCart.innerHTML = `<p class="font currentNumber">${++point}</p>
               <img class="card-cart-photo" src="${
                 dataProducts[i].thumbnail
               }" alt="">
@@ -227,9 +227,16 @@ export default function cartProduct(): void {
         let allCardsToCart: HTMLElement[] = Array.from(
           document.querySelectorAll(".card-cart")
         );
+        let allCardsNumber: HTMLElement[] = Array.from(
+          document.querySelectorAll(".currentNumber")
+        );
         for (let i = 0; i < allCardsToCart.length; i++) {
           allCardsToCart[i].addEventListener("click", (e) => {
             let event = <HTMLElement>e.target;
+            allCardsNumber = Array.from(document.querySelectorAll(".currentNumber"));
+            allCardsToCart= Array.from(document.querySelectorAll(".card-cart"));
+            allSignCount= Array.from(document.querySelectorAll(".sign-count"));
+            allCountSumma= Array.from(document.querySelectorAll(".count-summa"));
             if (event.classList.contains("sign-add")) {
               if(state.totalPages()===1){
                 if (amountStock[i].innerHTML === allSignCount[i].innerHTML) {
@@ -279,11 +286,11 @@ export default function cartProduct(): void {
                 if (amountStock[i].innerHTML === allSignCount[i].innerHTML) {
                   return;
                 }else{
-                  allSignCount[Number(allCardsToCart[i].id)-1].innerHTML = `${Number(allSignCount[Number(allCardsToCart[i].id)-1].innerHTML) + 1}`;
+                  allSignCount[i].innerHTML = `${Number(allSignCount[i].innerHTML) + 1}`;
                   for (let o = 0; o < dataProducts.length; o++) {
                     if (allCardsToCart[i].id === String(dataProducts[o].id)) {
-                      allCountSumma[Number(allCardsToCart[i].id)-1].innerHTML = `${dataProducts[o].price * Number(allSignCount[Number(allCardsToCart[i].id)-1].innerHTML)}`;
-                      localStorage.setItem(`${allCardsToCart[i].id}`,`${allSignCount[Number(allCardsToCart[i].id)-1].innerHTML}-${allCountSumma[Number(allCardsToCart[i].id)-1].innerHTML}`);
+                      allCountSumma[i].innerHTML = `${dataProducts[o].price * Number(allSignCount[i].innerHTML)}`;
+                      localStorage.setItem(`${allCardsToCart[i].id}`,`${allSignCount[i].innerHTML}-${allCountSumma[i].innerHTML}`);
                       localStorage.setItem("count",`${Number(localStorage.getItem("count")) + 1}`);
                       countProduct.innerHTML = `${localStorage.getItem("count")}`;
                       localStorage.setItem("totalCard",`${Number(localStorage.getItem("totalCard")) + dataProducts[o].price}`);
@@ -322,7 +329,7 @@ export default function cartProduct(): void {
               }
           
             }else if (event.classList.contains("sign-remove")) {
-              if (allSignCount[Number(allCardsToCart[i].id)-1].innerHTML === "1") {
+              if (allSignCount[i].innerHTML === "1") {
                 if (productsCartWrap?.children.length === 1) {
                   if(state.totalPages()==1){
                     main.innerHTML = cartPageLayoutEmpty;
@@ -342,12 +349,10 @@ export default function cartProduct(): void {
                       localStorage.setItem("idArrayCart", `${idArrCartLocal}`);
                     }
                     summaryCount.innerHTML = `${localStorage.getItem("count")}`;
-                    summaryTotalSumma.innerHTML = `${localStorage.getItem(
-                      "totalCard"
-                    )}`;
+                    summaryTotalSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
                   }else{
                     allCardsToCart[i].remove();
-                  localStorage.removeItem(`${allCardsToCart[i].id}`);
+                    localStorage.removeItem(`${allCardsToCart[i].id}`);
                   for (let o = 0; o < dataProducts.length; o++) {
                     if (allCardsToCart[i].id === String(dataProducts[o].id)) {
                       localStorage.setItem("totalCard",`${Number(localStorage.getItem("totalCard")) - dataProducts[o].price}`);
@@ -452,8 +457,8 @@ export default function cartProduct(): void {
                   renderItems(state.curPage);
                 }
               } else {
-                allSignCount[Number(allCardsToCart[i].id)-1].innerHTML = `${
-                  Number(allSignCount[Number(allCardsToCart[i].id)-1].innerHTML) - 1
+                allSignCount[i].innerHTML = `${
+                  Number(allSignCount[i].innerHTML) - 1
                 }`;
                 localStorage.setItem(
                   "count",
@@ -462,12 +467,12 @@ export default function cartProduct(): void {
                 countProduct.innerHTML = `${localStorage.getItem("count")}`;
                 for (let o = 0; o < dataProducts.length; o++) {
                   if (allCardsToCart[i].id === String(dataProducts[o].id)) {
-                    allCountSumma[Number(allCardsToCart[i].id)-1].innerHTML = `${
-                      Number(allCountSumma[Number(allCardsToCart[i].id)-1].innerHTML) - dataProducts[o].price
+                    allCountSumma[i].innerHTML = `${
+                      Number(allCountSumma[i].innerHTML) - dataProducts[o].price
                     }`;
                     localStorage.setItem(
                       `${allCardsToCart[i].id}`,
-                      `${allSignCount[Number(allCardsToCart[i].id)-1].innerHTML}-${allCountSumma[Number(allCardsToCart[i].id)-1].innerHTML}`
+                      `${allSignCount[i].innerHTML}-${allCountSumma[i].innerHTML}`
                     );
                     localStorage.setItem(
                       "totalCard",
@@ -587,7 +592,7 @@ export default function cartProduct(): void {
               let cardCart = <HTMLElement>document.createElement("div");
               cardCart.className = "card-cart wrap";
               cardCart.id = `${dataProducts[i].id}`;
-              cardCart.innerHTML = `<p class="font">${++point}</p>
+              cardCart.innerHTML = `<p class="font currentNumber">${++point}</p>
                     <img class="card-cart-photo" src="${
                       dataProducts[i].thumbnail
                     }" alt="">
@@ -630,7 +635,7 @@ export default function cartProduct(): void {
             let cardCart = <HTMLElement>document.createElement("div");
             cardCart.className = "card-cart wrap";
             cardCart.id = `${dataProducts[i].id}`;
-            cardCart.innerHTML = `<p class="font">${++point}</p>
+            cardCart.innerHTML = `<p class="font currentNumber">${++point}</p>
                   <img class="card-cart-photo" src="${
                     dataProducts[i].thumbnail
                   }" alt="">
