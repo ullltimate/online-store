@@ -847,6 +847,23 @@ input[type="range"] {
     width: 80vw;
     height: 70vh;
   } */ 
+
+  .itemsInput{
+    width: 30px;
+    border-radius: 5px;
+    border: none;
+    background-color: rgba(255, 173, 158, 0.29);
+  }
+
+  .next-page{
+    cursor: pointer;
+  }
+
+  .prev-page{
+    cursor: pointer;
+  }
+  
+
   .empty-cart,
   .not-fount{
     text-align: center;
