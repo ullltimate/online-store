@@ -45,8 +45,8 @@ const cartPageLayout: string = `<div class="wrapper">
         <div class="products-cart">
           <div class="products-header wrap font">
             <h2>Products in cart</h2>
-            <p>ITEMS: 1</p>
-            <p>PAGE: &lt 1 &gt</p>
+            <p>ITEMS: <input type="number" value=1 class="itemsInput"></p>
+            <div><a>PAGE:</a><a class="prev-page">&lt</a> <a class="current-page">1</a> <a class="next-page">&gt</a></div>
           </div>
           <div class="products-cart-wrapper">
             
@@ -77,18 +77,13 @@ const cartPageLayoutEmpty: string = `<div class="wrapper">
 
 export default function cartProduct(): void {
   let main = <HTMLElement>document.querySelector(".main");
-  if (
-    localStorage.getItem("count") === null ||
-    localStorage.getItem("count") === "0"
-  ) {
+  if (localStorage.getItem("count") === null || localStorage.getItem("count") === "0") {
     main.innerHTML = cartPageLayoutEmpty;
   } else {
     main.innerHTML = cartPageLayout;
     let point: number = 0;
     let summaryCount = <HTMLElement>document.querySelector(".summary-count");
-    let summaryTotalSumma = <HTMLElement>(
-      document.querySelector(".summary-total-summa")
-    );
+    let summaryTotalSumma = <HTMLElement>(document.querySelector(".summary-total-summa"));
     summaryCount.innerHTML = `${localStorage.getItem("count")}`;
     summaryTotalSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
     let countProduct = <HTMLElement>document.querySelector(".count");
@@ -97,16 +92,14 @@ export default function cartProduct(): void {
     totalCardSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
 
     let idArrayCartLocSor = localStorage.getItem("idArrayCart")?.split("-");
-    let productsCartWrap = document.querySelector(".products-cart-wrapper");
+    let productsCartWrap = <HTMLElement>(document.querySelector(".products-cart-wrapper"));
     for (let i = 0; i < dataProducts.length; i++) {
       if (idArrayCartLocSor != undefined) {
         for (let j = 0; j < idArrayCartLocSor.length; j++) {
           if (dataProducts[i].id === Number(idArrayCartLocSor[j])) {
             if (localStorage.getItem(`${dataProducts[i].id}`) != null) {
               console.log(localStorage.getItem(`${dataProducts[i].id}`));
-              let idArrAmountCountAndSum = localStorage
-                .getItem(`${dataProducts[i].id}`)
-                ?.split("-");
+              let idArrAmountCountAndSum = localStorage.getItem(`${dataProducts[i].id}`)?.split("-");
               if (idArrAmountCountAndSum != undefined) {
                 console.log(idArrAmountCountAndSum);
                 let cardCart = <HTMLElement>document.createElement("div");
@@ -197,6 +190,487 @@ export default function cartProduct(): void {
       }
     }
 
+    const productsInCart = productsCartWrap.children;
+
+    let itemsInput = <HTMLInputElement>document.querySelector(".itemsInput");
+    let cardsCount: number = productsCartWrap.children.length;
+    itemsInput.value = `${cardsCount}`;
+    let prevPageButton = <HTMLElement>document.querySelector(".prev-page");
+    let nextPageButton = <HTMLElement>document.querySelector(".next-page");
+    let currentPage = <HTMLElement>document.querySelector(".current-page");
+    itemsInput.addEventListener("input", () => {
+      toBack();
+      let state = {
+        allItems: Array.from(document.querySelectorAll(".card-cart")),
+        maximumItems: Number(itemsInput.value),
+        initialPage: 1,
+        totalPages() {
+          return Math.ceil(state.allItems.length / Number(itemsInput.value));
+        },
+        curPage: 1,
+      };
+
+      // /get items per each page;
+      let getItems = (page: number) => {
+        state.allItems.forEach((item) => item.remove());
+        let min = (page - 1) * Number(itemsInput.value);
+        let max = page * Number(itemsInput.value);
+
+        //slicing items based on page
+        return state.allItems.slice(min, max);
+      };
+
+      //render items in DOM
+      let renderItems = (page: number) => {
+        let items = getItems(page);
+        items.forEach((item) => productsCartWrap?.append(item));
+        let allCardsToCart: HTMLElement[] = Array.from(
+          document.querySelectorAll(".card-cart")
+        );
+        for (let i = 0; i < allCardsToCart.length; i++) {
+          allCardsToCart[i].addEventListener("click", (e) => {
+            let event = <HTMLElement>e.target;
+            if (event.classList.contains("sign-add")) {
+              if(state.totalPages()===1){
+                if (amountStock[i].innerHTML === allSignCount[i].innerHTML) {
+                  return;
+                } else {
+                  allSignCount[i].innerHTML = `${Number(allSignCount[i].innerHTML) + 1}`;
+                  for (let o = 0; o < dataProducts.length; o++) {
+                    if (allCardsToCart[i].id === String(dataProducts[o].id)) {
+                      allCountSumma[i].innerHTML = `${dataProducts[o].price * Number(allSignCount[i].innerHTML)}`;
+                      localStorage.setItem(`${allCardsToCart[i].id}`,`${allSignCount[i].innerHTML}-${allCountSumma[i].innerHTML}`);
+                      localStorage.setItem("count",`${Number(localStorage.getItem("count")) + 1}`);
+                      countProduct.innerHTML = `${localStorage.getItem("count")}`;
+                      localStorage.setItem("totalCard",`${Number(localStorage.getItem("totalCard")) + dataProducts[o].price}`);
+                      totalCardSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
+                      summaryCount.innerHTML = `${localStorage.getItem("count")}`;
+                      summaryTotalSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
+                      if (localStorage.getItem("promo") != undefined) {
+                        if (localStorage.getItem("promo")?.split("-").length === 3) {
+                          summaryTotalSummaDiscount.innerHTML = `${
+                            Number(localStorage.getItem("totalCard")) -
+                            Number(localStorage.getItem("totalCard")) * 0.2
+                          }`;
+                          summaryTotalSumma.style.textDecoration = "line-through";
+                        } else if (
+                          localStorage.getItem("promo")?.split("-").length === 2
+                        ) {
+                          summaryTotalSummaDiscount.innerHTML = `${
+                            Number(localStorage.getItem("totalCard")) -
+                            Number(localStorage.getItem("totalCard")) * 0.1
+                          }`;
+                          summaryTotalSumma.style.textDecoration = "line-through";
+                        } else if (
+                          localStorage.getItem("promo")?.split("-").length === 1
+                        ) {
+                          summaryTotalSummaDiscount.innerHTML = "";
+                          summaryTotalSumma.style.textDecoration = "none";
+                        }
+                      }
+                    }
+                  }
+                  toBack();
+                  state.allItems = Array.from(productsCartWrap.children);
+                  productsCartWrap.innerHTML = "";
+                  renderItems(state.curPage);
+                }
+              }else{
+                if (amountStock[i].innerHTML === allSignCount[i].innerHTML) {
+                  return;
+                }else{
+                  allSignCount[Number(allCardsToCart[i].id)-1].innerHTML = `${Number(allSignCount[Number(allCardsToCart[i].id)-1].innerHTML) + 1}`;
+                  for (let o = 0; o < dataProducts.length; o++) {
+                    if (allCardsToCart[i].id === String(dataProducts[o].id)) {
+                      allCountSumma[Number(allCardsToCart[i].id)-1].innerHTML = `${dataProducts[o].price * Number(allSignCount[Number(allCardsToCart[i].id)-1].innerHTML)}`;
+                      localStorage.setItem(`${allCardsToCart[i].id}`,`${allSignCount[Number(allCardsToCart[i].id)-1].innerHTML}-${allCountSumma[Number(allCardsToCart[i].id)-1].innerHTML}`);
+                      localStorage.setItem("count",`${Number(localStorage.getItem("count")) + 1}`);
+                      countProduct.innerHTML = `${localStorage.getItem("count")}`;
+                      localStorage.setItem("totalCard",`${Number(localStorage.getItem("totalCard")) + dataProducts[o].price}`);
+                      totalCardSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
+                      summaryCount.innerHTML = `${localStorage.getItem("count")}`;
+                      summaryTotalSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
+                      if (localStorage.getItem("promo") != undefined) {
+                        if (localStorage.getItem("promo")?.split("-").length === 3) {
+                          summaryTotalSummaDiscount.innerHTML = `${
+                            Number(localStorage.getItem("totalCard")) -
+                            Number(localStorage.getItem("totalCard")) * 0.2
+                          }`;
+                          summaryTotalSumma.style.textDecoration = "line-through";
+                        } else if (
+                          localStorage.getItem("promo")?.split("-").length === 2
+                        ) {
+                          summaryTotalSummaDiscount.innerHTML = `${
+                            Number(localStorage.getItem("totalCard")) -
+                            Number(localStorage.getItem("totalCard")) * 0.1
+                          }`;
+                          summaryTotalSumma.style.textDecoration = "line-through";
+                        } else if (
+                          localStorage.getItem("promo")?.split("-").length === 1
+                        ) {
+                          summaryTotalSummaDiscount.innerHTML = "";
+                          summaryTotalSumma.style.textDecoration = "none";
+                        }
+                      }
+                    }
+                  }
+                  toBack();
+                  state.allItems = Array.from(productsCartWrap.children);
+                  productsCartWrap.innerHTML = "";
+                  renderItems(state.curPage);
+                }
+              }
+          
+            }else if (event.classList.contains("sign-remove")) {
+              if (allSignCount[Number(allCardsToCart[i].id)-1].innerHTML === "1") {
+                if (productsCartWrap?.children.length === 1) {
+                  if(state.totalPages()==1){
+                    main.innerHTML = cartPageLayoutEmpty;
+                    localStorage.removeItem(`${allCardsToCart[i].id}`);
+                    localStorage.setItem("count", `${Number(localStorage.getItem("count")) - 1}`);
+                    countProduct.innerHTML = `${localStorage.getItem("count")}`;
+                    for (let o = 0; o < dataProducts.length; o++) {
+                      if (allCardsToCart[i].id === String(dataProducts[o].id)) {
+                        localStorage.setItem("totalCard",`${Number(localStorage.getItem("totalCard")) - dataProducts[o].price}`);
+                        totalCardSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
+                      }
+                    }
+                    let idArrCartLocal = localStorage.getItem("idArrayCart");
+                    if (idArrCartLocal != null) {
+                      let str = `-${allCardsToCart[i].id}`;
+                      idArrCartLocal = idArrCartLocal.replace(str, "");
+                      localStorage.setItem("idArrayCart", `${idArrCartLocal}`);
+                    }
+                    summaryCount.innerHTML = `${localStorage.getItem("count")}`;
+                    summaryTotalSumma.innerHTML = `${localStorage.getItem(
+                      "totalCard"
+                    )}`;
+                  }else{
+                    allCardsToCart[i].remove();
+                  localStorage.removeItem(`${allCardsToCart[i].id}`);
+                  for (let o = 0; o < dataProducts.length; o++) {
+                    if (allCardsToCart[i].id === String(dataProducts[o].id)) {
+                      localStorage.setItem("totalCard",`${Number(localStorage.getItem("totalCard")) - dataProducts[o].price}`);
+                      totalCardSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
+                    }
+                  }
+                  let idArrCartLocal = localStorage.getItem("idArrayCart");
+                  if (idArrCartLocal != null) {
+                    let str = `-${allCardsToCart[i].id}`;
+                    idArrCartLocal = idArrCartLocal.replace(str, "");
+                    localStorage.setItem("idArrayCart", `${idArrCartLocal}`);
+                    localStorage.setItem(
+                      "count",
+                      `${Number(localStorage.getItem("count")) - 1}`
+                    );
+                    countProduct.innerHTML = `${localStorage.getItem("count")}`;
+                  }
+                  summaryCount.innerHTML = `${localStorage.getItem("count")}`;
+                  summaryTotalSumma.innerHTML = `${localStorage.getItem(
+                    "totalCard"
+                  )}`;
+                  if (localStorage.getItem("promo") != undefined) {
+                    if (localStorage.getItem("promo")?.split("-").length === 3) {
+                      summaryTotalSummaDiscount.innerHTML = `${
+                        Number(localStorage.getItem("totalCard")) -
+                        Number(localStorage.getItem("totalCard")) * 0.2
+                      }`;
+                      summaryTotalSumma.style.textDecoration = "line-through";
+                    } else if (
+                      localStorage.getItem("promo")?.split("-").length === 2
+                    ) {
+                      summaryTotalSummaDiscount.innerHTML = `${
+                        Number(localStorage.getItem("totalCard")) -
+                        Number(localStorage.getItem("totalCard")) * 0.1
+                      }`;
+                      summaryTotalSumma.style.textDecoration = "line-through";
+                    } else if (
+                      localStorage.getItem("promo")?.split("-").length === 1
+                    ) {
+                      summaryTotalSummaDiscount.innerHTML = "";
+                      summaryTotalSumma.style.textDecoration = "none";
+                    }
+                  }
+                  toBack();
+                  state.allItems = Array.from(productsCartWrap.children);
+                  productsCartWrap.innerHTML = "";
+                  if(state.curPage!=1){
+                    state.curPage -=1; 
+                  }
+                  renderItems(state.curPage);
+                  }
+                 
+                } else {
+                  allCardsToCart[i].remove();
+                  localStorage.removeItem(`${allCardsToCart[i].id}`);
+                  for (let o = 0; o < dataProducts.length; o++) {
+                    if (allCardsToCart[i].id === String(dataProducts[o].id)) {
+                      localStorage.setItem("totalCard",`${Number(localStorage.getItem("totalCard")) - dataProducts[o].price}`);
+                      totalCardSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
+                    }
+                  }
+                  let idArrCartLocal = localStorage.getItem("idArrayCart");
+                  if (idArrCartLocal != null) {
+                    let str = `-${allCardsToCart[i].id}`;
+                    idArrCartLocal = idArrCartLocal.replace(str, "");
+                    localStorage.setItem("idArrayCart", `${idArrCartLocal}`);
+                    localStorage.setItem(
+                      "count",
+                      `${Number(localStorage.getItem("count")) - 1}`
+                    );
+                    countProduct.innerHTML = `${localStorage.getItem("count")}`;
+                  }
+                  summaryCount.innerHTML = `${localStorage.getItem("count")}`;
+                  summaryTotalSumma.innerHTML = `${localStorage.getItem(
+                    "totalCard"
+                  )}`;
+                  if (localStorage.getItem("promo") != undefined) {
+                    if (localStorage.getItem("promo")?.split("-").length === 3) {
+                      summaryTotalSummaDiscount.innerHTML = `${
+                        Number(localStorage.getItem("totalCard")) -
+                        Number(localStorage.getItem("totalCard")) * 0.2
+                      }`;
+                      summaryTotalSumma.style.textDecoration = "line-through";
+                    } else if (
+                      localStorage.getItem("promo")?.split("-").length === 2
+                    ) {
+                      summaryTotalSummaDiscount.innerHTML = `${
+                        Number(localStorage.getItem("totalCard")) -
+                        Number(localStorage.getItem("totalCard")) * 0.1
+                      }`;
+                      summaryTotalSumma.style.textDecoration = "line-through";
+                    } else if (
+                      localStorage.getItem("promo")?.split("-").length === 1
+                    ) {
+                      summaryTotalSummaDiscount.innerHTML = "";
+                      summaryTotalSumma.style.textDecoration = "none";
+                    }
+                  }
+                  toBack();
+                  state.allItems = Array.from(productsCartWrap.children);
+                  productsCartWrap.innerHTML = "";
+                  renderItems(state.curPage);
+                }
+              } else {
+                allSignCount[Number(allCardsToCart[i].id)-1].innerHTML = `${
+                  Number(allSignCount[Number(allCardsToCart[i].id)-1].innerHTML) - 1
+                }`;
+                localStorage.setItem(
+                  "count",
+                  `${Number(localStorage.getItem("count")) - 1}`
+                );
+                countProduct.innerHTML = `${localStorage.getItem("count")}`;
+                for (let o = 0; o < dataProducts.length; o++) {
+                  if (allCardsToCart[i].id === String(dataProducts[o].id)) {
+                    allCountSumma[Number(allCardsToCart[i].id)-1].innerHTML = `${
+                      Number(allCountSumma[Number(allCardsToCart[i].id)-1].innerHTML) - dataProducts[o].price
+                    }`;
+                    localStorage.setItem(
+                      `${allCardsToCart[i].id}`,
+                      `${allSignCount[Number(allCardsToCart[i].id)-1].innerHTML}-${allCountSumma[Number(allCardsToCart[i].id)-1].innerHTML}`
+                    );
+                    localStorage.setItem(
+                      "totalCard",
+                      `${
+                        Number(localStorage.getItem("totalCard")) -
+                        dataProducts[o].price
+                      }`
+                    );
+                    totalCardSumma.innerHTML = `${localStorage.getItem(
+                      "totalCard"
+                    )}`;
+                  }
+                }
+                summaryCount.innerHTML = `${localStorage.getItem("count")}`;
+                summaryTotalSumma.innerHTML = `${localStorage.getItem(
+                  "totalCard"
+                )}`;
+                if (localStorage.getItem("promo") != undefined) {
+                  if (localStorage.getItem("promo")?.split("-").length === 3) {
+                    summaryTotalSummaDiscount.innerHTML = `${
+                      Number(localStorage.getItem("totalCard")) -
+                      Number(localStorage.getItem("totalCard")) * 0.2
+                    }`;
+                    summaryTotalSumma.style.textDecoration = "line-through";
+                  } else if (
+                    localStorage.getItem("promo")?.split("-").length === 2
+                  ) {
+                    summaryTotalSummaDiscount.innerHTML = `${
+                      Number(localStorage.getItem("totalCard")) -
+                      Number(localStorage.getItem("totalCard")) * 0.1
+                    }`;
+                    summaryTotalSumma.style.textDecoration = "line-through";
+                  } else if (
+                    localStorage.getItem("promo")?.split("-").length === 1
+                  ) {
+                    summaryTotalSummaDiscount.innerHTML = "";
+                    summaryTotalSumma.style.textDecoration = "none";
+                  }
+                }
+                toBack();
+                state.allItems = Array.from(productsCartWrap.children);
+                productsCartWrap.innerHTML = "";
+                renderItems(state.curPage);
+              }
+            } 
+          });
+        }
+        currentPage.innerText = `${state.curPage}`;
+      };
+
+      //render by default the first 10 when DOM loads
+      renderItems(state.initialPage);
+
+      let displayBtns = (page: number) => {
+        //If there's only one page, hide btns
+        if (state.totalPages() === state.initialPage) {
+          prevPageButton.style.display = "none";
+          nextPageButton.style.display = "none";
+        }
+
+        //If the last page, display only prev. btn
+        if (page === state.totalPages() && page !== state.initialPage) {
+          nextPageButton.style.display = "none";
+          prevPageButton.style.display = "inline";
+        }
+
+        //If the 1st page, display only next btn
+        if (
+          page === state.initialPage &&
+          state.totalPages() > state.initialPage
+        ) {
+          nextPageButton.style.display = "inline";
+          prevPageButton.style.display = "none";
+        }
+
+        //If not the 1st page and not the last one
+        if (page !== state.initialPage && page < state.totalPages()) {
+          nextPageButton.style.display = "inline";
+          prevPageButton.style.display = "inline";
+        }
+      };
+
+      //Display btns based on met conditions when DOM loads
+      displayBtns(state.initialPage);
+
+      prevPageButton.addEventListener("click", () => {
+        productsCartWrap.innerHTML = "";
+        state.curPage--;
+        renderItems(state.curPage);
+        displayBtns(state.curPage);
+      });
+
+      nextPageButton.addEventListener("click", () => {
+        productsCartWrap.innerHTML = "";
+        state.curPage++;
+        renderItems(state.curPage);
+        displayBtns(state.curPage);
+      });
+    });
+
+    function toBack() {
+      point = 0;
+      productsCartWrap.innerHTML = "";
+      let idArrayCartLocSor = localStorage.getItem("idArrayCart")?.split("-");
+      for (let i = 0; i < dataProducts.length; i++) {
+        if (
+          idArrayCartLocSor != undefined &&
+          idArrayCartLocSor.includes(String(dataProducts[i].id))
+        ) {
+          if (localStorage.getItem(`${dataProducts[i].id}`) != null) {
+            console.log(localStorage.getItem(`${dataProducts[i].id}`));
+            let idArrAmountCountAndSum = localStorage
+              .getItem(`${dataProducts[i].id}`)
+              ?.split("-");
+            if (idArrAmountCountAndSum != undefined) {
+              console.log(idArrAmountCountAndSum);
+              let cardCart = <HTMLElement>document.createElement("div");
+              cardCart.className = "card-cart wrap";
+              cardCart.id = `${dataProducts[i].id}`;
+              cardCart.innerHTML = `<p class="font">${++point}</p>
+                    <img class="card-cart-photo" src="${
+                      dataProducts[i].thumbnail
+                    }" alt="">
+                    <div class="card-cart-info wrap">
+                      <p class="header-text font">${dataProducts[i].title}</p>
+                      <div class="cart-info-description-and-count wrap">
+                        <p class="cart-info-desc font">${
+                          dataProducts[i].description
+                        }</p>
+                        <div class="cart-info-count">
+                          <p class="font">STOCK: <a class='stock-amount'>${
+                            dataProducts[i].stock
+                          }</a></p>
+                          <div class="cart-info-current-count wrap">
+                            <div class="round-sign sign-add wrap">+</div>
+                            <p class="font sign-count">${
+                              idArrAmountCountAndSum[0]
+                            }</p>
+                            <div class="round-sign sign-remove wrap">-</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="cart-info-rating-discount-cost wrap">
+                        <div class="cart-info-rating-discount wrap">
+                          <ul class="font">
+                            <li>Rating: </li>
+                            <li>Discount: </li>
+                          </ul>
+                          <ul class="font">
+                            <li>${dataProducts[i].rating}</li>
+                            <li>${dataProducts[i].discountPercentage}</li>
+                          </ul>
+                        </div>
+                        <p class='count-summa'>${idArrAmountCountAndSum[1]}</p>
+                      </div>
+                    </div>`;
+              productsCartWrap?.append(cardCart);
+            }
+          } else {
+            let cardCart = <HTMLElement>document.createElement("div");
+            cardCart.className = "card-cart wrap";
+            cardCart.id = `${dataProducts[i].id}`;
+            cardCart.innerHTML = `<p class="font">${++point}</p>
+                  <img class="card-cart-photo" src="${
+                    dataProducts[i].thumbnail
+                  }" alt="">
+                  <div class="card-cart-info wrap">
+                    <p class="header-text font">${dataProducts[i].title}</p>
+                    <div class="cart-info-description-and-count wrap">
+                      <p class="cart-info-desc font">${
+                        dataProducts[i].description
+                      }</p>
+                      <div class="cart-info-count">
+                        <p class="font">STOCK: <a class='stock-amount'>${
+                          dataProducts[i].stock
+                        }</a></p>
+                        <div class="cart-info-current-count wrap">
+                          <div class="round-sign sign-add wrap">+</div>
+                          <p class="font sign-count">1</p>
+                          <div class="round-sign sign-remove wrap">-</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cart-info-rating-discount-cost wrap">
+                      <div class="cart-info-rating-discount wrap">
+                        <ul class="font">
+                          <li>Rating: </li>
+                          <li>Discount: </li>
+                        </ul>
+                        <ul class="font">
+                          <li>${dataProducts[i].rating}</li>
+                          <li>${dataProducts[i].discountPercentage}</li>
+                        </ul>
+                      </div>
+                      <p class='count-summa'>${dataProducts[i].price}</p>
+                    </div>
+                  </div>`;
+            productsCartWrap?.append(cardCart);
+          }
+        }
+      }
+    }
+
     let allCardsToCart: HTMLElement[] = Array.from(
       document.querySelectorAll(".card-cart")
     );
@@ -217,37 +691,17 @@ export default function cartProduct(): void {
           if (amountStock[i].innerHTML === allSignCount[i].innerHTML) {
             return;
           } else {
-            allSignCount[i].innerHTML = `${
-              Number(allSignCount[i].innerHTML) + 1
-            }`;
+            allSignCount[i].innerHTML = `${Number(allSignCount[i].innerHTML) + 1}`;
             for (let o = 0; o < dataProducts.length; o++) {
               if (allCardsToCart[i].id === String(dataProducts[o].id)) {
-                allCountSumma[i].innerHTML = `${
-                  dataProducts[o].price * Number(allSignCount[i].innerHTML)
-                }`;
-                localStorage.setItem(
-                  `${allCardsToCart[i].id}`,
-                  `${allSignCount[i].innerHTML}-${allCountSumma[i].innerHTML}`
-                );
-                localStorage.setItem(
-                  "count",
-                  `${Number(localStorage.getItem("count")) + 1}`
-                );
+                allCountSumma[i].innerHTML = `${dataProducts[o].price * Number(allSignCount[i].innerHTML)}`;
+                localStorage.setItem(`${allCardsToCart[i].id}`,`${allSignCount[i].innerHTML}-${allCountSumma[i].innerHTML}`);
+                localStorage.setItem("count",`${Number(localStorage.getItem("count")) + 1}`);
                 countProduct.innerHTML = `${localStorage.getItem("count")}`;
-                localStorage.setItem(
-                  "totalCard",
-                  `${
-                    Number(localStorage.getItem("totalCard")) +
-                    dataProducts[o].price
-                  }`
-                );
-                totalCardSumma.innerHTML = `${localStorage.getItem(
-                  "totalCard"
-                )}`;
+                localStorage.setItem("totalCard",`${Number(localStorage.getItem("totalCard")) + dataProducts[o].price}`);
+                totalCardSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
                 summaryCount.innerHTML = `${localStorage.getItem("count")}`;
-                summaryTotalSumma.innerHTML = `${localStorage.getItem(
-                  "totalCard"
-                )}`;
+                summaryTotalSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
                 if (localStorage.getItem("promo") != undefined) {
                   if (localStorage.getItem("promo")?.split("-").length === 3) {
                     summaryTotalSummaDiscount.innerHTML = `${
@@ -278,10 +732,7 @@ export default function cartProduct(): void {
             if (productsCartWrap?.children.length === 1) {
               main.innerHTML = cartPageLayoutEmpty;
               localStorage.removeItem(`${allCardsToCart[i].id}`);
-              localStorage.setItem(
-                "count",
-                `${Number(localStorage.getItem("count")) - 1}`
-              );
+              localStorage.setItem("count", `${Number(localStorage.getItem("count")) - 1}`);
               countProduct.innerHTML = `${localStorage.getItem("count")}`;
               for (let o = 0; o < dataProducts.length; o++) {
                 if (allCardsToCart[i].id === String(dataProducts[o].id)) {
@@ -637,10 +1088,10 @@ export default function cartProduct(): void {
       valid
         ? (cardCVV.style.border = "3px solid green")
         : (cardCVV.style.border = "3px solid red");
-        if (cardCVV.style.border == "3px solid green") {
-          let err_p = <HTMLElement>cardCVV.previousElementSibling;
-          err_p.style.color = "black";
-        }
+      if (cardCVV.style.border == "3px solid green") {
+        let err_p = <HTMLElement>cardCVV.previousElementSibling;
+        err_p.style.color = "black";
+      }
     });
 
     let cardName = <HTMLInputElement>document.querySelector(".cardName");
