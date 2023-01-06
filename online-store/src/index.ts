@@ -16,6 +16,10 @@ const getRoute = () => {
             data: cartProduct,
         },
         {
+            path: '/cart-buynow',
+            data: cartProduct,
+        },
+        {
             path: '/404',
             data: page404,
         },

@@ -3,7 +3,7 @@ import productPage from "./productPage";
 const cartPageLayout: string = `<div class="wrapper">
     <div class="modal-background">
       <div class="modal-window">
-        <img class="modal-close" src="https://i.ibb.co/q70WLs6/close.png">
+        <a href='/cart'><img class="modal-close" src="https://i.ibb.co/q70WLs6/close.png"></a>
         <div class="modal-info">
           <div class="modal-card">
             <p>Credit card details</p>
@@ -76,11 +76,16 @@ const cartPageLayoutEmpty: string = `<div class="wrapper">
 </div>`;
 
 export default function cartProduct(): void {
+  let path = window.location.pathname;
+  console.log(path)
   let main = <HTMLElement>document.querySelector(".main");
   if (localStorage.getItem("count") === null || localStorage.getItem("count") === "0") {
     main.innerHTML = cartPageLayoutEmpty;
   } else {
     main.innerHTML = cartPageLayout;
+    if (path === '/cart-buynow'){
+      buyNow();
+    }
     let point: number = 0;
     let summaryCount = <HTMLElement>document.querySelector(".summary-count");
     let summaryTotalSumma = <HTMLElement>(document.querySelector(".summary-total-summa"));
