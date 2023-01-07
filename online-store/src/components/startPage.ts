@@ -232,9 +232,7 @@ export default function home(): void {
                 localStorage.setItem('idArrayCart', idArrayElemAddCart);
                 localStorage.setItem('count', String(count));
                 localStorage.setItem('totalCard', String(summa));
-            } else {
-                //productPage(i, allCards[i].id);
-            }
+            } 
         });
     }
   }
@@ -261,7 +259,6 @@ export default function home(): void {
             elem.src = "https://i.ibb.co/V3mPKbP/icons8-48.png";
             count += 1;
             countProduct.innerHTML = `${count}`;
-            //localStorage.setItem('basketSrc', elem.src);
             if (id != undefined){
                 idArrayElemAddCart += `-${id}`;
                 for (let i=0; i<dataProducts.length; i++){

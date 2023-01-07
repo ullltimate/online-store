@@ -83,43 +83,7 @@ export default function productPage(): void {
       }
     }
   }
-  //let title = <HTMLElement>document.querySelector(".product-title");
-  //title.innerText = dataProducts[i].title;
-
-  //let description = <HTMLElement>(document.querySelector(".product-description"));
-  //description.innerText = dataProducts[i].description;
-
-  //let rating = <HTMLElement>document.querySelector(".product-rating");
-  //rating.innerText = String(dataProducts[i].rating);
-
-  //let stock = <HTMLElement>document.querySelector(".product-stock");
-  //stock.innerText = String(dataProducts[i].stock);
-
-  //let brand = <HTMLElement>document.querySelector(".product-brand");
-  //brand.innerText = dataProducts[i].brand;
-
-  //let category = <HTMLElement>document.querySelector(".product-category");
-  //category.innerText = dataProducts[i].category;
-
-  //let discount = <HTMLElement>(document.querySelector(".product-discountPercentage"));
-  //discount.innerText = String(dataProducts[i].discountPercentage);
-
-  //let path = <HTMLElement>document.querySelector(".path-product");
-  //path.innerText = `Store > ${dataProducts[i].category} > ${dataProducts[i].brand} > ${dataProducts[i].title}`;
-
-  //let main_page = <HTMLElement>document.querySelector(".photos-main");
-  //main_page.style.background = `url('${dataProducts[i].images[0]}') no-repeat`;
-  //for (let j = 0; j < 3; j++) {
-  //  let k = <HTMLElement>document.getElementsByClassName("photo-other")[j];
-  //  k.style.backgroundImage = `url('${dataProducts[i].images[j]}')`;
-  //  k.style.backgroundSize = "cover";
-  //  k.addEventListener("click", () => {
-  //    main_page.style.backgroundImage = `url('${dataProducts[i].images[j]}')`;
-  //  });
-  //}
-  //let cost = <HTMLElement>document.querySelector(".cost-product");
-  //cost.innerText = `€${dataProducts[i].price}`;
-
+ 
   let btnAdd = <HTMLElement>document.querySelector(".btn-add");
   let count: number = 0;
   let countProduct = <HTMLElement>document.querySelector(".count");
