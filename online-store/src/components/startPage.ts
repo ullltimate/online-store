@@ -353,6 +353,8 @@ export default function home(): void {
     if (selectSort.value === "raiting-DESC") {
       sortRaitingDESC();
     }
+    let path:string = '?sort=';
+    history.replaceState( {}, '', path + selectSort.value);
   };
 
   function sortPriceASC() {
@@ -760,5 +762,45 @@ function checkAllFilters(resultSearch:string[], checkboxC:string[], checkboxB:st
     }
   }
 }
+const sortByQueryParams= () => {
+  const getQueryParams = (url: string) => {
+    const paramArr = url.slice(url.indexOf('?') + 1).split('&');
+    const params: { [index: string]: any } = {};
+    paramArr.map(param => {
+      const [key, val] = param.split('=');
+      params[key] = decodeURIComponent(val);
+    })
+    return params;
+  }
+  const params = getQueryParams(window.location.search)
+  console.log(params);
+  for (let key in params) {
+    if (key === 'sort') {
+      let selectSort = <HTMLSelectElement>document.querySelector(".select-sort");
+      if (params[key].toLowerCase() === 'price-asc') {
+        selectSort.value = "price-ASC";
+        sortPriceASC();
+      }
+      if (params[key].toLowerCase() === 'price-desc') {
+        selectSort.value = "price-DESC";
+        sortPriceDESC();
+      }
+      if (params[key].toLowerCase() === 'raiting-asc') {
+        selectSort.value = "raiting-ASC";
+        sortRaitingASC();
+      }
+      if (params[key].toLowerCase() === 'raiting-desc') {
+        selectSort.value = "raiting-DESC";
+        sortRaitingDESC();
+      }
+    }
+  }
+  let handleLocation = () => { 
+    window.addEventListener('popstate', handleLocation);
+      window.addEventListener('DOMContentLoaded', handleLocation);
+  }; 
+  handleLocation();
+}
+sortByQueryParams();
 }
 
