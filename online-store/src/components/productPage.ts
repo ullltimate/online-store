@@ -41,9 +41,7 @@ const productPageLayout: string = `
 </div>`;
 
 export default function productPage(): void {
-  console.log(location.pathname);
   let id: string = location.pathname.slice(location.pathname.indexOf("-") + 1);
-  console.log(id);
   let main = <HTMLElement>document.querySelector(".main");
   main.innerHTML = productPageLayout;
 
@@ -139,11 +137,8 @@ export default function productPage(): void {
   if (localStorage.getItem("idArrayCart") != undefined) {
     idArrayElemAddCart = String(localStorage.getItem("idArrayCart"));
   }
-  console.log(localStorage.getItem("idArrayCart"));
-  console.log(id);
   if (localStorage.getItem("idArrayCart") != undefined) {
     let idArrayCartLocSor = localStorage.getItem("idArrayCart")?.split("-");
-    console.log(idArrayCartLocSor);
     if (idArrayCartLocSor != undefined) {
       for (let i = 0; i < idArrayCartLocSor.length; i++) {
         if (idArrayCartLocSor[i] === id) {

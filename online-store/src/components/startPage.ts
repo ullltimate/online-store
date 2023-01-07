@@ -227,7 +227,6 @@ export default function home(): void {
     for (let i = 0; i < dataProducts.length; i++) {
         allCards[i].addEventListener("click", (e) => {
             let eventElem = <HTMLImageElement>e.target;
-            console.log(eventElem)
             if (eventElem.classList.contains('card-basket-img')){
                 addToCart(eventElem, eventElem.parentElement?.parentElement?.id);
                 localStorage.setItem('idArrayCart', idArrayElemAddCart);
@@ -461,12 +460,10 @@ function changeSpanForCheckbox(currentSpan:any, filterArray:string []) {
     acc[el] = (acc[el] || 0) + 1;
     return acc;
   }, {});
-  console.log(countForSpanB);
   let countForSpanC = categories.reduce<Record<string, number>>(function (acc, el) {
     acc[el] = (acc[el] || 0) + 1;
     return acc;
   }, {});
-  console.log(countForSpanC);
 
   for (let i = 0; i < allSpan.length; i++) {
     let startCount = allSpan[i].innerText;
@@ -777,8 +774,7 @@ const sortByQueryParams= () => {
     })
     return params;
   }
-  const params = getQueryParams(window.location.search)
-  console.log(params);
+  const params = getQueryParams(window.location.search);
   for (let key in params) {
     if (key === 'sort') {
       let selectSort = <HTMLSelectElement>document.querySelector(".select-sort");

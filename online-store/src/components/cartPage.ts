@@ -102,10 +102,8 @@ export default function cartProduct(): void {
         for (let j = 0; j < idArrayCartLocSor.length; j++) {
           if (dataProducts[i].id === Number(idArrayCartLocSor[j])) {
             if (localStorage.getItem(`${dataProducts[i].id}`) != null) {
-              console.log(localStorage.getItem(`${dataProducts[i].id}`));
               let idArrAmountCountAndSum = localStorage.getItem(`${dataProducts[i].id}`)?.split("-");
               if (idArrAmountCountAndSum != undefined) {
-                console.log(idArrAmountCountAndSum);
                 let cardCart = <HTMLElement>document.createElement("div");
                 cardCart.className = "card-cart wrap";
                 cardCart.id = `${dataProducts[i].id}`;
@@ -587,12 +585,10 @@ export default function cartProduct(): void {
           idArrayCartLocSor.includes(String(dataProducts[i].id))
         ) {
           if (localStorage.getItem(`${dataProducts[i].id}`) != null) {
-            console.log(localStorage.getItem(`${dataProducts[i].id}`));
             let idArrAmountCountAndSum = localStorage
               .getItem(`${dataProducts[i].id}`)
               ?.split("-");
             if (idArrAmountCountAndSum != undefined) {
-              console.log(idArrAmountCountAndSum);
               let cardCart = <HTMLElement>document.createElement("div");
               cardCart.className = "card-cart wrap";
               cardCart.id = `${dataProducts[i].id}`;
@@ -999,7 +995,6 @@ export default function cartProduct(): void {
           summaryTotalSumma.style.textDecoration = "none";
         }
         localStorage.setItem("promo", `${promoLocal}`);
-        console.log(promoLocal);
       }
     }
 
@@ -1184,7 +1179,6 @@ export default function cartProduct(): void {
       document.querySelector(".confirmButton")
     );
     let allInputModal: Array<HTMLInputElement> = [inputModalCard, inputModalPersonal].flat();
-    console.log(allInputModal)
     confirmButton.addEventListener("click", () => {
       for (let i = 0; i < inputModalPersonal.length; i++) {
         if (inputModalPersonal[i].style.border != "3px solid green") {
