@@ -202,6 +202,20 @@ export default function home(): void {
     filterBrand.append(checkboxBrand);
   }
 
+  let copyLink = <HTMLElement>document.querySelector('.btn-copy');
+  copyLink.addEventListener('click', () => {
+    let link = window.location.href;
+    navigator.clipboard.writeText(link).then(() => {
+      if (copyLink.innerText !== 'Copied!') {
+        const originalText = copyLink.innerText;
+        copyLink.innerText = 'Copied!';
+        setTimeout(() => {
+          copyLink.innerText = originalText;
+        }, 1000);
+      }
+    })
+  })
+
   let allCards: Array<HTMLElement> = Array.from(document.querySelectorAll('.products-card'));
 
   if (allCards != undefined) {
