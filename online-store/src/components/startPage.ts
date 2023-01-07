@@ -216,6 +216,11 @@ export default function home(): void {
     })
   })
 
+  let btnReset = <HTMLElement>document.querySelector('.btn-reset');
+  btnReset.addEventListener('click', () => {
+    window.location.href = '/';
+  })
+
   let allCards: Array<HTMLElement> = Array.from(document.querySelectorAll('.products-card'));
 
   if (allCards != undefined) {
