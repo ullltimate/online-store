@@ -479,6 +479,7 @@ textarea {
     border: 1px solid rgba(255, 173, 158, 0.5);
     justify-content: space-evenly;
     border-radius: 5px;
+    cursor: pointer;
 }
 .size-elem-big:hover,
 .size-elem-small:hover,
@@ -515,6 +516,7 @@ button:hover{
     height: 34px;
     border: none;
     border-radius: 5px;
+    cursor: pointer;
 }
 .search{
     height: 34px;
@@ -559,6 +561,7 @@ button:hover{
 input[type=checkbox]{
     width: 15px;
     height: 15px;
+    cursor: pointer;
 }
 input[type=checkbox]:checked{
     accent-color: rgba(255, 173, 158, 0.5);
@@ -758,6 +761,7 @@ input[type="range"] {
     height: 100%;
     background-color: rgba(255, 173, 158, 0.29);
     border-radius: 1vw;
+    cursor: pointer;
   }
   /* info of product */
   .info-product {

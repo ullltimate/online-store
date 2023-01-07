@@ -168,7 +168,7 @@ export default function home(): void {
               <div class="products-card-image">
                 <img src="${dataProducts[i].thumbnail}" alt="" class="card-image">
               </div>
-            </a>    
+            </a>
             <div class="products-card-title wrap">
               <a href = '/product-${dataProducts[i].id}'>  
                 <img src="https://i.ibb.co/b1fRcKR/icons8-100-1.png" alt="" class="card-expand-img">
