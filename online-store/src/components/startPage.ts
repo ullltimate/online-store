@@ -457,12 +457,10 @@ function changeSpanForCheckbox(filterArray:string [], currentSpan?:HTMLSpanEleme
     acc[el] = (acc[el] || 0) + 1;
     return acc;
   }, {});
-  console.log(countForSpanB);
   let countForSpanC = categories.reduce<Record<string, number>>(function (acc, el) {
     acc[el] = (acc[el] || 0) + 1;
     return acc;
   }, {});
-  console.log(countForSpanC);
 
   for (let i = 0; i < allSpan.length; i++) {
     let startCount = allSpan[i].innerText;
