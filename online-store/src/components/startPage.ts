@@ -431,7 +431,7 @@ function startSPanForCheckbox() {
 let checkboxesP: Array<HTMLElement> = Array.from(document.querySelectorAll(`.checkbox-line`));
 let checkboxes: Array<HTMLInputElement> = Array.from(document.querySelectorAll(`input[type="checkbox"]`));
 
-function changeSpanForCheckbox(currentSpan:any, filterArray:string []) {
+function changeSpanForCheckbox(filterArray:string [], currentSpan?:HTMLSpanElement, null_el?:number) {
   let allSpan: Array<HTMLElement> = Array.from(document.querySelectorAll(".countFilters"));
   let brands = [];
   let categories = [];
@@ -457,10 +457,12 @@ function changeSpanForCheckbox(currentSpan:any, filterArray:string []) {
     acc[el] = (acc[el] || 0) + 1;
     return acc;
   }, {});
+  console.log(countForSpanB);
   let countForSpanC = categories.reduce<Record<string, number>>(function (acc, el) {
     acc[el] = (acc[el] || 0) + 1;
     return acc;
   }, {});
+  console.log(countForSpanC);
 
   for (let i = 0; i < allSpan.length; i++) {
     let startCount = allSpan[i].innerText;
@@ -538,7 +540,7 @@ for (let i = 0; i < checkboxesP.length; i++) {
     if (eventElem.nodeName == "INPUT") {
       eventElem.addEventListener("change", (eventElem)=>{
         filter()});
-      changeSpanForCheckbox(currentSpan, mathcedFinal);
+        changeSpanForCheckbox(mathcedFinal, currentSpan, 1);
     }
   });
 }
@@ -616,7 +618,7 @@ searchFilter.addEventListener("input", () => {
     emptyPage.style.display="flex";
     productsCards.style.display="none";  
   }
-  changeSpanForCheckbox(0, mathcedFinal);
+  changeSpanForCheckbox(mathcedFinal, undefined, 0);
 });
 
 let priceRange:number[] = [];
@@ -733,7 +735,7 @@ function checkAllFilters(resultSearch:string[], checkboxC:string[], checkboxB:st
     let matched1 = resultSearch.filter((el) => rangeFilter.indexOf(el) > -1);
     let matched2 = checkboxB.filter((el) => checkboxC.indexOf(el) > -1);
     mathcedFinal = matched1.filter((el) => matched2.indexOf(el) > -1);
-    changeSpanForCheckbox(0, mathcedFinal);
+    changeSpanForCheckbox(mathcedFinal, undefined , 0);
     if (mathcedFinal.length == 0) {
       emptyPage.style.display = "flex";
       productsCards.style.display="none"; 
