@@ -227,15 +227,12 @@ export default function home(): void {
     for (let i = 0; i < dataProducts.length; i++) {
         allCards[i].addEventListener("click", (e) => {
             let eventElem = <HTMLImageElement>e.target;
-            console.log(eventElem)
             if (eventElem.classList.contains('card-basket-img')){
                 addToCart(eventElem, eventElem.parentElement?.parentElement?.id);
                 localStorage.setItem('idArrayCart', idArrayElemAddCart);
                 localStorage.setItem('count', String(count));
                 localStorage.setItem('totalCard', String(summa));
-            } else {
-                //productPage(i, allCards[i].id);
-            }
+            } 
         });
     }
   }
@@ -262,7 +259,6 @@ export default function home(): void {
             elem.src = "https://i.ibb.co/V3mPKbP/icons8-48.png";
             count += 1;
             countProduct.innerHTML = `${count}`;
-            //localStorage.setItem('basketSrc', elem.src);
             if (id != undefined){
                 idArrayElemAddCart += `-${id}`;
                 for (let i=0; i<dataProducts.length; i++){
@@ -435,7 +431,7 @@ function startSPanForCheckbox() {
 let checkboxesP: Array<HTMLElement> = Array.from(document.querySelectorAll(`.checkbox-line`));
 let checkboxes: Array<HTMLInputElement> = Array.from(document.querySelectorAll(`input[type="checkbox"]`));
 
-function changeSpanForCheckbox(currentSpan:any, filterArray:string []) {
+function changeSpanForCheckbox(filterArray:string [], currentSpan?:HTMLSpanElement, null_el?:number) {
   let allSpan: Array<HTMLElement> = Array.from(document.querySelectorAll(".countFilters"));
   let brands = [];
   let categories = [];
@@ -461,12 +457,10 @@ function changeSpanForCheckbox(currentSpan:any, filterArray:string []) {
     acc[el] = (acc[el] || 0) + 1;
     return acc;
   }, {});
-  console.log(countForSpanB);
   let countForSpanC = categories.reduce<Record<string, number>>(function (acc, el) {
     acc[el] = (acc[el] || 0) + 1;
     return acc;
   }, {});
-  console.log(countForSpanC);
 
   for (let i = 0; i < allSpan.length; i++) {
     let startCount = allSpan[i].innerText;
@@ -544,7 +538,7 @@ for (let i = 0; i < checkboxesP.length; i++) {
     if (eventElem.nodeName == "INPUT") {
       eventElem.addEventListener("change", (eventElem)=>{
         filter()});
-      changeSpanForCheckbox(currentSpan, mathcedFinal);
+        changeSpanForCheckbox(mathcedFinal, currentSpan, 1);
     }
   });
 }
@@ -622,7 +616,7 @@ searchFilter.addEventListener("input", () => {
     emptyPage.style.display="flex";
     productsCards.style.display="none";  
   }
-  changeSpanForCheckbox(0, mathcedFinal);
+  changeSpanForCheckbox(mathcedFinal, undefined, 0);
 });
 
 let priceRange:number[] = [];
@@ -739,8 +733,8 @@ function checkAllFilters(resultSearch:string[], checkboxC:string[], checkboxB:st
     let matched1 = resultSearch.filter((el) => rangeFilter.indexOf(el) > -1);
     let matched2 = checkboxB.filter((el) => checkboxC.indexOf(el) > -1);
     mathcedFinal = matched1.filter((el) => matched2.indexOf(el) > -1);
-    changeSpanForCheckbox(0, mathcedFinal);
-    if (mathcedFinal.length == 0) {
+    changeSpanForCheckbox(mathcedFinal, undefined , 0);
+    if (mathcedFinal.length == 0 || (mathcedFinal.length==21&&searchFilter.value!='')) {
       emptyPage.style.display = "flex";
       productsCards.style.display="none"; 
       p_found.innerText = `Found: 0`;
@@ -777,8 +771,7 @@ const sortByQueryParams= () => {
     })
     return params;
   }
-  const params = getQueryParams(window.location.search)
-  console.log(params);
+  const params = getQueryParams(window.location.search);
   for (let key in params) {
     if (key === 'sort') {
       let selectSort = <HTMLSelectElement>document.querySelector(".select-sort");

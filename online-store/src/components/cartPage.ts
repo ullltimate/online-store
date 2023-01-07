@@ -102,10 +102,8 @@ export default function cartProduct(): void {
         for (let j = 0; j < idArrayCartLocSor.length; j++) {
           if (dataProducts[i].id === Number(idArrayCartLocSor[j])) {
             if (localStorage.getItem(`${dataProducts[i].id}`) != null) {
-              console.log(localStorage.getItem(`${dataProducts[i].id}`));
               let idArrAmountCountAndSum = localStorage.getItem(`${dataProducts[i].id}`)?.split("-");
               if (idArrAmountCountAndSum != undefined) {
-                console.log(idArrAmountCountAndSum);
                 let cardCart = <HTMLElement>document.createElement("div");
                 cardCart.className = "card-cart wrap";
                 cardCart.id = `${dataProducts[i].id}`;
@@ -214,17 +212,13 @@ export default function cartProduct(): void {
         curPage: 1,
       };
 
-      // /get items per each page;
       let getItems = (page: number) => {
         state.allItems.forEach((item) => item.remove());
         let min = (page - 1) * Number(itemsInput.value);
         let max = page * Number(itemsInput.value);
-
-        //slicing items based on page
         return state.allItems.slice(min, max);
       };
 
-      //render items in DOM
       let renderItems = (page: number) => {
         let items = getItems(page);
         items.forEach((item) => productsCartWrap?.append(item));
@@ -527,23 +521,19 @@ export default function cartProduct(): void {
         currentPage.innerText = `${state.curPage}`;
       };
 
-      //render by default the first 10 when DOM loads
       renderItems(state.initialPage);
 
       let displayBtns = (page: number) => {
-        //If there's only one page, hide btns
         if (state.totalPages() === state.initialPage) {
           prevPageButton.style.display = "none";
           nextPageButton.style.display = "none";
         }
 
-        //If the last page, display only prev. btn
         if (page === state.totalPages() && page !== state.initialPage) {
           nextPageButton.style.display = "none";
           prevPageButton.style.display = "inline";
         }
 
-        //If the 1st page, display only next btn
         if (
           page === state.initialPage &&
           state.totalPages() > state.initialPage
@@ -552,14 +542,11 @@ export default function cartProduct(): void {
           prevPageButton.style.display = "none";
         }
 
-        //If not the 1st page and not the last one
         if (page !== state.initialPage && page < state.totalPages()) {
           nextPageButton.style.display = "inline";
           prevPageButton.style.display = "inline";
         }
       };
-
-      //Display btns based on met conditions when DOM loads
       displayBtns(state.initialPage);
 
       prevPageButton.addEventListener("click", () => {
@@ -587,12 +574,10 @@ export default function cartProduct(): void {
           idArrayCartLocSor.includes(String(dataProducts[i].id))
         ) {
           if (localStorage.getItem(`${dataProducts[i].id}`) != null) {
-            console.log(localStorage.getItem(`${dataProducts[i].id}`));
             let idArrAmountCountAndSum = localStorage
               .getItem(`${dataProducts[i].id}`)
               ?.split("-");
             if (idArrAmountCountAndSum != undefined) {
-              console.log(idArrAmountCountAndSum);
               let cardCart = <HTMLElement>document.createElement("div");
               cardCart.className = "card-cart wrap";
               cardCart.id = `${dataProducts[i].id}`;
@@ -999,7 +984,6 @@ export default function cartProduct(): void {
           summaryTotalSumma.style.textDecoration = "none";
         }
         localStorage.setItem("promo", `${promoLocal}`);
-        console.log(promoLocal);
       }
     }
 
@@ -1078,9 +1062,6 @@ export default function cartProduct(): void {
       valid
         ? (cardDate.style.border = "3px solid green")
         : (cardDate.style.border = "3px solid red");
-      // if (cardDate.value.length == 2 && !cardDate.value.includes('/')) {
-      //   cardDate.value = cardDate.value+`/`;
-      // }
       if (cardDate.style.border == "3px solid green") {
         let err_p = <HTMLElement>cardDate.previousElementSibling;
         err_p.style.color = "black";
@@ -1184,7 +1165,6 @@ export default function cartProduct(): void {
       document.querySelector(".confirmButton")
     );
     let allInputModal: Array<HTMLInputElement> = [inputModalCard, inputModalPersonal].flat();
-    console.log(allInputModal)
     confirmButton.addEventListener("click", () => {
       for (let i = 0; i < inputModalPersonal.length; i++) {
         if (inputModalPersonal[i].style.border != "3px solid green") {
