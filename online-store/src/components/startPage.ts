@@ -168,7 +168,7 @@ export default function home(): void {
               <div class="products-card-image">
                 <img src="${dataProducts[i].thumbnail}" alt="" class="card-image">
               </div>
-            </a>    
+            </a>
             <div class="products-card-title wrap">
               <a href = '/product-${dataProducts[i].id}'>  
                 <img src="https://i.ibb.co/b1fRcKR/icons8-100-1.png" alt="" class="card-expand-img">
@@ -201,6 +201,25 @@ export default function home(): void {
         <span class="countFilters">(5/5)</span>`;
     filterBrand.append(checkboxBrand);
   }
+
+  let copyLink = <HTMLElement>document.querySelector('.btn-copy');
+  copyLink.addEventListener('click', () => {
+    let link = window.location.href;
+    navigator.clipboard.writeText(link).then(() => {
+      if (copyLink.innerText !== 'Copied!') {
+        const originalText = copyLink.innerText;
+        copyLink.innerText = 'Copied!';
+        setTimeout(() => {
+          copyLink.innerText = originalText;
+        }, 1000);
+      }
+    })
+  })
+
+  let btnReset = <HTMLElement>document.querySelector('.btn-reset');
+  btnReset.addEventListener('click', () => {
+    window.location.href = '/';
+  })
 
   let allCards: Array<HTMLElement> = Array.from(document.querySelectorAll('.products-card'));
 
@@ -339,6 +358,8 @@ export default function home(): void {
     if (selectSort.value === "raiting-DESC") {
       sortRaitingDESC();
     }
+    let path:string = '?sort=';
+    history.replaceState( {}, '', path + selectSort.value);
   };
 
   function sortPriceASC() {
@@ -746,5 +767,45 @@ function checkAllFilters(resultSearch:string[], checkboxC:string[], checkboxB:st
     }
   }
 }
+const sortByQueryParams= () => {
+  const getQueryParams = (url: string) => {
+    const paramArr = url.slice(url.indexOf('?') + 1).split('&');
+    const params: { [index: string]: any } = {};
+    paramArr.map(param => {
+      const [key, val] = param.split('=');
+      params[key] = decodeURIComponent(val);
+    })
+    return params;
+  }
+  const params = getQueryParams(window.location.search)
+  console.log(params);
+  for (let key in params) {
+    if (key === 'sort') {
+      let selectSort = <HTMLSelectElement>document.querySelector(".select-sort");
+      if (params[key].toLowerCase() === 'price-asc') {
+        selectSort.value = "price-ASC";
+        sortPriceASC();
+      }
+      if (params[key].toLowerCase() === 'price-desc') {
+        selectSort.value = "price-DESC";
+        sortPriceDESC();
+      }
+      if (params[key].toLowerCase() === 'raiting-asc') {
+        selectSort.value = "raiting-ASC";
+        sortRaitingASC();
+      }
+      if (params[key].toLowerCase() === 'raiting-desc') {
+        selectSort.value = "raiting-DESC";
+        sortRaitingDESC();
+      }
+    }
+  }
+  let handleLocation = () => { 
+    window.addEventListener('popstate', handleLocation);
+      window.addEventListener('DOMContentLoaded', handleLocation);
+  }; 
+  handleLocation();
+}
+sortByQueryParams();
 }
 
