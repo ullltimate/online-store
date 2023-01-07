@@ -77,7 +77,8 @@ export default function productPage(): void {
         k.style.backgroundImage = `url('${dataProducts[j].images[o]}')`;
         k.style.backgroundSize = 'cover';
         k.addEventListener("click", () => {
-          main_page.style.background = `url('${dataProducts[j].images[o]}')`;
+          main_page.style.background = `url('${dataProducts[j].images[o]}') no-repeat`;
+          main_page.style.backgroundSize = "cover";
         });
         other_photos_parent_block.appendChild(k);
       }

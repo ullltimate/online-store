@@ -586,6 +586,8 @@ input[type=checkbox]:checked{
     width: 275px;
     height: 175px;
     border-radius: 10px 10px 0px 0px;
+    object-fit: cover;
+    object-position: center;
 }
 .card-expand-img{
     max-width: 35px;
