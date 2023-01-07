@@ -734,7 +734,7 @@ function checkAllFilters(resultSearch:string[], checkboxC:string[], checkboxB:st
     let matched2 = checkboxB.filter((el) => checkboxC.indexOf(el) > -1);
     mathcedFinal = matched1.filter((el) => matched2.indexOf(el) > -1);
     changeSpanForCheckbox(mathcedFinal, undefined , 0);
-    if (mathcedFinal.length == 0) {
+    if (mathcedFinal.length == 0 || (mathcedFinal.length==21&&searchFilter.value!='')) {
       emptyPage.style.display = "flex";
       productsCards.style.display="none"; 
       p_found.innerText = `Found: 0`;
