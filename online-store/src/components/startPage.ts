@@ -139,6 +139,8 @@ export default function home(): void {
     let productsCard = <HTMLElement>document.createElement("div");
     productsCard.className = "products-card";
     productsCard.id = `${dataProducts[i].id}`;
+    productsCard.dataset.price = `${dataProducts[i].price}`;
+    productsCard.dataset.rating = `${dataProducts[i].rating}`;
     productsCard.innerHTML = 
         `<a href = '/product-${dataProducts[i].id}'>
           <div class="products-card-image">
@@ -166,7 +168,7 @@ export default function home(): void {
               <div class="products-card-image">
                 <img src="${dataProducts[i].thumbnail}" alt="" class="card-image">
               </div>
-            </a>    
+            </a>
             <div class="products-card-title wrap">
               <a href = '/product-${dataProducts[i].id}'>  
                 <img src="https://i.ibb.co/b1fRcKR/icons8-100-1.png" alt="" class="card-expand-img">
@@ -199,6 +201,25 @@ export default function home(): void {
         <span class="countFilters">(5/5)</span>`;
     filterBrand.append(checkboxBrand);
   }
+
+  let copyLink = <HTMLElement>document.querySelector('.btn-copy');
+  copyLink.addEventListener('click', () => {
+    let link = window.location.href;
+    navigator.clipboard.writeText(link).then(() => {
+      if (copyLink.innerText !== 'Copied!') {
+        const originalText = copyLink.innerText;
+        copyLink.innerText = 'Copied!';
+        setTimeout(() => {
+          copyLink.innerText = originalText;
+        }, 1000);
+      }
+    })
+  })
+
+  let btnReset = <HTMLElement>document.querySelector('.btn-reset');
+  btnReset.addEventListener('click', () => {
+    window.location.href = '/';
+  })
 
   let allCards: Array<HTMLElement> = Array.from(document.querySelectorAll('.products-card'));
 
@@ -337,95 +358,49 @@ export default function home(): void {
     if (selectSort.value === "raiting-DESC") {
       sortRaitingDESC();
     }
+    let path:string = '?sort=';
+    history.replaceState( {}, '', path + selectSort.value);
   };
 
-  function switchingViewBySort() {
-    productsCards.innerHTML = '';
-    for (let i = 0; i < dataProducts.length; i++) {
-      let productsCard = <HTMLElement>document.createElement("div");
-      productsCard.className = "products-card";
-      productsCard.id = `${dataProducts[i].id}`;
-      productsCard.innerHTML = 
-          `<a href = '/product-${dataProducts[i].id}'>
-            <div class="products-card-image">
-                <img src="${dataProducts[i].thumbnail}" alt="" class="card-image">
-            </div>
-          </a>
-          <div class="products-card-title wrap">
-            <a href = '/product-${dataProducts[i].id}'>  
-              <img src="https://i.ibb.co/b1fRcKR/icons8-100-1.png" alt="" class="card-expand-img">
-            </a>
-            <p class="card-title font">${dataProducts[i].title}</p>
-            <img src="https://i.ibb.co/b2V2ZLR/shopping-cart-icon-196876-1.png" alt='' class="card-basket-img">
-          </div>`;
-      productsCards.append(productsCard);
-      if (
-        localStorage.getItem("idArrayCart") != "" &&
-        localStorage.getItem("idArrayCart") != undefined
-      ) {
-        let idArrayCartLocSor = localStorage.getItem("idArrayCart")?.split("-");
-        if (idArrayCartLocSor != undefined) {
-          for (let j = 0; j < idArrayCartLocSor?.length; j++) {
-            if (dataProducts[i].id === Number(idArrayCartLocSor[j])) {
-              productsCard.innerHTML = 
-              `<a href = '/product-${dataProducts[i].id}'>
-                <div class="products-card-image">
-                  <img src="${dataProducts[i].thumbnail}" alt="" class="card-image">
-                </div>
-              </a>    
-              <div class="products-card-title wrap">
-                <a href = '/product-${dataProducts[i].id}'>  
-                  <img src="https://i.ibb.co/b1fRcKR/icons8-100-1.png" alt="" class="card-expand-img">
-                </a>
-                <p class="card-title font">${dataProducts[i].title}</p>
-                <img src="https://i.ibb.co/V3mPKbP/icons8-48.png" alt='' class="card-basket-img">
-              </div>`;
-            }
-          }
-        }
-      }
-    }
-    let allCards: Array<HTMLElement> = Array.from(document.querySelectorAll('.products-card'));
-    if (allCards != undefined) {
-      for (let i = 0; i < dataProducts.length; i++) {
-          allCards[i].addEventListener("click", (e) => {
-              let eventElem = <HTMLImageElement>e.target;
-              console.log(eventElem)
-              if (eventElem.classList.contains('card-basket-img')){
-                  addToCart(eventElem, eventElem.parentElement?.parentElement?.id);
-                  localStorage.setItem('idArrayCart', idArrayElemAddCart);
-                  localStorage.setItem('count', String(count));
-                  localStorage.setItem('totalCard', String(summa));
-              } else {
-                  //productPage(i, allCards[i].id);
-              }
-          });
-      }
-    }
-  }
   function sortPriceASC() {
-    dataProducts.sort(function (a, b) {
-      return a.price - b.price;
+    let productsCardsInSort = <HTMLElement>document.querySelector('.products-cards');
+    let items: Array<HTMLElement> = Array.from(document.querySelectorAll('.products-card'));
+    items.sort(function (a, b) {
+      return Number(a.dataset.price) - Number(b.dataset.price);
     });
-    switchingViewBySort();
+    for(let i=0; i<items.length; i++){
+      productsCardsInSort.append(items[i]);
+    }
   }
   function sortPriceDESC() {
-    dataProducts.sort(function (a, b) {
-      return b.price - a.price;
+    let productsCardsInSort = <HTMLElement>document.querySelector('.products-cards');
+    let items: Array<HTMLElement> = Array.from(document.querySelectorAll('.products-card'));
+    items.sort(function (a, b) {
+      return Number(b.dataset.price) - Number(a.dataset.price);
     });
-    switchingViewBySort();
+    for(let i=0; i<items.length; i++){
+      productsCardsInSort.append(items[i]);
+    }
   }
   function sortRaitingASC() {
-    dataProducts.sort(function (a, b) {
-      return a.rating - b.rating;
+    let productsCardsInSort = <HTMLElement>document.querySelector('.products-cards');
+    let items: Array<HTMLElement> = Array.from(document.querySelectorAll('.products-card'));
+    items.sort(function (a, b) {
+      return Number(a.dataset.rating) - Number(b.dataset.rating);
     });
-    switchingViewBySort();
+    for(let i=0; i<items.length; i++){
+      productsCardsInSort.append(items[i]);
+    }
   }
   function sortRaitingDESC() {
-    dataProducts.sort(function (a, b) {
-      return b.rating - a.rating;
+    let productsCardsInSort = <HTMLElement>document.querySelector('.products-cards');
+    let items: Array<HTMLElement> = Array.from(document.querySelectorAll('.products-card'));
+    items.sort(function (a, b) {
+      return Number(b.dataset.rating) - Number(a.dataset.rating);
     });
-    switchingViewBySort();
+    for(let i=0; i<items.length; i++){
+      productsCardsInSort.append(items[i]);
+    }
   }
 
 let foundProducts = <HTMLElement>document.querySelector(".found");
@@ -792,5 +767,45 @@ function checkAllFilters(resultSearch:string[], checkboxC:string[], checkboxB:st
     }
   }
 }
+const sortByQueryParams= () => {
+  const getQueryParams = (url: string) => {
+    const paramArr = url.slice(url.indexOf('?') + 1).split('&');
+    const params: { [index: string]: any } = {};
+    paramArr.map(param => {
+      const [key, val] = param.split('=');
+      params[key] = decodeURIComponent(val);
+    })
+    return params;
+  }
+  const params = getQueryParams(window.location.search)
+  console.log(params);
+  for (let key in params) {
+    if (key === 'sort') {
+      let selectSort = <HTMLSelectElement>document.querySelector(".select-sort");
+      if (params[key].toLowerCase() === 'price-asc') {
+        selectSort.value = "price-ASC";
+        sortPriceASC();
+      }
+      if (params[key].toLowerCase() === 'price-desc') {
+        selectSort.value = "price-DESC";
+        sortPriceDESC();
+      }
+      if (params[key].toLowerCase() === 'raiting-asc') {
+        selectSort.value = "raiting-ASC";
+        sortRaitingASC();
+      }
+      if (params[key].toLowerCase() === 'raiting-desc') {
+        selectSort.value = "raiting-DESC";
+        sortRaitingDESC();
+      }
+    }
+  }
+  let handleLocation = () => { 
+    window.addEventListener('popstate', handleLocation);
+      window.addEventListener('DOMContentLoaded', handleLocation);
+  }; 
+  handleLocation();
+}
+sortByQueryParams();
 }
 

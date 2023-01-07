@@ -212,11 +212,10 @@ export default function productPage(): void {
       summa += Number(cost.innerText);
       localStorage.setItem("totalCard", `${summa}`);
       totalCardSumma.innerHTML = `${summa}`;
-      cartProduct();
-      buyNow();
+      window.location.href = '/cart-buynow';
+      
     } else {
-      cartProduct();
-      buyNow();
+      window.location.href = '/cart-buynow';
     }
   }
 }
