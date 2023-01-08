@@ -290,7 +290,7 @@ const dataProducts = [
             "discountPercentage":13.31,
             "rating":4.83,
             "stock":110,
-            "brand":"L'Oreal Paris",
+            "brand":"LOreal Paris",
             "category":"skincare",
             "thumbnail":"https://i.dummyjson.com/data/products/16/thumbnail.jpg",
             "images":
@@ -365,7 +365,7 @@ const dataProducts = [
             "discountPercentage":16.99,
             "rating":4.06,
             "stock":140,
-            "brand":"Fair & Clear",
+            "brand":"Fair and Clear",
             "category":"skincare",
             "thumbnail":"https://i.dummyjson.com/data/products/20/thumbnail.jpg",
             "images":
@@ -383,7 +383,7 @@ const dataProducts = [
             "discountPercentage":4.81,
             "rating":4.44,
             "stock":133,
-            "brand":"Saaf & Khaas",
+            "brand":"Saaf and Khaas",
             "category":"groceries",
             "thumbnail":"https://i.dummyjson.com/data/products/21/thumbnail.png",
             "images":

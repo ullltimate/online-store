@@ -168,7 +168,7 @@ export default function home(): void {
               <div class="products-card-image">
                 <img src="${dataProducts[i].thumbnail}" alt="" class="card-image">
               </div>
-            </a>
+            </a>    
             <div class="products-card-title wrap">
               <a href = '/product-${dataProducts[i].id}'>  
                 <img src="https://i.ibb.co/b1fRcKR/icons8-100-1.png" alt="" class="card-expand-img">
@@ -196,8 +196,8 @@ export default function home(): void {
   for (let i = 0; i < arrayBrand.length; i++) {
     let checkboxBrand = <HTMLElement>document.createElement("div");
     checkboxBrand.className = "checkbox-line wrap item-active";
-    checkboxBrand.innerHTML = `<input type="checkbox" id="${arrayBrand[i]}">
-        <label for="${arrayBrand[i]}">${arrayBrand[i]}</label>
+    checkboxBrand.innerHTML = `<input type="checkbox" id="${arrayBrand[i].replace(/ /g, '_')}">
+        <label for="${arrayBrand[i].replace(/ /g, '_')}">${arrayBrand[i]}</label>
         <span class="countFilters">(5/5)</span>`;
     filterBrand.append(checkboxBrand);
   }
@@ -334,9 +334,11 @@ export default function home(): void {
     }
     
   sizeElemSmall.addEventListener("click", () => {
+    updateUrl('size', 'small')
     switchingView(sizeElemSmall, sizeElemBig);
   });
   sizeElemBig.addEventListener("click", () => {
+    updateUrl('size', 'big')
     switchingView(sizeElemBig, sizeElemSmall);
   });
 
@@ -354,8 +356,7 @@ export default function home(): void {
     if (selectSort.value === "raiting-DESC") {
       sortRaitingDESC();
     }
-    let path:string = '?sort=';
-    history.replaceState( {}, '', path + selectSort.value);
+    updateUrl('sort', selectSort.value)
   };
 
   function sortPriceASC() {
@@ -431,7 +432,7 @@ function startSPanForCheckbox() {
 let checkboxesP: Array<HTMLElement> = Array.from(document.querySelectorAll(`.checkbox-line`));
 let checkboxes: Array<HTMLInputElement> = Array.from(document.querySelectorAll(`input[type="checkbox"]`));
 
-function changeSpanForCheckbox(filterArray:string [], currentSpan?:HTMLSpanElement, null_el?:number) {
+function changeSpanForCheckbox(currentSpan:any, filterArray:string []) {
   let allSpan: Array<HTMLElement> = Array.from(document.querySelectorAll(".countFilters"));
   let brands = [];
   let categories = [];
@@ -538,7 +539,7 @@ for (let i = 0; i < checkboxesP.length; i++) {
     if (eventElem.nodeName == "INPUT") {
       eventElem.addEventListener("change", (eventElem)=>{
         filter()});
-        changeSpanForCheckbox(mathcedFinal, currentSpan, 1);
+      changeSpanForCheckbox(currentSpan, mathcedFinal);
     }
   });
 }
@@ -561,9 +562,13 @@ function filter() {
   checkboxB.length = 0;
   checkedArrId.length = 0;
   checkedArr = checkboxes.filter((item) => item.checked);
+  let filterParams:string = '';
   for (let i = 0; i < checkedArr.length; i++) {
-    checkedArrId[i] = checkedArr[i].id;
+    checkedArrId[i] = checkedArr[i].id.replace(/_/g, ' ');
+    filterParams += (i === 0) ? checkedArrId[i] : `+${checkedArrId[i]}`;
+    filterParams = filterParams.replace(/ /g, '_')
   }
+  updateUrl('filter', filterParams);
   counter_found = 0;
   for (let i = 0; i < cards.length; i++) {
     if (checkedArrId.includes(dataProducts[i].brand)) {
@@ -589,34 +594,39 @@ emptyPage.style.display="none";
 let searchFilter = <HTMLInputElement>document.querySelector(".search");
 let resultSearch:string[] = [];
 let textSearch:string = "";
-searchFilter.addEventListener("input", () => {
+
+function filterBySearchInput() {
   emptyPage.style.display = "none";
   productsCards.style.display="flex"; 
   resultSearch.length = 0;
   textSearch = searchFilter.value.toLowerCase();
   for (let i = 0; i < dataProducts.length; i++) {
-          let currentCard: { [index: string]: any } = dataProducts[i];
-          for (let key in currentCard) {
-            if (
-              currentCard.hasOwnProperty(key) &&
-              key != "id" &&
-              key != "thumbnail" &&
-              key != "images"
-            ) {
-              if (currentCard[key].toString().toLowerCase().includes(textSearch)) {
-                resultSearch.push(dataProducts[i].title);
-                break;
-              }
-            }
-          }
+    let currentCard: { [index: string]: any } = dataProducts[i];
+    for (let key in currentCard) {
+      if (
+        currentCard.hasOwnProperty(key) &&
+        key != "id" &&
+        key != "thumbnail" &&
+        key != "images"
+      ) {
+        if (currentCard[key].toString().toLowerCase().includes(textSearch)) {
+          resultSearch.push(dataProducts[i].title);
+          break;
         }
-        
+      }
+    }
+  }
+  updateUrl('search', textSearch);
+  
   checkAllFilters(resultSearch, checkboxC, checkboxB, rangeCarts);
   if(textSearch!=""&&resultSearch.length==0){
     emptyPage.style.display="flex";
     productsCards.style.display="none";  
   }
-  changeSpanForCheckbox(mathcedFinal, undefined, 0);
+  changeSpanForCheckbox(0, mathcedFinal);
+}
+searchFilter.addEventListener("input", () => {
+  filterBySearchInput();
 });
 
 let priceRange:number[] = [];
@@ -677,19 +687,22 @@ function priceRangeFilter(toInnerText:HTMLElement, arrayRange:number[], innerTex
       cards[cardTitle.indexOf(dataProducts[i].title)].style.display = "none";
     }
   }
-  toInnerText.innerText = String(arrayRange[Number(innerText.value)]);
+  const result = String(arrayRange[Number(innerText.value)])
+  toInnerText.innerText = result;
   p_found.innerText = `Found: ${counter_found}`;
-
   checkAllFilters(resultSearch, checkboxC, checkboxB, rangeCarts);
+  return { minP, maxP, minS, maxS, result }
   
 }
 
 priceMin.addEventListener("change", () => {
-  priceRangeFilter(priceMinValue, priceRange, priceMin);
+  let {maxP, result} = priceRangeFilter(priceMinValue, priceRange, priceMin);
+  updateUrl('price', `${result}-${maxP}`);
 });
 
 priceMax.addEventListener("change", () => {
-  priceRangeFilter(priceMaxValue, priceRange, priceMax);
+  let {minP, result} = priceRangeFilter(priceMaxValue, priceRange, priceMax);
+  updateUrl('price', `${minP}-${result}`);
 });
 
 stockMin.addEventListener("change", () => {
@@ -697,7 +710,8 @@ stockMin.addEventListener("change", () => {
 });
 
 stockMax.addEventListener("change", () => {
-  priceRangeFilter(stockMaxValue, stockRange, stockMax);
+  let {minS, result} = priceRangeFilter(stockMaxValue, stockRange, stockMax);
+  updateUrl('stock', `${minS}-${result}`);
 });
 
 let mathcedFinal:string[] = [];
@@ -733,8 +747,8 @@ function checkAllFilters(resultSearch:string[], checkboxC:string[], checkboxB:st
     let matched1 = resultSearch.filter((el) => rangeFilter.indexOf(el) > -1);
     let matched2 = checkboxB.filter((el) => checkboxC.indexOf(el) > -1);
     mathcedFinal = matched1.filter((el) => matched2.indexOf(el) > -1);
-    changeSpanForCheckbox(mathcedFinal, undefined , 0);
-    if (mathcedFinal.length == 0 || (mathcedFinal.length==21&&searchFilter.value!='')) {
+    changeSpanForCheckbox(0, mathcedFinal);
+    if (mathcedFinal.length == 0) {
       emptyPage.style.display = "flex";
       productsCards.style.display="none"; 
       p_found.innerText = `Found: 0`;
@@ -761,8 +775,22 @@ function checkAllFilters(resultSearch:string[], checkboxC:string[], checkboxB:st
     }
   }
 }
+
+function updateUrl(query: string, params: string) {
+  const url = new URL(location.href);
+  url.searchParams.set(query, params);
+  if (!params) url.searchParams.delete(query);
+  history.replaceState( {}, '', url);
+}
+
+// function getQueryParamsByName(name: string) {
+//   const url = new URL(location.href);
+//   let params = url.searchParams.get(name);
+//   return params
+// }
+
 const sortByQueryParams= () => {
-  const getQueryParams = (url: string) => {
+  const getAllQueryParams = (url: string) => {
     const paramArr = url.slice(url.indexOf('?') + 1).split('&');
     const params: { [index: string]: any } = {};
     paramArr.map(param => {
@@ -771,10 +799,9 @@ const sortByQueryParams= () => {
     })
     return params;
   }
-  const params = getQueryParams(window.location.search);
+  const params = getAllQueryParams(location.search)
   for (let key in params) {
     if (key === 'sort') {
-      let selectSort = <HTMLSelectElement>document.querySelector(".select-sort");
       if (params[key].toLowerCase() === 'price-asc') {
         selectSort.value = "price-ASC";
         sortPriceASC();
@@ -792,13 +819,48 @@ const sortByQueryParams= () => {
         sortRaitingDESC();
       }
     }
+    if (key === 'search' && params[key]) {
+        searchFilter.value = params[key].toLowerCase();
+        filterBySearchInput();
+    }
+    if (key === 'size') {
+      params[key].toLowerCase() == 'big'
+      ? switchingView(sizeElemBig, sizeElemSmall) 
+      : switchingView(sizeElemSmall, sizeElemBig);
+    }
+    if (key === 'filter') {
+      const filterParams = [...params[key].split('+')];
+      for (let filterId of filterParams) {
+        filterId = filterId;
+        const filterCheckbox = document.querySelector(`#${filterId}`);
+        filterCheckbox?.setAttribute('checked', 'true');
+      }
+      filter();     
+    }
+    if (key === 'price') {
+      const priceParams= [...params[key].split('-')];
+      const indexMin:string = String(priceRange.indexOf(+priceParams[0]));
+      const indexMax:string = String(priceRange.indexOf(+priceParams[1]));
+      priceMin.value = indexMin;
+      priceMax.value = indexMax;
+      priceRangeFilter(priceMinValue, priceRange, priceMin)
+      priceRangeFilter(priceMaxValue, priceRange, priceMax)
+    }
+    if (key === 'stock') {
+      const stockParams = [...params[key].split('-')];
+      const indexMin:string = String(stockRange.indexOf(+stockParams[0]));
+      const indexMax:string = String(stockRange.indexOf(+stockParams[1]));
+      stockMin.value = indexMin;
+      stockMax.value = indexMax;
+      priceRangeFilter(stockMinValue, stockRange, stockMin)
+      priceRangeFilter(stockMaxValue, stockRange, stockMax)
+    }
   }
   let handleLocation = () => { 
     window.addEventListener('popstate', handleLocation);
-      window.addEventListener('DOMContentLoaded', handleLocation);
+    window.addEventListener('DOMContentLoaded', handleLocation);
   }; 
   handleLocation();
 }
 sortByQueryParams();
 }
-
