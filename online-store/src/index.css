@@ -717,6 +717,15 @@ input[type="range"] {
   .path-product {
     padding-bottom: 1vw;
     padding-top: 1vw;
+    font-size: 24px;
+    text-align: center;
+  }
+  .path-product > a{
+    text-decoration: none;
+    cursor: pointer;
+    background: rgba(255, 173, 158, 0.5);
+    border-radius: 5px;
+    color:#000;
   }
   
   .wrapper-product {

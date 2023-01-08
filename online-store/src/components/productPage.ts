@@ -67,7 +67,7 @@ export default function productPage(): void {
       brand.innerText = dataProducts[j].brand;
       category.innerText = dataProducts[j].category;
       discount.innerText = String(dataProducts[j].discountPercentage);
-      path.innerText = `Store > ${dataProducts[j].category} > ${dataProducts[j].brand} > ${dataProducts[j].title}`;
+      path.innerHTML = `<a href='/'>STORE</a> > <a href='/?filter=${dataProducts[j].category}'>${dataProducts[j].category.toUpperCase()}</a> > <a href='/?filter=${dataProducts[j].brand.replace(/ /g, '_')}'>${dataProducts[j].brand.toUpperCase()}</a> > ${dataProducts[j].title.toUpperCase()}`;
       cost.innerText = `${dataProducts[j].price}`;
       main_page.style.background = `url('${dataProducts[j].thumbnail}') no-repeat`;
       main_page.style.backgroundSize = "cover";
