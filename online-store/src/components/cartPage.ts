@@ -1062,7 +1062,7 @@ export default function cartProduct(): void {
     });
     let cardDate = <HTMLInputElement>document.querySelector(".cardDate");
     cardDate.addEventListener("input", () => {
-      let reg = /^(0[1-9]|1[0-2])[/](2[3-9])$/;
+      let reg = /^(0[1-9]|1[0-2])[/](2[3-9]|3[0-9]|3[0-9]|4[0-9]|5[0-9]|6[0-9]|7[0-9]|8[0-9]|9[0-9])$/;
       let valid = reg.test(cardDate.value);
       valid
         ? (cardDate.style.border = "3px solid green")
