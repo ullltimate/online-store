@@ -109,9 +109,9 @@ export default function cartProduct(): void {
                 cardCart.className = "card-cart wrap";
                 cardCart.id = `${dataProducts[i].id}`;
                 cardCart.innerHTML = `<p class="font currentNumber">${++point}</p>
-                <img class="card-cart-photo" src="${
-                  dataProducts[i].thumbnail
-                }" alt="">
+                <a href='/product-${dataProducts[i].id}'>
+                  <img class="card-cart-photo" src="${dataProducts[i].thumbnail}" alt="">
+                </a>
                 <div class="card-cart-info wrap">
                   <p class="header-text font">${dataProducts[i].title}</p>
                   <div class="cart-info-description-and-count wrap">
@@ -152,9 +152,9 @@ export default function cartProduct(): void {
               cardCart.className = "card-cart wrap";
               cardCart.id = `${dataProducts[i].id}`;
               cardCart.innerHTML = `<p class="font currentNumber">${++point}</p>
-              <img class="card-cart-photo" src="${
-                dataProducts[i].thumbnail
-              }" alt="">
+              <a href='/product-${dataProducts[i].id}'>
+                <img class="card-cart-photo" src="${dataProducts[i].thumbnail}" alt="">
+              </a>
               <div class="card-cart-info wrap">
                 <p class="header-text font">${dataProducts[i].title}</p>
                 <div class="cart-info-description-and-count wrap">
