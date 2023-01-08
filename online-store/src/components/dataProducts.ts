@@ -212,7 +212,7 @@ const dataProducts = [
             "discountPercentage":15.66,
             "rating":4,
             "stock":52,
-            "brand":"Royal_Mirage",
+            "brand":"Royal Mirage",
             "category":"fragrances",
             "thumbnail":"https://i.dummyjson.com/data/products/12/thumbnail.jpg",
             "images":
