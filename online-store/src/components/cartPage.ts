@@ -350,6 +350,7 @@ export default function cartProduct(): void {
                     summaryCount.innerHTML = `${localStorage.getItem("count")}`;
                     summaryTotalSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
                   }else{
+                    console.log(allCardsToCart[i]);
                     allCardsToCart[i].remove();
                     localStorage.removeItem(`${allCardsToCart[i].id}`);
                   for (let o = 0; o < dataProducts.length; o++) {
@@ -402,6 +403,7 @@ export default function cartProduct(): void {
                     state.curPage -=1; 
                   }
                   renderItems(state.curPage);
+                  displayBtns(state.curPage);
                   }
                  
                 } else {
@@ -454,6 +456,7 @@ export default function cartProduct(): void {
                   state.allItems = Array.from(productsCartWrap.children);
                   productsCartWrap.innerHTML = "";
                   renderItems(state.curPage);
+                  displayBtns(state.curPage);
                 }
               } else {
                 allSignCount[i].innerHTML = `${
@@ -515,6 +518,7 @@ export default function cartProduct(): void {
                 state.allItems = Array.from(productsCartWrap.children);
                 productsCartWrap.innerHTML = "";
                 renderItems(state.curPage);
+                displayBtns(state.curPage);
               }
             } 
           });
