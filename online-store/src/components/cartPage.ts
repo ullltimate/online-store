@@ -1194,8 +1194,13 @@ export default function cartProduct(): void {
         } 
       })
       if (inputValidCheck === true){
-        modalWindow.innerHTML = `<h2 style='padding:20%'>Thanks for your order. Redirect to the store after 3 sec</h2>`;
-        setTimeout(() =>{localStorage.clear();location.href = "/";} , 3000);
+        modalWindow.innerHTML = `<h2 style='padding:20%'>Thanks for your order. Redirect to the store after <span class="time-before"></span> sec</h2>`;
+        const timer = <HTMLElement>document.querySelector('.time-before');
+        let sec:number = 3;
+        for (let i = 0; i < sec; i++) {
+          setTimeout(() => timer.textContent = `${sec--}`, i * 1000);
+        }
+        setTimeout(() =>{localStorage.clear();location.href = "/";} , sec * 1000);
       }
     });
   }
