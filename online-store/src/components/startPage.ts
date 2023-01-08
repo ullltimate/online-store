@@ -218,8 +218,19 @@ export default function home(): void {
 
   let btnReset = <HTMLElement>document.querySelector('.btn-reset');
   btnReset.addEventListener('click', () => {
-    window.location.href = '/';
+    resetAllFilters();
   })
+  function resetAllFilters() {
+    searchFilter.value = '';
+    filterBySearchInput();
+    selectSort.value = 'sort-title';
+    switchingView(sizeElemBig, sizeElemSmall);
+    let filterCheckbox = document.querySelectorAll('input[type=checkbox]');
+    filterCheckbox.forEach(checkbox => checkbox.removeAttribute('checked'))
+    filter();
+    history.replaceState( {}, '', '/');
+    home();
+}
 
   let allCards: Array<HTMLElement> = Array.from(document.querySelectorAll('.products-card'));
 
