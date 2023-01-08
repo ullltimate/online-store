@@ -732,7 +732,7 @@ function checkAllFilters(resultSearch:string[], checkboxC:string[], checkboxB:st
     startSPanForCheckbox();
     p_found.innerText = `Found: 21`;
   } else {
-    if (resultSearch.length == 0) {
+    if (resultSearch.length == 0 && searchFilter.value=="") {
       resultSearch = cardTitle;
     }
     if (checkboxC.length == 0) {
