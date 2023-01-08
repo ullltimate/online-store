@@ -58,11 +58,12 @@ const cartPageLayout: string = `<div class="wrapper">
             <ul>
               <li>Products:</li>
               <li>Total:</li>
+              <li>Discounted Total:</li>
             </ul>
             <ul>
               <li class="summary-count">0</li>
               <li class="summary-total-summa">€0</li>
-              <li class="summary-total-summa-discount"></li>
+              <li class="summary-total-summa-discount">0</li>
             </ul>
           </div>
           <input type="text" class="search-promo" placeholder="Enter promo code" />
@@ -980,7 +981,7 @@ export default function cartProduct(): void {
         if (
           summaryTotalSummaDiscount.innerHTML === summaryTotalSumma.innerHTML
         ) {
-          summaryTotalSummaDiscount.innerHTML = "";
+          summaryTotalSummaDiscount.innerHTML = '0';
           summaryTotalSumma.style.textDecoration = "none";
         }
         localStorage.setItem("promo", `${promoLocal}`);

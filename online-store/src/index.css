@@ -1259,3 +1259,11 @@ input[type="range"] {
     color: #fff;
     cursor: pointer;
   }
+  .from-price::before,
+  .to-price::before,
+  .cost-product::before,
+  .count-summa::before,
+  .summary-total-summa::before,
+  .summary-total-summa-discount::before {
+     content: '$';
+   }
