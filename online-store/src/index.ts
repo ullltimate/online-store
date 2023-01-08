@@ -36,7 +36,6 @@ const getRoute = () => {
     
     let handleLocation = () => {
         const html = routes.find((route) => route.path === location.pathname) || routes.at(-1);
-        console.log(html)
         const main = <HTMLElement | null> document.querySelector('.main');
 
         if (main !== null) {
@@ -52,17 +51,5 @@ const getRoute = () => {
 
 getRoute()
 
-//home();
 
-//let logo = <HTMLElement>document.querySelector('.logo');
-//
-//logo.addEventListener('click', () => {
-//  home();
-//});
-
-//let cart = <HTMLElement>document.querySelector(".basket-img");
-//
-//cart.addEventListener("click", () => {
-//  cartProduct();
-//});
 

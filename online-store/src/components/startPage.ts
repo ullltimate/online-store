@@ -794,11 +794,6 @@ function updateUrl(query: string, params: string) {
   history.replaceState( {}, '', url);
 }
 
-// function getQueryParamsByName(name: string) {
-//   const url = new URL(location.href);
-//   let params = url.searchParams.get(name);
-//   return params
-// }
 
 const sortByQueryParams= () => {
   const getAllQueryParams = (url: string) => {
