@@ -201,22 +201,23 @@ export default function cartProduct(): void {
     let prevPageButton = <HTMLElement>document.querySelector(".prev-page");
     let nextPageButton = <HTMLElement>document.querySelector(".next-page");
     let currentPage = <HTMLElement>document.querySelector(".current-page");
-    itemsInput.addEventListener("input", () => {
+
+    function doPagination(valueInput:string) {
       toBack();
       let state = {
         allItems: Array.from(document.querySelectorAll(".card-cart")),
-        maximumItems: Number(itemsInput.value),
+        maximumItems: Number(valueInput),
         initialPage: 1,
         totalPages() {
-          return Math.ceil(state.allItems.length / Number(itemsInput.value));
+          return Math.ceil(state.allItems.length / Number(valueInput));
         },
         curPage: 1,
       };
 
       let getItems = (page: number) => {
         state.allItems.forEach((item) => item.remove());
-        let min = (page - 1) * Number(itemsInput.value);
-        let max = page * Number(itemsInput.value);
+        let min = (page - 1) * Number(valueInput);
+        let max = page * Number(valueInput);
         return state.allItems.slice(min, max);
       };
 
@@ -229,6 +230,7 @@ export default function cartProduct(): void {
         let allCardsNumber: HTMLElement[] = Array.from(
           document.querySelectorAll(".currentNumber")
         );
+        updateUrl('limit', `${valueInput}`);
         for (let i = 0; i < allCardsToCart.length; i++) {
           allCardsToCart[i].addEventListener("click", (e) => {
             let event = <HTMLElement>e.target;
@@ -350,6 +352,7 @@ export default function cartProduct(): void {
                     summaryCount.innerHTML = `${localStorage.getItem("count")}`;
                     summaryTotalSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
                   }else{
+                    console.log(allCardsToCart[i]);
                     allCardsToCart[i].remove();
                     localStorage.removeItem(`${allCardsToCart[i].id}`);
                   for (let o = 0; o < dataProducts.length; o++) {
@@ -566,7 +569,40 @@ export default function cartProduct(): void {
         renderItems(state.curPage);
         displayBtns(state.curPage);
       });
-    });
+    }
+    itemsInput.addEventListener("input", ()=>doPagination(itemsInput.value));
+
+    function updateUrl(query: string, params: string) {
+      const url = new URL(location.href);
+      url.searchParams.set(query, params);
+      if (!params) url.searchParams.delete(query);
+      history.replaceState( {}, '', url);
+    }
+
+    const paginationByQueryParams= () => {
+      const getAllQueryParams = (url: string) => {
+        const paramArr = url.slice(url.indexOf('?') + 1).split('&');
+        const params: { [index: string]: any } = {};
+        paramArr.map(param => {
+          const [key, val] = param.split('=');
+          params[key] = decodeURIComponent(val);
+        })
+        return params;
+      }
+      const params = getAllQueryParams(location.search)
+      for (let key in params) {
+        if (key === 'limit') {
+          itemsInput.value=`${params[key]}`;
+          doPagination(itemsInput.value);
+        }
+      }
+      let handleLocation = () => { 
+        window.addEventListener('popstate', handleLocation);
+        window.addEventListener('DOMContentLoaded', handleLocation);
+      }; 
+      handleLocation();
+    }
+    paginationByQueryParams();
 
     function toBack() {
       point = 0;
