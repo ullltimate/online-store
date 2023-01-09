@@ -198,25 +198,42 @@ export default function cartProduct(): void {
     let itemsInput = <HTMLInputElement>document.querySelector(".itemsInput");
     let cardsCount: number = productsCartWrap.children.length;
     itemsInput.value = `${cardsCount}`;
+    
     let prevPageButton = <HTMLElement>document.querySelector(".prev-page");
     let nextPageButton = <HTMLElement>document.querySelector(".next-page");
     let currentPage = <HTMLElement>document.querySelector(".current-page");
-    itemsInput.addEventListener("input", () => {
+
+    let allCardsToCart: HTMLElement[] = Array.from(
+      document.querySelectorAll(".card-cart")
+    );
+    let allSignCount: HTMLElement[] = Array.from(
+      document.querySelectorAll(".sign-count")
+    );
+    let allCountSumma: HTMLElement[] = Array.from(
+      document.querySelectorAll(".count-summa")
+    );
+    let amountStock: HTMLElement[] = Array.from(
+      document.querySelectorAll(".stock-amount")
+    );
+
+    doPagination(itemsInput.value);
+    
+    function doPagination(valueInput:string) {
       toBack();
       let state = {
         allItems: Array.from(document.querySelectorAll(".card-cart")),
-        maximumItems: Number(itemsInput.value),
+        maximumItems: Number(valueInput),
         initialPage: 1,
         totalPages() {
-          return Math.ceil(state.allItems.length / Number(itemsInput.value));
+          return Math.ceil(state.allItems.length / Number(valueInput));
         },
         curPage: 1,
       };
 
       let getItems = (page: number) => {
         state.allItems.forEach((item) => item.remove());
-        let min = (page - 1) * Number(itemsInput.value);
-        let max = page * Number(itemsInput.value);
+        let min = (page - 1) * Number(valueInput);
+        let max = page * Number(valueInput);
         return state.allItems.slice(min, max);
       };
 
@@ -229,6 +246,7 @@ export default function cartProduct(): void {
         let allCardsNumber: HTMLElement[] = Array.from(
           document.querySelectorAll(".currentNumber")
         );
+        updateUrl('limit', `${valueInput}`);
         for (let i = 0; i < allCardsToCart.length; i++) {
           allCardsToCart[i].addEventListener("click", (e) => {
             let event = <HTMLElement>e.target;
@@ -350,6 +368,7 @@ export default function cartProduct(): void {
                     summaryCount.innerHTML = `${localStorage.getItem("count")}`;
                     summaryTotalSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
                   }else{
+                    console.log(allCardsToCart[i]);
                     allCardsToCart[i].remove();
                     localStorage.removeItem(`${allCardsToCart[i].id}`);
                   for (let o = 0; o < dataProducts.length; o++) {
@@ -566,7 +585,40 @@ export default function cartProduct(): void {
         renderItems(state.curPage);
         displayBtns(state.curPage);
       });
-    });
+    }
+    itemsInput.addEventListener("input", ()=>doPagination(itemsInput.value));
+
+    function updateUrl(query: string, params: string) {
+      const url = new URL(location.href);
+      url.searchParams.set(query, params);
+      if (!params) url.searchParams.delete(query);
+      history.replaceState( {}, '', url);
+    }
+
+    const paginationByQueryParams= () => {
+      const getAllQueryParams = (url: string) => {
+        const paramArr = url.slice(url.indexOf('?') + 1).split('&');
+        const params: { [index: string]: any } = {};
+        paramArr.map(param => {
+          const [key, val] = param.split('=');
+          params[key] = decodeURIComponent(val);
+        })
+        return params;
+      }
+      const params = getAllQueryParams(location.search)
+      for (let key in params) {
+        if (key === 'limit') {
+          itemsInput.value=`${params[key]}`;
+          doPagination(itemsInput.value);
+        }
+      }
+      let handleLocation = () => { 
+        window.addEventListener('popstate', handleLocation);
+        window.addEventListener('DOMContentLoaded', handleLocation);
+      }; 
+      handleLocation();
+    }
+    paginationByQueryParams();
 
     function toBack() {
       point = 0;
@@ -669,208 +721,210 @@ export default function cartProduct(): void {
       }
     }
 
-    let allCardsToCart: HTMLElement[] = Array.from(
-      document.querySelectorAll(".card-cart")
-    );
-    let allSignCount: HTMLElement[] = Array.from(
-      document.querySelectorAll(".sign-count")
-    );
-    let allCountSumma: HTMLElement[] = Array.from(
-      document.querySelectorAll(".count-summa")
-    );
-    let amountStock: HTMLElement[] = Array.from(
-      document.querySelectorAll(".stock-amount")
-    );
+    // doPagination(itemsInput.value);
 
-    for (let i = 0; i < allCardsToCart.length; i++) {
-      allCardsToCart[i].addEventListener("click", (e) => {
-        let event = <HTMLElement>e.target;
-        if (event.classList.contains("sign-add")) {
-          if (amountStock[i].innerHTML === allSignCount[i].innerHTML) {
-            return;
-          } else {
-            allSignCount[i].innerHTML = `${Number(allSignCount[i].innerHTML) + 1}`;
-            for (let o = 0; o < dataProducts.length; o++) {
-              if (allCardsToCart[i].id === String(dataProducts[o].id)) {
-                allCountSumma[i].innerHTML = `${dataProducts[o].price * Number(allSignCount[i].innerHTML)}`;
-                localStorage.setItem(`${allCardsToCart[i].id}`,`${allSignCount[i].innerHTML}-${allCountSumma[i].innerHTML}`);
-                localStorage.setItem("count",`${Number(localStorage.getItem("count")) + 1}`);
-                countProduct.innerHTML = `${localStorage.getItem("count")}`;
-                localStorage.setItem("totalCard",`${Number(localStorage.getItem("totalCard")) + dataProducts[o].price}`);
-                totalCardSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
-                summaryCount.innerHTML = `${localStorage.getItem("count")}`;
-                summaryTotalSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
-                if (localStorage.getItem("promo") != undefined) {
-                  if (localStorage.getItem("promo")?.split("-").length === 3) {
-                    summaryTotalSummaDiscount.innerHTML = `${
-                      Number(localStorage.getItem("totalCard")) -
-                      Number(localStorage.getItem("totalCard")) * 0.2
-                    }`;
-                    summaryTotalSumma.style.textDecoration = "line-through";
-                  } else if (
-                    localStorage.getItem("promo")?.split("-").length === 2
-                  ) {
-                    summaryTotalSummaDiscount.innerHTML = `${
-                      Number(localStorage.getItem("totalCard")) -
-                      Number(localStorage.getItem("totalCard")) * 0.1
-                    }`;
-                    summaryTotalSumma.style.textDecoration = "line-through";
-                  } else if (
-                    localStorage.getItem("promo")?.split("-").length === 1
-                  ) {
-                    summaryTotalSummaDiscount.innerHTML = "";
-                    summaryTotalSumma.style.textDecoration = "none";
-                  }
-                }
-              }
-            }
-          }
-        } else if (event.classList.contains("sign-remove")) {
-          if (allSignCount[i].innerHTML === "1") {
-            if (productsCartWrap?.children.length === 1) {
-              main.innerHTML = cartPageLayoutEmpty;
-              localStorage.removeItem(`${allCardsToCart[i].id}`);
-              localStorage.setItem("count", `${Number(localStorage.getItem("count")) - 1}`);
-              countProduct.innerHTML = `${localStorage.getItem("count")}`;
-              for (let o = 0; o < dataProducts.length; o++) {
-                if (allCardsToCart[i].id === String(dataProducts[o].id)) {
-                  localStorage.setItem(
-                    "totalCard",
-                    `${
-                      Number(localStorage.getItem("totalCard")) -
-                      dataProducts[o].price
-                    }`
-                  );
-                  totalCardSumma.innerHTML = `${localStorage.getItem(
-                    "totalCard"
-                  )}`;
-                }
-              }
-              let idArrCartLocal = localStorage.getItem("idArrayCart");
-              if (idArrCartLocal != null) {
-                let str = `-${allCardsToCart[i].id}`;
-                idArrCartLocal = idArrCartLocal.replace(str, "");
-                localStorage.setItem("idArrayCart", `${idArrCartLocal}`);
-              }
-              summaryCount.innerHTML = `${localStorage.getItem("count")}`;
-              summaryTotalSumma.innerHTML = `${localStorage.getItem(
-                "totalCard"
-              )}`;
-            } else {
-              allCardsToCart[i].remove();
-              localStorage.removeItem(`${allCardsToCart[i].id}`);
-              for (let o = 0; o < dataProducts.length; o++) {
-                if (allCardsToCart[i].id === String(dataProducts[o].id)) {
-                  localStorage.setItem(
-                    "totalCard",
-                    `${
-                      Number(localStorage.getItem("totalCard")) -
-                      dataProducts[o].price
-                    }`
-                  );
-                  totalCardSumma.innerHTML = `${localStorage.getItem(
-                    "totalCard"
-                  )}`;
-                }
-              }
-              let idArrCartLocal = localStorage.getItem("idArrayCart");
-              if (idArrCartLocal != null) {
-                let str = `-${allCardsToCart[i].id}`;
-                idArrCartLocal = idArrCartLocal.replace(str, "");
-                localStorage.setItem("idArrayCart", `${idArrCartLocal}`);
-                localStorage.setItem(
-                  "count",
-                  `${Number(localStorage.getItem("count")) - 1}`
-                );
-                countProduct.innerHTML = `${localStorage.getItem("count")}`;
-              }
-              summaryCount.innerHTML = `${localStorage.getItem("count")}`;
-              summaryTotalSumma.innerHTML = `${localStorage.getItem(
-                "totalCard"
-              )}`;
-              if (localStorage.getItem("promo") != undefined) {
-                if (localStorage.getItem("promo")?.split("-").length === 3) {
-                  summaryTotalSummaDiscount.innerHTML = `${
-                    Number(localStorage.getItem("totalCard")) -
-                    Number(localStorage.getItem("totalCard")) * 0.2
-                  }`;
-                  summaryTotalSumma.style.textDecoration = "line-through";
-                } else if (
-                  localStorage.getItem("promo")?.split("-").length === 2
-                ) {
-                  summaryTotalSummaDiscount.innerHTML = `${
-                    Number(localStorage.getItem("totalCard")) -
-                    Number(localStorage.getItem("totalCard")) * 0.1
-                  }`;
-                  summaryTotalSumma.style.textDecoration = "line-through";
-                } else if (
-                  localStorage.getItem("promo")?.split("-").length === 1
-                ) {
-                  summaryTotalSummaDiscount.innerHTML = "";
-                  summaryTotalSumma.style.textDecoration = "none";
-                }
-              }
-            }
-          } else {
-            allSignCount[i].innerHTML = `${
-              Number(allSignCount[i].innerHTML) - 1
-            }`;
-            localStorage.setItem(
-              "count",
-              `${Number(localStorage.getItem("count")) - 1}`
-            );
-            countProduct.innerHTML = `${localStorage.getItem("count")}`;
-            for (let o = 0; o < dataProducts.length; o++) {
-              if (allCardsToCart[i].id === String(dataProducts[o].id)) {
-                allCountSumma[i].innerHTML = `${
-                  Number(allCountSumma[i].innerHTML) - dataProducts[o].price
-                }`;
-                localStorage.setItem(
-                  `${allCardsToCart[i].id}`,
-                  `${allSignCount[i].innerHTML}-${allCountSumma[i].innerHTML}`
-                );
-                localStorage.setItem(
-                  "totalCard",
-                  `${
-                    Number(localStorage.getItem("totalCard")) -
-                    dataProducts[o].price
-                  }`
-                );
-                totalCardSumma.innerHTML = `${localStorage.getItem(
-                  "totalCard"
-                )}`;
-              }
-            }
-            summaryCount.innerHTML = `${localStorage.getItem("count")}`;
-            summaryTotalSumma.innerHTML = `${localStorage.getItem(
-              "totalCard"
-            )}`;
-            if (localStorage.getItem("promo") != undefined) {
-              if (localStorage.getItem("promo")?.split("-").length === 3) {
-                summaryTotalSummaDiscount.innerHTML = `${
-                  Number(localStorage.getItem("totalCard")) -
-                  Number(localStorage.getItem("totalCard")) * 0.2
-                }`;
-                summaryTotalSumma.style.textDecoration = "line-through";
-              } else if (
-                localStorage.getItem("promo")?.split("-").length === 2
-              ) {
-                summaryTotalSummaDiscount.innerHTML = `${
-                  Number(localStorage.getItem("totalCard")) -
-                  Number(localStorage.getItem("totalCard")) * 0.1
-                }`;
-                summaryTotalSumma.style.textDecoration = "line-through";
-              } else if (
-                localStorage.getItem("promo")?.split("-").length === 1
-              ) {
-                summaryTotalSummaDiscount.innerHTML = "";
-                summaryTotalSumma.style.textDecoration = "none";
-              }
-            }
-          }
-        }
-      });
-    }
+    // let allCardsToCart: HTMLElement[] = Array.from(
+    //   document.querySelectorAll(".card-cart")
+    // );
+    // let allSignCount: HTMLElement[] = Array.from(
+    //   document.querySelectorAll(".sign-count")
+    // );
+    // let allCountSumma: HTMLElement[] = Array.from(
+    //   document.querySelectorAll(".count-summa")
+    // );
+    // let amountStock: HTMLElement[] = Array.from(
+    //   document.querySelectorAll(".stock-amount")
+    // );
+
+    // for (let i = 0; i < allCardsToCart.length; i++) {
+    //   allCardsToCart[i].addEventListener("click", (e) => {
+    //     let event = <HTMLElement>e.target;
+    //     if (event.classList.contains("sign-add")) {
+    //       if (amountStock[i].innerHTML === allSignCount[i].innerHTML) {
+    //         return;
+    //       } else {
+    //         allSignCount[i].innerHTML = `${Number(allSignCount[i].innerHTML) + 1}`;
+    //         for (let o = 0; o < dataProducts.length; o++) {
+    //           if (allCardsToCart[i].id === String(dataProducts[o].id)) {
+    //             allCountSumma[i].innerHTML = `${dataProducts[o].price * Number(allSignCount[i].innerHTML)}`;
+    //             localStorage.setItem(`${allCardsToCart[i].id}`,`${allSignCount[i].innerHTML}-${allCountSumma[i].innerHTML}`);
+    //             localStorage.setItem("count",`${Number(localStorage.getItem("count")) + 1}`);
+    //             countProduct.innerHTML = `${localStorage.getItem("count")}`;
+    //             localStorage.setItem("totalCard",`${Number(localStorage.getItem("totalCard")) + dataProducts[o].price}`);
+    //             totalCardSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
+    //             summaryCount.innerHTML = `${localStorage.getItem("count")}`;
+    //             summaryTotalSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
+    //             if (localStorage.getItem("promo") != undefined) {
+    //               if (localStorage.getItem("promo")?.split("-").length === 3) {
+    //                 summaryTotalSummaDiscount.innerHTML = `${
+    //                   Number(localStorage.getItem("totalCard")) -
+    //                   Number(localStorage.getItem("totalCard")) * 0.2
+    //                 }`;
+    //                 summaryTotalSumma.style.textDecoration = "line-through";
+    //               } else if (
+    //                 localStorage.getItem("promo")?.split("-").length === 2
+    //               ) {
+    //                 summaryTotalSummaDiscount.innerHTML = `${
+    //                   Number(localStorage.getItem("totalCard")) -
+    //                   Number(localStorage.getItem("totalCard")) * 0.1
+    //                 }`;
+    //                 summaryTotalSumma.style.textDecoration = "line-through";
+    //               } else if (
+    //                 localStorage.getItem("promo")?.split("-").length === 1
+    //               ) {
+    //                 summaryTotalSummaDiscount.innerHTML = "";
+    //                 summaryTotalSumma.style.textDecoration = "none";
+    //               }
+    //             }
+    //           }
+    //         }
+    //       }
+    //     } else if (event.classList.contains("sign-remove")) {
+    //       if (allSignCount[i].innerHTML === "1") {
+    //         if (productsCartWrap?.children.length === 1) {
+    //           main.innerHTML = cartPageLayoutEmpty;
+    //           localStorage.removeItem(`${allCardsToCart[i].id}`);
+    //           localStorage.setItem("count", `${Number(localStorage.getItem("count")) - 1}`);
+    //           countProduct.innerHTML = `${localStorage.getItem("count")}`;
+    //           for (let o = 0; o < dataProducts.length; o++) {
+    //             if (allCardsToCart[i].id === String(dataProducts[o].id)) {
+    //               localStorage.setItem(
+    //                 "totalCard",
+    //                 `${
+    //                   Number(localStorage.getItem("totalCard")) -
+    //                   dataProducts[o].price
+    //                 }`
+    //               );
+    //               totalCardSumma.innerHTML = `${localStorage.getItem(
+    //                 "totalCard"
+    //               )}`;
+    //             }
+    //           }
+    //           let idArrCartLocal = localStorage.getItem("idArrayCart");
+    //           if (idArrCartLocal != null) {
+    //             let str = `-${allCardsToCart[i].id}`;
+    //             idArrCartLocal = idArrCartLocal.replace(str, "");
+    //             localStorage.setItem("idArrayCart", `${idArrCartLocal}`);
+    //           }
+    //           summaryCount.innerHTML = `${localStorage.getItem("count")}`;
+    //           summaryTotalSumma.innerHTML = `${localStorage.getItem(
+    //             "totalCard"
+    //           )}`;
+    //         } else {
+    //           allCardsToCart[i].remove();
+    //           localStorage.removeItem(`${allCardsToCart[i].id}`);
+    //           for (let o = 0; o < dataProducts.length; o++) {
+    //             if (allCardsToCart[i].id === String(dataProducts[o].id)) {
+    //               localStorage.setItem(
+    //                 "totalCard",
+    //                 `${
+    //                   Number(localStorage.getItem("totalCard")) -
+    //                   dataProducts[o].price
+    //                 }`
+    //               );
+    //               totalCardSumma.innerHTML = `${localStorage.getItem(
+    //                 "totalCard"
+    //               )}`;
+    //             }
+    //           }
+    //           let idArrCartLocal = localStorage.getItem("idArrayCart");
+    //           if (idArrCartLocal != null) {
+    //             let str = `-${allCardsToCart[i].id}`;
+    //             idArrCartLocal = idArrCartLocal.replace(str, "");
+    //             localStorage.setItem("idArrayCart", `${idArrCartLocal}`);
+    //             localStorage.setItem(
+    //               "count",
+    //               `${Number(localStorage.getItem("count")) - 1}`
+    //             );
+    //             countProduct.innerHTML = `${localStorage.getItem("count")}`;
+    //           }
+    //           summaryCount.innerHTML = `${localStorage.getItem("count")}`;
+    //           summaryTotalSumma.innerHTML = `${localStorage.getItem(
+    //             "totalCard"
+    //           )}`;
+    //           if (localStorage.getItem("promo") != undefined) {
+    //             if (localStorage.getItem("promo")?.split("-").length === 3) {
+    //               summaryTotalSummaDiscount.innerHTML = `${
+    //                 Number(localStorage.getItem("totalCard")) -
+    //                 Number(localStorage.getItem("totalCard")) * 0.2
+    //               }`;
+    //               summaryTotalSumma.style.textDecoration = "line-through";
+    //             } else if (
+    //               localStorage.getItem("promo")?.split("-").length === 2
+    //             ) {
+    //               summaryTotalSummaDiscount.innerHTML = `${
+    //                 Number(localStorage.getItem("totalCard")) -
+    //                 Number(localStorage.getItem("totalCard")) * 0.1
+    //               }`;
+    //               summaryTotalSumma.style.textDecoration = "line-through";
+    //             } else if (
+    //               localStorage.getItem("promo")?.split("-").length === 1
+    //             ) {
+    //               summaryTotalSummaDiscount.innerHTML = "";
+    //               summaryTotalSumma.style.textDecoration = "none";
+    //             }
+    //           }
+    //         }
+    //       } else {
+    //         allSignCount[i].innerHTML = `${
+    //           Number(allSignCount[i].innerHTML) - 1
+    //         }`;
+    //         localStorage.setItem(
+    //           "count",
+    //           `${Number(localStorage.getItem("count")) - 1}`
+    //         );
+    //         countProduct.innerHTML = `${localStorage.getItem("count")}`;
+    //         for (let o = 0; o < dataProducts.length; o++) {
+    //           if (allCardsToCart[i].id === String(dataProducts[o].id)) {
+    //             allCountSumma[i].innerHTML = `${
+    //               Number(allCountSumma[i].innerHTML) - dataProducts[o].price
+    //             }`;
+    //             localStorage.setItem(
+    //               `${allCardsToCart[i].id}`,
+    //               `${allSignCount[i].innerHTML}-${allCountSumma[i].innerHTML}`
+    //             );
+    //             localStorage.setItem(
+    //               "totalCard",
+    //               `${
+    //                 Number(localStorage.getItem("totalCard")) -
+    //                 dataProducts[o].price
+    //               }`
+    //             );
+    //             totalCardSumma.innerHTML = `${localStorage.getItem(
+    //               "totalCard"
+    //             )}`;
+    //           }
+    //         }
+    //         summaryCount.innerHTML = `${localStorage.getItem("count")}`;
+    //         summaryTotalSumma.innerHTML = `${localStorage.getItem(
+    //           "totalCard"
+    //         )}`;
+    //         if (localStorage.getItem("promo") != undefined) {
+    //           if (localStorage.getItem("promo")?.split("-").length === 3) {
+    //             summaryTotalSummaDiscount.innerHTML = `${
+    //               Number(localStorage.getItem("totalCard")) -
+    //               Number(localStorage.getItem("totalCard")) * 0.2
+    //             }`;
+    //             summaryTotalSumma.style.textDecoration = "line-through";
+    //           } else if (
+    //             localStorage.getItem("promo")?.split("-").length === 2
+    //           ) {
+    //             summaryTotalSummaDiscount.innerHTML = `${
+    //               Number(localStorage.getItem("totalCard")) -
+    //               Number(localStorage.getItem("totalCard")) * 0.1
+    //             }`;
+    //             summaryTotalSumma.style.textDecoration = "line-through";
+    //           } else if (
+    //             localStorage.getItem("promo")?.split("-").length === 1
+    //           ) {
+    //             summaryTotalSummaDiscount.innerHTML = "";
+    //             summaryTotalSumma.style.textDecoration = "none";
+    //           }
+    //         }
+    //       }
+    //     }
+    //   });
+    // }
 
     let inputSearchPromo = <HTMLInputElement>(
       document.querySelector(".search-promo")
