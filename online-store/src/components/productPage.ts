@@ -55,26 +55,26 @@ export default function productPage(): void {
   const cost = <HTMLElement>document.querySelector(".cost-product");
   const main_page = <HTMLElement>document.querySelector(".photos-main");
   const other_photos_parent_block = <HTMLElement>document.querySelector(".photos-other");
-  for (let j = 0; j < dataProducts.length; j++) {
-    if (dataProducts[j].id === Number(id)) {
-      title.innerText = dataProducts[j].title;
-      description.innerText = dataProducts[j].description;
-      rating.innerText = String(dataProducts[j].rating);
-      stock.innerText = String(dataProducts[j].stock);
-      brand.innerText = dataProducts[j].brand;
-      category.innerText = dataProducts[j].category;
-      discount.innerText = String(dataProducts[j].discountPercentage);
-      path.innerHTML = `<a href='/'>STORE</a> > <a href='/?filter=${dataProducts[j].category}'>${dataProducts[j].category.toUpperCase()}</a> > <a href='/?filter=${dataProducts[j].brand.replace(/ /g, '_')}'>${dataProducts[j].brand.toUpperCase()}</a> > ${dataProducts[j].title.toUpperCase()}`;
-      cost.innerText = `${dataProducts[j].price}`;
-      main_page.style.background = `url('${dataProducts[j].thumbnail}') no-repeat`;
+  for (let i = 0; i < dataProducts.length; i++) {
+    if (dataProducts[i].id === Number(id)) {
+      title.innerText = dataProducts[i].title;
+      description.innerText = dataProducts[i].description;
+      rating.innerText = String(dataProducts[i].rating);
+      stock.innerText = String(dataProducts[i].stock);
+      brand.innerText = dataProducts[i].brand;
+      category.innerText = dataProducts[i].category;
+      discount.innerText = String(dataProducts[i].discountPercentage);
+      path.innerHTML = `<a href='/'>STORE</a> > <a href='/?filter=${dataProducts[i].category}'>${dataProducts[i].category.toUpperCase()}</a> > <a href='/?filter=${dataProducts[i].brand.replace(/ /g, '_')}'>${dataProducts[i].brand.toUpperCase()}</a> > ${dataProducts[i].title.toUpperCase()}`;
+      cost.innerText = `${dataProducts[i].price}`;
+      main_page.style.background = `url('${dataProducts[i].thumbnail}') no-repeat`;
       main_page.style.backgroundSize = "cover";
-      for (let o = 0; o < dataProducts[j].images.length; o++) {
+      for (let j = 0; j < dataProducts[i].images.length; j++) {
         let imgBlock = document.createElement("div");
         imgBlock.classList.add("photo-other");
-        imgBlock.style.backgroundImage = `url('${dataProducts[j].images[o]}')`;
+        imgBlock.style.backgroundImage = `url('${dataProducts[i].images[j]}')`;
         imgBlock.style.backgroundSize = 'cover';
         imgBlock.addEventListener("click", () => {
-          main_page.style.background = `url('${dataProducts[j].images[o]}') no-repeat`;
+          main_page.style.background = `url('${dataProducts[i].images[j]}') no-repeat`;
           main_page.style.backgroundSize = "cover";
         });
         other_photos_parent_block.appendChild(imgBlock);
