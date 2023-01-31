@@ -50,6 +50,3 @@ const getRoute = () => {
 }
 
 getRoute()
-
-
-

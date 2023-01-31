@@ -1,6 +1,5 @@
-import cartProduct from "./cartPage";
 import dataProducts from "./dataProducts";
-import { buyNow } from "./cartPage";
+
 const productPageLayout: string = `
 <div class="wrapper">
   <p class="path-product font">STORE ></p>
@@ -12,8 +11,8 @@ const productPageLayout: string = `
     </div>
     <div class="info-product wrap">
       <div class="info-main font wrap">
-        <h2 class = "product-title font">iPhone 9</h2>
-        <p class = "product-description font">An apple mobile which is nothing like apple</p>
+        <h2 class="product-title font">iPhone 9</h2>
+        <p class="product-description font">An apple mobile which is nothing like apple</p>
       </div>
       <div class="info-other">
         <ul class="font">
@@ -24,11 +23,11 @@ const productPageLayout: string = `
           <li>Discount precentage:</li>
         </ul>
         <ul>
-          <li class = "product-rating">dataProducts.rating</li>
-          <li class = "product-stock">dataProducts.stock</li>
-          <li class = "product-brand">dataProducts.brand</li>
-          <li class = "product-category">dataProducts.category</li>
-          <li class = "product-discountPercentage">dataProducts.discountPercentage</li>
+          <li class="product-rating">dataProducts.rating</li>
+          <li class="product-stock">dataProducts.stock</li>
+          <li class="product-brand">dataProducts.brand</li>
+          <li class="product-category">dataProducts.category</li>
+          <li class="product-discountPercentage">dataProducts.discountPercentage</li>
         </ul>
       </div>
     </div>
@@ -42,22 +41,20 @@ const productPageLayout: string = `
 
 export default function productPage(): void {
   let id: string = location.pathname.slice(location.pathname.indexOf("-") + 1);
-  let main = <HTMLElement>document.querySelector(".main");
+  const main = <HTMLElement>document.querySelector(".main");
   main.innerHTML = productPageLayout;
 
-  let title = <HTMLElement>document.querySelector(".product-title");
-  let description = <HTMLElement>document.querySelector(".product-description");
-  let rating = <HTMLElement>document.querySelector(".product-rating");
-  let stock = <HTMLElement>document.querySelector(".product-stock");
-  let brand = <HTMLElement>document.querySelector(".product-brand");
-  let category = <HTMLElement>document.querySelector(".product-category");
-  let discount = <HTMLElement>(
-    document.querySelector(".product-discountPercentage")
-  );
-  let path = <HTMLElement>document.querySelector(".path-product");
-  let cost = <HTMLElement>document.querySelector(".cost-product");
-  let main_page = <HTMLElement>document.querySelector(".photos-main");
-  let other_photos_parent_block = <HTMLElement>document.querySelector(".photos-other");
+  const title = <HTMLElement>document.querySelector(".product-title");
+  const description = <HTMLElement>document.querySelector(".product-description");
+  const rating = <HTMLElement>document.querySelector(".product-rating");
+  const stock = <HTMLElement>document.querySelector(".product-stock");
+  const brand = <HTMLElement>document.querySelector(".product-brand");
+  const category = <HTMLElement>document.querySelector(".product-category");
+  const discount = <HTMLElement>(document.querySelector(".product-discountPercentage"));
+  const path = <HTMLElement>document.querySelector(".path-product");
+  const cost = <HTMLElement>document.querySelector(".cost-product");
+  const main_page = <HTMLElement>document.querySelector(".photos-main");
+  const other_photos_parent_block = <HTMLElement>document.querySelector(".photos-other");
   for (let j = 0; j < dataProducts.length; j++) {
     if (dataProducts[j].id === Number(id)) {
       title.innerText = dataProducts[j].title;
@@ -72,23 +69,23 @@ export default function productPage(): void {
       main_page.style.background = `url('${dataProducts[j].thumbnail}') no-repeat`;
       main_page.style.backgroundSize = "cover";
       for (let o = 0; o < dataProducts[j].images.length; o++) {
-        let k = document.createElement("div");
-        k.classList.add("photo-other");
-        k.style.backgroundImage = `url('${dataProducts[j].images[o]}')`;
-        k.style.backgroundSize = 'cover';
-        k.addEventListener("click", () => {
+        let imgBlock = document.createElement("div");
+        imgBlock.classList.add("photo-other");
+        imgBlock.style.backgroundImage = `url('${dataProducts[j].images[o]}')`;
+        imgBlock.style.backgroundSize = 'cover';
+        imgBlock.addEventListener("click", () => {
           main_page.style.background = `url('${dataProducts[j].images[o]}') no-repeat`;
           main_page.style.backgroundSize = "cover";
         });
-        other_photos_parent_block.appendChild(k);
+        other_photos_parent_block.appendChild(imgBlock);
       }
     }
   }
  
-  let btnAdd = <HTMLElement>document.querySelector(".btn-add");
+  const btnAdd = <HTMLElement>document.querySelector(".btn-add");
   let count: number = 0;
-  let countProduct = <HTMLElement>document.querySelector(".count");
-  let totalCardSumma = <HTMLElement>document.querySelector(".summa");
+  const countProduct = <HTMLElement>document.querySelector(".count");
+  const totalCardSumma = <HTMLElement>document.querySelector(".summa");
   let summa: number = 0;
   if (localStorage.getItem("totalCard") != undefined) {
     summa = Number(localStorage.getItem("totalCard"));

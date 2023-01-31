@@ -87,17 +87,17 @@ export default function cartProduct(): void {
       buyNow();
     }
     let point: number = 0;
-    let summaryCount = <HTMLElement>document.querySelector(".summary-count");
-    let summaryTotalSumma = <HTMLElement>(document.querySelector(".summary-total-summa"));
+    const summaryCount = <HTMLElement>document.querySelector(".summary-count");
+    const summaryTotalSumma = <HTMLElement>(document.querySelector(".summary-total-summa"));
     summaryCount.innerHTML = `${localStorage.getItem("count")}`;
     summaryTotalSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
-    let countProduct = <HTMLElement>document.querySelector(".count");
-    let totalCardSumma = <HTMLElement>document.querySelector(".summa");
+    const countProduct = <HTMLElement>document.querySelector(".count");
+    const totalCardSumma = <HTMLElement>document.querySelector(".summa");
     countProduct.innerHTML = `${localStorage.getItem("count")}`;
     totalCardSumma.innerHTML = `${localStorage.getItem("totalCard")}`;
 
     let idArrayCartLocSor = localStorage.getItem("idArrayCart")?.split("-");
-    let productsCartWrap = <HTMLElement>(document.querySelector(".products-cart-wrapper"));
+    const productsCartWrap = <HTMLElement>(document.querySelector(".products-cart-wrapper"));
     for (let i = 0; i < dataProducts.length; i++) {
       if (idArrayCartLocSor != undefined) {
         for (let j = 0; j < idArrayCartLocSor.length; j++) {
@@ -195,12 +195,12 @@ export default function cartProduct(): void {
 
     const productsInCart = productsCartWrap.children;
 
-    let itemsInput = <HTMLInputElement>document.querySelector(".itemsInput");
+    const itemsInput = <HTMLInputElement>document.querySelector(".itemsInput");
     let cardsCount: number = productsCartWrap.children.length;
     itemsInput.value = `${cardsCount}`;
-    let prevPageButton = <HTMLElement>document.querySelector(".prev-page");
-    let nextPageButton = <HTMLElement>document.querySelector(".next-page");
-    let currentPage = <HTMLElement>document.querySelector(".current-page");
+    const prevPageButton = <HTMLElement>document.querySelector(".prev-page");
+    const nextPageButton = <HTMLElement>document.querySelector(".next-page");
+    const currentPage = <HTMLElement>document.querySelector(".current-page");
     itemsInput.addEventListener("input", () => {
       toBack();
       let state = {
@@ -669,18 +669,10 @@ export default function cartProduct(): void {
       }
     }
 
-    let allCardsToCart: HTMLElement[] = Array.from(
-      document.querySelectorAll(".card-cart")
-    );
-    let allSignCount: HTMLElement[] = Array.from(
-      document.querySelectorAll(".sign-count")
-    );
-    let allCountSumma: HTMLElement[] = Array.from(
-      document.querySelectorAll(".count-summa")
-    );
-    let amountStock: HTMLElement[] = Array.from(
-      document.querySelectorAll(".stock-amount")
-    );
+    let allCardsToCart: HTMLElement[] = Array.from(document.querySelectorAll(".card-cart"));
+    let allSignCount: HTMLElement[] = Array.from(document.querySelectorAll(".sign-count"));
+    let allCountSumma: HTMLElement[] = Array.from(document.querySelectorAll(".count-summa"));
+    let amountStock: HTMLElement[] = Array.from(document.querySelectorAll(".stock-amount"));
 
     for (let i = 0; i < allCardsToCart.length; i++) {
       allCardsToCart[i].addEventListener("click", (e) => {
@@ -872,30 +864,26 @@ export default function cartProduct(): void {
       });
     }
 
-    let inputSearchPromo = <HTMLInputElement>(
-      document.querySelector(".search-promo")
-    );
-    let summaryTotalSummaDiscount = <HTMLElement>(
-      document.querySelector(".summary-total-summa-discount")
-    );
+    let inputSearchPromo = <HTMLInputElement>(document.querySelector(".search-promo"));
+    let summaryTotalSummaDiscount = <HTMLElement>(document.querySelector(".summary-total-summa-discount"));
 
-    let rsPromo: HTMLElement = document.createElement("div");
+    const rsPromo: HTMLElement = document.createElement("div");
     rsPromo.className = "rs-promo";
     rsPromo.innerHTML = `Rolling Scopes School - 10% <span>ADD</span>`;
 
-    let epmPromo: HTMLElement = document.createElement("div");
+    const epmPromo: HTMLElement = document.createElement("div");
     epmPromo.className = "epm-promo";
     epmPromo.innerHTML = `EPAM Systems - 10% <span>ADD</span>`;
 
-    let rsPromoAdded: HTMLElement = document.createElement("div");
+    const rsPromoAdded: HTMLElement = document.createElement("div");
     rsPromoAdded.className = "rs-promo-added";
     rsPromoAdded.innerHTML = `Rolling Scopes School - 10% <span>DROP</span>`;
 
-    let epmPromoAdded: HTMLElement = document.createElement("div");
+    const epmPromoAdded: HTMLElement = document.createElement("div");
     epmPromoAdded.className = "epm-promo-added";
     epmPromoAdded.innerHTML = `EPAM Systems - 10% <span>DROP</span>`;
 
-    let summaryBlock = <HTMLElement>document.querySelector(".summary-cart");
+    const summaryBlock = <HTMLElement>document.querySelector(".summary-cart");
     let allSummaryElement: HTMLCollection = summaryBlock.children;
 
     rsPromo.addEventListener("click", (e) => {
@@ -1017,10 +1005,10 @@ export default function cartProduct(): void {
       }
     }
 
-    let toModal = <HTMLElement>document.querySelector(".toModal");
-    let modalBg = <HTMLElement>document.querySelector(".modal-background");
-    let modalWindow = <HTMLElement>document.querySelector(".modal-window");
-    let closeModal = <HTMLElement>document.querySelector(".modal-close");
+    const toModal = <HTMLElement>document.querySelector(".toModal");
+    const modalBg = <HTMLElement>document.querySelector(".modal-background");
+    const modalWindow = <HTMLElement>document.querySelector(".modal-window");
+    const closeModal = <HTMLElement>document.querySelector(".modal-close");
 
     toModal.addEventListener("click", () => {
       buyNow();
@@ -1210,8 +1198,8 @@ export default function cartProduct(): void {
   }
 }
 export function buyNow() {
-  let modalBg = <HTMLElement>document.querySelector(".modal-background");
-  let modalWindow = <HTMLElement>document.querySelector(".modal-window");
+  const modalBg = <HTMLElement>document.querySelector(".modal-background");
+  const modalWindow = <HTMLElement>document.querySelector(".modal-window");
   modalBg.style.display = "block";
   modalWindow.style.display = "flex";
 }
